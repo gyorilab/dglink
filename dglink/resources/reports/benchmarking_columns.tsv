@@ -14,7 +14,7 @@ fp	sheet	column	group_identifier	heuristic_vote	is_entity_col
 /Users/buzgalbraith/.synapseCache/917/127374917/DQ97-4S2_11-12-14.csv	dq97-4s2_11-12-14	field1	syn7217928	true	false
 /Users/buzgalbraith/.synapseCache/11/158564011/patient4tumor10.junction.xls	patient4tumor10.junction	annotation	syn4984604	false	false
 /Users/buzgalbraith/.synapseCache/13/8917013/69244-0209702964.TARGET.BED.sample_interval_statistics.csv	69244-0209702964.target.bed.sample_interval_statistics	Number_of_sources	syn4939874	false	false
-/Users/buzgalbraith/.synapseCache/735/135145735/HS01_16.biotype_counts_mqc.tsv	hs01_16.biotype_counts_mqc	# id: 'biotype_counts'	syn2343195	true	true
+/Users/buzgalbraith/.synapseCache/735/135145735/HS01_16.biotype_counts_mqc.tsv	hs01_16.biotype_counts_mqc	# id: 'biotype_counts'	syn2343195	true	false
 /Users/buzgalbraith/.synapseCache/175/93239175/Strelka_cNF97.2a_variants_snpEff.csv	strelka_cnf97.2a_variants_snpeff	Value	syn11374339	false	false
 /Users/buzgalbraith/.synapseCache/71/7353071/C856CANXX_1_RNASeq_Kallisto_gencodev24_quants.tsv	c856canxx_1_rnaseq_kallisto_gencodev24_quants	OttTrans	syn4939874	false	false
 /Users/buzgalbraith/.synapseCache/734/40728734/HS11_CCG_20hours_metadata_set2.csv	hs11_ccg_20hours_metadata_set2	ColSid	syn2343195	false	false
@@ -36,7 +36,7 @@ fp	sheet	column	group_identifier	heuristic_vote	is_entity_col
 /Users/buzgalbraith/.synapseCache/682/127374682/dapi_D6_C_S1_4-8-15.csv	dapi_d6_c_s1_4-8-15	field1	syn7217928	true	false
 /Users/buzgalbraith/.synapseCache/410/14655410/RFP_D1_956_S1_5-20-15.csv	rfp_d1_956_s1_5-20-15	field1	syn7217928	true	false
 /Users/buzgalbraith/.synapseCache/69/8917069/69247-0209702954.TARGET.BED.sample_cumulative_coverage_proportions.csv	69247-0209702954.target.bed.sample_cumulative_coverage_proportions	sample	syn4939874	false	false
-/Users/buzgalbraith/.synapseCache/731/135145731/HS01_15.biotype_counts_mqc.tsv	hs01_15.biotype_counts_mqc	# id: 'biotype_counts'	syn2343195	true	true
+/Users/buzgalbraith/.synapseCache/731/135145731/HS01_15.biotype_counts_mqc.tsv	hs01_15.biotype_counts_mqc	# id: 'biotype_counts'	syn2343195	true	false
 /Users/buzgalbraith/.synapseCache/124/127375124/RFPD1_3-25-15_C_S2dap-TdT.csv	rfpd1_3-25-15_c_s2dap-tdt	field1	syn7217928	true	false
 /Users/buzgalbraith/.synapseCache/906/145477906/JH-2-055-W1_Normal_segments.tsv	jh-2-055-w1_normal_segments	INFO	syn21984813	true	false
 /Users/buzgalbraith/.synapseCache/766/135145766/HS01_6.biotype_counts_mqc.tsv	hs01_6.biotype_counts_mqc	# id: 'biotype_counts'	syn2343195	true	false
