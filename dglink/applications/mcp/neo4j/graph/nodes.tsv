@@ -1,315 +1,315 @@
 curie:ID	:LABEL	name	raw_texts:string[]	columns:string[]	iri	file_id:string[]	tool_type	DOI	source:string[]	study_url
-syn2343195	Project		syn2343195	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn2343195
-syn4939872	Project		syn4939872	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939872
-syn4939874	Project		syn4939874	metadata		""			metadata;projects;vcf_experimental_data	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939874
-syn4939876	Project		syn4939876	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939876
-syn4939878	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939878
-syn4939880	Project		syn4939880	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939880
-syn4939884	Project		syn4939884	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939884
-syn4939888	Project		syn4939888	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939888
-syn4939890	Project		syn4939890	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939890
-syn4939892	Project		syn4939892	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939892
-syn4939894	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939894
-syn4939896	Project		syn4939896	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939896
-syn4939902	Project		syn4939902	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939902
-syn4939904	Project		syn4939904	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939904
-syn4939906	Project		syn4939906	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939906
-syn4939908	Project		syn4939908	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939908
-syn4939910	Project		syn4939910	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939910
-syn4939912	Project		syn4939912	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939912
-syn4939914	Project		syn4939914	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939914
-syn4939916	Project		syn4939916	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939916
-syn4939918	Project		syn4939918	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939918
-syn4984604	Project		syn4984604	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4984604
-syn5562324	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn5562324
-syn5610418	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn5610418
-syn5698493	Project		syn5698493	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn5698493
-syn6633069	Project		syn6633069	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn6633069
-syn7217928	Project		syn7217928	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7217928
-syn7217935	Project		syn7217935	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7217935
-syn7217946	Project		syn7217946	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7217946
-syn7231973	Project		syn7231973	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7231973
-syn7239560	Project		syn7239560	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7239560
-syn8012530	Project		syn8012530	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8012530
-syn8012599	Project		syn8012599	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8012599
-syn8016577	Project		syn8016577	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016577
-syn8016599	Project		syn8016599	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016599
-syn8016635	Project		syn8016635	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016635
-syn8016650	Project		syn8016650	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016650
-syn9727752	Project		syn9727752	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn9727752
-syn11374333	Project		syn11374333	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374333
-syn11374337	Project		syn11374337	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374337
-syn11374339	Project		syn11374339	metadata		""			metadata;projects;vcf_experimental_data	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374339
-syn11374341	Project		syn11374341	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374341
-syn11374345	Project		syn11374345	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374345
-syn11374349	Project		syn11374349	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374349
-syn11374353	Project		syn11374353	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374353
-syn11374354	Project		syn11374354	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374354
-syn11374357	Project		syn11374357	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374357
-syn11638893	Project		syn11638893	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11638893
-syn11672851	Project		syn11672851	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11672851
-syn11681835	Project		syn11681835	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11681835
-syn11817821	Project		syn11817821	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11817821
-syn17098100	Project		syn17098100	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn17098100
-syn17100988	Project		syn17100988	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn17100988
-syn18904024	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn18904024
-syn20608511	Project		syn20608511	metadata		""			dicom_experimental_data;metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn20608511
-syn20613866	Project		syn20613866	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn20613866
-syn21355225	Project		syn21355225	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21355225
-syn21452685	Project		syn21452685	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21452685
-syn21641813	Project		syn21641813	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641813
-syn21641872	Project		syn21641872	metadata		""			dicom_experimental_data;metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641872
-syn21641876	Project		syn21641876	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641876
-syn21641931	Project		syn21641931	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641931
-syn21641945	Project		syn21641945	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641945
-syn21641955	Project		syn21641955	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641955
-syn21641985	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641985
-syn21642010	Project		syn21642010	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21642010
-syn21642027	Project		syn21642027	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21642027
-syn21650326	Project		syn21650326	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650326
-syn21650366	Project		syn21650366	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650366
-syn21650395	Project		syn21650395	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650395
-syn21650404	Project		syn21650404	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650404
-syn21650464	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650464
-syn21650476	Project		syn21650476	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650476
-syn21650480	Project		syn21650480	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650480
-syn21650484	Project		syn21650484	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650484
-syn21650488	Project		syn21650488	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650488
-syn21650493	Project		syn21650493	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650493
-syn21650499	Project		syn21650499	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650499
-syn21984813	Project		syn21984813	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21984813
-syn22266552	Project		syn22266552	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22266552
-syn22266606	Project		syn22266606	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22266606
-syn22267284	Project		syn22267284	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22267284
-syn22267323	Project		syn22267323	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22267323
-syn22267330	Project		syn22267330	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22267330
-syn22268639	Project		syn22268639	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22268639
-syn22268652	Project		syn22268652	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22268652
-syn22268689	Project		syn22268689	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22268689
-syn22392179	Project		syn22392179	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22392179
-syn23532255	Project		syn23532255	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532255
-syn23532258	Project		syn23532258	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532258
-syn23532271	Project		syn23532271	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532271
-syn23532273	Project		syn23532273	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532273
-syn23639889	Project		syn23639889	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23639889
-syn23651168	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23651168
-syn23651229	Project		syn23651229	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23651229
-syn23662493	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23662493
-syn23664726	Project		syn23664726	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23664726
-syn24875850	Project		syn24875850	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn24875850
-syn25881328	Project		syn25881328	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25881328
-syn25961160	Project		syn25961160	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25961160
-syn25999239	Project		syn25999239	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25999239
-syn25999248	Project		syn25999248	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25999248
-syn25999950	Project		syn25999950	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25999950
-syn26238842	Project		syn26238842	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26238842
-syn26238926	Project		syn26238926	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26238926
-syn26238964	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26238964
-syn26241781	Project		syn26241781	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26241781
-syn26347297	Project		syn26347297	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26347297
-syn26383473	Project		syn26383473	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26383473
-syn26410510	Project		syn26410510	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26410510
-syn26438193	Project		syn26438193	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26438193
-syn26585075	Project		syn26585075	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26585075
-syn26957643	Project		syn26957643	metadata		""			dicom_experimental_data;metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26957643
-syn26966057	Project		syn26966057	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26966057
-syn27114640	Project		syn27114640	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27114640
-syn27261816	Project		syn27261816	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261816
-syn27261829	Project		syn27261829	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261829
-syn27261835	Project		syn27261835	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261835
-syn27261848	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261848
-syn27761862	Project		syn27761862	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27761862
-syn27762317	Project		syn27762317	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27762317
-syn28545963	Project		syn28545963	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn28545963
-syn29525025	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29525025
-syn29772925	Project		syn29772925	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29772925
-syn29866703	Project		syn29866703	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29866703
-syn29867701	Project		""	""		""			dicom_experimental_data;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29867701
-syn30264486	Project		syn30264486	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn30264486
-syn30283982	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn30283982
-syn31619419	Project		syn31619419	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn31619419
-syn31748644	Project		syn31748644	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn31748644
-syn31821155	Project		syn31821155	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn31821155
-syn32128792	Project		syn32128792	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn32128792
-syn33791300	Project		syn33791300	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn33791300
-syn33820507	Project		syn33820507	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn33820507
-syn34624846	Project		syn34624846	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn34624846
-syn35627501	Project		syn35627501	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35627501
-syn35630161	Project		syn35630161	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35630161
-syn35632706	Project		syn35632706	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35632706
-syn35634638	Project		syn35634638	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35634638
-syn35636485	Project		syn35636485	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35636485
-syn35637409	Project		syn35637409	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35637409
-syn35638003	Project		syn35638003	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35638003
-syn36191081	Project		syn36191081	metadata		""			dicom_experimental_data;metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36191081
-syn36360320	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36360320
-syn36361151	Project		syn36361151	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36361151
-syn36362557	Project		syn36362557	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36362557
-syn36362764	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36362764
-syn36363358	Project		syn36363358	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36363358
-syn36364285	Project		syn36364285	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36364285
-syn36366922	Project		syn36366922	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36366922
-syn36367080	Project		syn36367080	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36367080
-syn36501381	Project		syn36501381	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36501381
-syn36501403	Project		syn36501403	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36501403
-syn36501485	Project		syn36501485	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36501485
-syn36528571	Project		syn36528571	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36528571
-syn36528579	Project		syn36528579	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36528579
-syn36528589	Project		syn36528589	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36528589
-syn36530073	Project		syn36530073	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530073
-syn36530086	Project		syn36530086	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530086
-syn36530108	Project		syn36530108	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530108
-syn36530126	Project		syn36530126	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530126
-syn36530149	Project		syn36530149	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530149
-syn36530163	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530163
-syn36544385	Project		syn36544385	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544385
-syn36544400	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544400
-syn36544414	Project		syn36544414	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544414
-syn36544421	Project		syn36544421	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544421
-syn36544436	Project		syn36544436	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544436
-syn36544447	Project		syn36544447	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544447
-syn36544458	Project		syn36544458	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544458
-syn36544468	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544468
-syn36544478	Project		syn36544478	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544478
-syn36544490	Project		syn36544490	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544490
-syn36544517	Project		syn36544517	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544517
-syn37860391	Project		syn37860391	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37860391
-syn37861830	Project		syn37861830	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37861830
-syn37872335	Project		syn37872335	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37872335
-syn37889514	Project		syn37889514	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37889514
-syn37889584	Project		syn37889584	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37889584
-syn39800678	Project		syn39800678	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn39800678
-syn47857478	Project		syn47857478	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn47857478
-syn50315996	Project		syn50315996	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn50315996
-syn51115812	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51115812
-syn51116567	Project		syn51116567	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51116567
-syn51116572	Project		syn51116572	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51116572
-syn51116577	Project		syn51116577	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51116577
-syn51117783	Project		syn51117783	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51117783
-syn51133914	Project		syn51133914	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133914
-syn51133924	Project		syn51133924	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133924
-syn51133929	Project		syn51133929	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133929
-syn51133935	Project		syn51133935	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133935
-syn51133946	Project		syn51133946	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133946
-syn51133957	Project		syn51133957	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133957
-syn51133963	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133963
-syn51204782	Project		syn51204782	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51204782
-syn51207088	Project		syn51207088	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51207088
-syn51218284	Project		syn51218284	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51218284
-syn51227166	Project		syn51227166	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51227166
-syn51298831	Project		syn51298831	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51298831
-syn51301409	Project		syn51301409	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51301409
-syn51315882	Project		syn51315882	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51315882
-syn51333298	Project		syn51333298	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51333298
-syn51356705	Project		syn51356705	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51356705
-syn51356824	Project		syn51356824	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51356824
-syn51356860	Project		syn51356860	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51356860
-syn51360851	Project		syn51360851	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51360851
-syn51364179	Project		syn51364179	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51364179
-syn51471542	Project		syn51471542	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51471542
-syn51658171	Project		syn51658171	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51658171
-syn51664331	Project		syn51664331	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51664331
-syn51730549	Project		syn51730549	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51730549
-syn51907739	Project		syn51907739	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51907739
-syn52369030	Project		syn52369030	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52369030
-syn52396692	Project		syn52396692	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52396692
-syn52396762	Project		syn52396762	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52396762
-syn52399590	Project		syn52399590	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52399590
-syn52399623	Project		syn52399623	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52399623
-syn52676851	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52676851
-syn52677046	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52677046
-syn52740594	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52740594
-syn52781876	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52781876
-syn53072189	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53072189
-syn53128248	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53128248
-syn53130024	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53130024
-syn53181385	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53181385
-syn53183718	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53183718
-syn53183744	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53183744
-syn53185180	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53185180
-syn53192398	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53192398
-syn53213247	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53213247
-syn53335634	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53335634
-syn53405342	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53405342
-syn53604892	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53604892
-syn53651618	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53651618
-syn53974914	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53974914
-syn54166654	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn54166654
-syn54168300	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn54168300
-syn54308478	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn54308478
-syn56373031	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56373031
-syn56417025	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56417025
-syn56419166	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56419166
-syn56420568	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56420568
-syn56421718	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56421718
-syn56566376	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56566376
-syn57442781	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn57442781
-syn58211567	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn58211567
-syn58577585	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn58577585
-syn60057901	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn60057901
-syn60244968	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn60244968
-syn61249909	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61249909
-syn61259950	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61259950
-syn61391891	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61391891
-syn61696875	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61696875
-syn61718741	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61718741
-syn61721315	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61721315
-syn61777297	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61777297
-syn61777443	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61777443
-syn61778589	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61778589
-syn61783227	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61783227
-syn61831970	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61831970
-syn61848703	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61848703
-syn61915471	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61915471
-syn61931946	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61931946
-syn62012031	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62012031
-syn62012147	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62012147
-syn62026045	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62026045
-syn62026171	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62026171
-syn62031004	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62031004
-syn62031290	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62031290
-syn62626050	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62626050
-syn62660805	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62660805
-syn62665253	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62665253
-syn62809145	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62809145
-syn63102351	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63102351
-syn63298604	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63298604
-syn63543841	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63543841
-syn63596553	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63596553
-syn63944395	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63944395
-syn63992357	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63992357
-syn64126375	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64126375
-syn64156441	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64156441
-syn64500888	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64500888
-syn64696349	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64696349
-syn64765215	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64765215
-syn64829479	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64829479
-syn66527425	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn66527425
-syn68080320	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68080320
-syn68622867	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68622867
-syn68622887	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68622887
-syn68622908	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68622908
-syn68623354	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68623354
-syn68634225	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68634225
-syn68638152	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638152
-syn68638197	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638197
-syn68638227	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638227
-syn68638238	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638238
-syn68638276	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638276
-syn68638297	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638297
-syn68698543	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68698543
-syn68747438	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68747438
-syn68749817	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68749817
-syn68805918	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68805918
-syn68872078	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68872078
-syn68872619	Project		syn68872619	metadata		""			metadata;projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68872619
-syn68876148	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68876148
-syn69071607	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69071607
-syn69707917	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69707917
-syn69715258	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69715258
-syn69715590	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69715590
-syn69981762	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69981762
-syn70194549	Project		""	""		""			projects	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn70194549
+syn2343195	Project		syn2343195	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn2343195
+syn4939872	Project		syn4939872	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939872
+syn4939874	Project		syn4939874	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939874
+syn4939876	Project		syn4939876	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939876
+syn4939878	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939878
+syn4939880	Project		syn4939880	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939880
+syn4939884	Project		syn4939884	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939884
+syn4939888	Project		syn4939888	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939888
+syn4939890	Project		syn4939890	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939890
+syn4939892	Project		syn4939892	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939892
+syn4939894	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939894
+syn4939896	Project		syn4939896	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939896
+syn4939902	Project		syn4939902	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939902
+syn4939904	Project		syn4939904	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939904
+syn4939906	Project		syn4939906	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939906
+syn4939908	Project		syn4939908	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939908
+syn4939910	Project		syn4939910	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939910
+syn4939912	Project		syn4939912	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939912
+syn4939914	Project		syn4939914	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939914
+syn4939916	Project		syn4939916	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939916
+syn4939918	Project		syn4939918	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4939918
+syn4984604	Project		syn4984604	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn4984604
+syn5562324	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn5562324
+syn5610418	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn5610418
+syn5698493	Project		syn5698493	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn5698493
+syn6633069	Project		syn6633069	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn6633069
+syn7217928	Project		syn7217928	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7217928
+syn7217935	Project		syn7217935	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7217935
+syn7217946	Project		syn7217946	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7217946
+syn7231973	Project		syn7231973	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7231973
+syn7239560	Project		syn7239560	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn7239560
+syn8012530	Project		syn8012530	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8012530
+syn8012599	Project		syn8012599	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8012599
+syn8016577	Project		syn8016577	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016577
+syn8016599	Project		syn8016599	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016599
+syn8016635	Project		syn8016635	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016635
+syn8016650	Project		syn8016650	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn8016650
+syn9727752	Project		syn9727752	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn9727752
+syn11374333	Project		syn11374333	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374333
+syn11374337	Project		syn11374337	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374337
+syn11374339	Project		syn11374339	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374339
+syn11374341	Project		syn11374341	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374341
+syn11374345	Project		syn11374345	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374345
+syn11374349	Project		syn11374349	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374349
+syn11374353	Project		syn11374353	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374353
+syn11374354	Project		syn11374354	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374354
+syn11374357	Project		syn11374357	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11374357
+syn11638893	Project		syn11638893	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11638893
+syn11672851	Project		syn11672851	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11672851
+syn11681835	Project		syn11681835	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11681835
+syn11817821	Project		syn11817821	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn11817821
+syn17098100	Project		syn17098100	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn17098100
+syn17100988	Project		syn17100988	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn17100988
+syn18904024	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn18904024
+syn20608511	Project		syn20608511	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn20608511
+syn20613866	Project		syn20613866	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn20613866
+syn21355225	Project		syn21355225	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21355225
+syn21452685	Project		syn21452685	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21452685
+syn21641813	Project		syn21641813	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641813
+syn21641872	Project		syn21641872	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641872
+syn21641876	Project		syn21641876	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641876
+syn21641931	Project		syn21641931	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641931
+syn21641945	Project		syn21641945	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641945
+syn21641955	Project		syn21641955	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641955
+syn21641985	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21641985
+syn21642010	Project		syn21642010	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21642010
+syn21642027	Project		syn21642027	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21642027
+syn21650326	Project		syn21650326	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650326
+syn21650366	Project		syn21650366	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650366
+syn21650395	Project		syn21650395	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650395
+syn21650404	Project		syn21650404	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650404
+syn21650464	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650464
+syn21650476	Project		syn21650476	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650476
+syn21650480	Project		syn21650480	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650480
+syn21650484	Project		syn21650484	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650484
+syn21650488	Project		syn21650488	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650488
+syn21650493	Project		syn21650493	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650493
+syn21650499	Project		syn21650499	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21650499
+syn21984813	Project		syn21984813	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn21984813
+syn22266552	Project		syn22266552	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22266552
+syn22266606	Project		syn22266606	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22266606
+syn22267284	Project		syn22267284	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22267284
+syn22267323	Project		syn22267323	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22267323
+syn22267330	Project		syn22267330	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22267330
+syn22268639	Project		syn22268639	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22268639
+syn22268652	Project		syn22268652	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22268652
+syn22268689	Project		syn22268689	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22268689
+syn22392179	Project		syn22392179	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn22392179
+syn23532255	Project		syn23532255	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532255
+syn23532258	Project		syn23532258	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532258
+syn23532271	Project		syn23532271	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532271
+syn23532273	Project		syn23532273	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23532273
+syn23639889	Project		syn23639889	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23639889
+syn23651168	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23651168
+syn23651229	Project		syn23651229	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23651229
+syn23662493	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23662493
+syn23664726	Project		syn23664726	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn23664726
+syn24875850	Project		syn24875850	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn24875850
+syn25881328	Project		syn25881328	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25881328
+syn25961160	Project		syn25961160	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25961160
+syn25999239	Project		syn25999239	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25999239
+syn25999248	Project		syn25999248	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25999248
+syn25999950	Project		syn25999950	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn25999950
+syn26238842	Project		syn26238842	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26238842
+syn26238926	Project		syn26238926	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26238926
+syn26238964	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26238964
+syn26241781	Project		syn26241781	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26241781
+syn26347297	Project		syn26347297	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26347297
+syn26383473	Project		syn26383473	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26383473
+syn26410510	Project		syn26410510	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26410510
+syn26438193	Project		syn26438193	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26438193
+syn26585075	Project		syn26585075	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26585075
+syn26957643	Project		syn26957643	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26957643
+syn26966057	Project		syn26966057	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn26966057
+syn27114640	Project		syn27114640	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27114640
+syn27261816	Project		syn27261816	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261816
+syn27261829	Project		syn27261829	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261829
+syn27261835	Project		syn27261835	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261835
+syn27261848	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27261848
+syn27761862	Project		syn27761862	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27761862
+syn27762317	Project		syn27762317	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn27762317
+syn28545963	Project		syn28545963	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn28545963
+syn29525025	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29525025
+syn29772925	Project		syn29772925	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29772925
+syn29866703	Project		syn29866703	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29866703
+syn29867701	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn29867701
+syn30264486	Project		syn30264486	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn30264486
+syn30283982	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn30283982
+syn31619419	Project		syn31619419	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn31619419
+syn31748644	Project		syn31748644	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn31748644
+syn31821155	Project		syn31821155	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn31821155
+syn32128792	Project		syn32128792	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn32128792
+syn33791300	Project		syn33791300	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn33791300
+syn33820507	Project		syn33820507	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn33820507
+syn34624846	Project		syn34624846	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn34624846
+syn35627501	Project		syn35627501	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35627501
+syn35630161	Project		syn35630161	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35630161
+syn35632706	Project		syn35632706	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35632706
+syn35634638	Project		syn35634638	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35634638
+syn35636485	Project		syn35636485	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35636485
+syn35637409	Project		syn35637409	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35637409
+syn35638003	Project		syn35638003	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn35638003
+syn36191081	Project		syn36191081	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36191081
+syn36360320	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36360320
+syn36361151	Project		syn36361151	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36361151
+syn36362557	Project		syn36362557	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36362557
+syn36362764	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36362764
+syn36363358	Project		syn36363358	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36363358
+syn36364285	Project		syn36364285	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36364285
+syn36366922	Project		syn36366922	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36366922
+syn36367080	Project		syn36367080	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36367080
+syn36501381	Project		syn36501381	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36501381
+syn36501403	Project		syn36501403	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36501403
+syn36501485	Project		syn36501485	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36501485
+syn36528571	Project		syn36528571	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36528571
+syn36528579	Project		syn36528579	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36528579
+syn36528589	Project		syn36528589	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36528589
+syn36530073	Project		syn36530073	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530073
+syn36530086	Project		syn36530086	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530086
+syn36530108	Project		syn36530108	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530108
+syn36530126	Project		syn36530126	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530126
+syn36530149	Project		syn36530149	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530149
+syn36530163	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36530163
+syn36544385	Project		syn36544385	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544385
+syn36544400	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544400
+syn36544414	Project		syn36544414	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544414
+syn36544421	Project		syn36544421	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544421
+syn36544436	Project		syn36544436	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544436
+syn36544447	Project		syn36544447	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544447
+syn36544458	Project		syn36544458	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544458
+syn36544468	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544468
+syn36544478	Project		syn36544478	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544478
+syn36544490	Project		syn36544490	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544490
+syn36544517	Project		syn36544517	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn36544517
+syn37860391	Project		syn37860391	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37860391
+syn37861830	Project		syn37861830	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37861830
+syn37872335	Project		syn37872335	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37872335
+syn37889514	Project		syn37889514	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37889514
+syn37889584	Project		syn37889584	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn37889584
+syn39800678	Project		syn39800678	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn39800678
+syn47857478	Project		syn47857478	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn47857478
+syn50315996	Project		syn50315996	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn50315996
+syn51115812	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51115812
+syn51116567	Project		syn51116567	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51116567
+syn51116572	Project		syn51116572	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51116572
+syn51116577	Project		syn51116577	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51116577
+syn51117783	Project		syn51117783	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51117783
+syn51133914	Project		syn51133914	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133914
+syn51133924	Project		syn51133924	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133924
+syn51133929	Project		syn51133929	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133929
+syn51133935	Project		syn51133935	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133935
+syn51133946	Project		syn51133946	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133946
+syn51133957	Project		syn51133957	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133957
+syn51133963	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51133963
+syn51204782	Project		syn51204782	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51204782
+syn51207088	Project		syn51207088	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51207088
+syn51218284	Project		syn51218284	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51218284
+syn51227166	Project		syn51227166	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51227166
+syn51298831	Project		syn51298831	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51298831
+syn51301409	Project		syn51301409	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51301409
+syn51315882	Project		syn51315882	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51315882
+syn51333298	Project		syn51333298	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51333298
+syn51356705	Project		syn51356705	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51356705
+syn51356824	Project		syn51356824	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51356824
+syn51356860	Project		syn51356860	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51356860
+syn51360851	Project		syn51360851	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51360851
+syn51364179	Project		syn51364179	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51364179
+syn51471542	Project		syn51471542	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51471542
+syn51658171	Project		syn51658171	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51658171
+syn51664331	Project		syn51664331	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51664331
+syn51730549	Project		syn51730549	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51730549
+syn51907739	Project		syn51907739	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn51907739
+syn52369030	Project		syn52369030	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52369030
+syn52396692	Project		syn52396692	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52396692
+syn52396762	Project		syn52396762	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52396762
+syn52399590	Project		syn52399590	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52399590
+syn52399623	Project		syn52399623	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52399623
+syn52676851	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52676851
+syn52677046	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52677046
+syn52740594	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52740594
+syn52781876	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn52781876
+syn53072189	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53072189
+syn53128248	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53128248
+syn53130024	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53130024
+syn53181385	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53181385
+syn53183718	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53183718
+syn53183744	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53183744
+syn53185180	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53185180
+syn53192398	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53192398
+syn53213247	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53213247
+syn53335634	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53335634
+syn53405342	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53405342
+syn53604892	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53604892
+syn53651618	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53651618
+syn53974914	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn53974914
+syn54166654	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn54166654
+syn54168300	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn54168300
+syn54308478	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn54308478
+syn56373031	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56373031
+syn56417025	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56417025
+syn56419166	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56419166
+syn56420568	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56420568
+syn56421718	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56421718
+syn56566376	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn56566376
+syn57442781	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn57442781
+syn58211567	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn58211567
+syn58577585	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn58577585
+syn60057901	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn60057901
+syn60244968	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn60244968
+syn61249909	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61249909
+syn61259950	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61259950
+syn61391891	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61391891
+syn61696875	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61696875
+syn61718741	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61718741
+syn61721315	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61721315
+syn61777297	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61777297
+syn61777443	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61777443
+syn61778589	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61778589
+syn61783227	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61783227
+syn61831970	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61831970
+syn61848703	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61848703
+syn61915471	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61915471
+syn61931946	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn61931946
+syn62012031	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62012031
+syn62012147	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62012147
+syn62026045	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62026045
+syn62026171	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62026171
+syn62031004	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62031004
+syn62031290	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62031290
+syn62626050	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62626050
+syn62660805	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62660805
+syn62665253	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62665253
+syn62809145	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn62809145
+syn63102351	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63102351
+syn63298604	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63298604
+syn63543841	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63543841
+syn63596553	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63596553
+syn63944395	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63944395
+syn63992357	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn63992357
+syn64126375	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64126375
+syn64156441	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64156441
+syn64500888	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64500888
+syn64696349	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64696349
+syn64765215	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64765215
+syn64829479	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn64829479
+syn66527425	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn66527425
+syn68080320	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68080320
+syn68622867	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68622867
+syn68622887	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68622887
+syn68622908	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68622908
+syn68623354	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68623354
+syn68634225	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68634225
+syn68638152	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638152
+syn68638197	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638197
+syn68638227	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638227
+syn68638238	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638238
+syn68638276	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638276
+syn68638297	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68638297
+syn68698543	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68698543
+syn68747438	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68747438
+syn68749817	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68749817
+syn68805918	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68805918
+syn68872078	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68872078
+syn68872619	Project		syn68872619	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68872619
+syn68876148	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn68876148
+syn69071607	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69071607
+syn69707917	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69707917
+syn69715258	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69715258
+syn69715590	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69715590
+syn69981762	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn69981762
+syn70194549	Project		""	structural_information		""			structural_information	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn70194549
 syn2343195:Wiki	Wiki		""	""		""			wiki	https://nf.synapse.org/Explore/Studies/DetailsPage/StudyDetails?studyId=syn2343195
 mesh:D008579	disease	Meningioma	Meningiomas;meningiomas;meningioma;Meningioma	metadata;cellType;wiki;Disease;tumorType	https://bioregistry.io/mesh:D008579	syn18457540;syn30768581			wiki;tabular_experimental_data;metadata	
 go:0045202	cellular_location	synapse	0045202 // synapse // inferred from direct assay;Synapse	wiki;Gene Ontology Cellular Component	https://bioregistry.io/go:0045202	syn51200082			wiki;tabular_experimental_data	
@@ -3702,7 +3702,7 @@ Coriell Institute for Medical Research Biobank	tool	Coriell Institute for Medica
 Children's Hospital of Philadelphia Biobank	tool	Children's Hospital of Philadelphia Biobank	""	""		""	Biobank		tools	
 CTF	fundingAgency	CTF	CTF	metadata		""			metadata	
 Completed	studyStatus	Completed	Completed	metadata		""			metadata	
-Synodos	initiative	Synodos	Synodos	metadata		""			metadata	
+Synodos	initiative	Synodos	Synodos	structural_information		""			structural_information	
 syn4489	parentId	syn4489	syn4489	metadata		""			metadata	
 Available	dataStatus	Available	Available	metadata		""			metadata	
 Johns Hopkins Medicine	institutions	Johns Hopkins Medicine	Johns Hopkins Medicine	metadata		""			metadata	
@@ -3732,21 +3732,21 @@ https://doi.org/10.48105/pc.gr.88567	grantDOI	https://doi.org/10.48105/pc.gr.885
 https://doi.org/10.48105/pc.gr.88682	grantDOI	https://doi.org/10.48105/pc.gr.88682	https://doi.org/10.48105/pc.gr.88682	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.88823	grantDOI	https://doi.org/10.48105/pc.gr.88823	https://doi.org/10.48105/pc.gr.88823	metadata		""			metadata	
 NTAP	fundingAgency	NTAP	NTAP	metadata		""			metadata	
-Open Proposal Program	initiative	Open Proposal Program	Open Proposal Program	metadata		""			metadata	
+Open Proposal Program	initiative	Open Proposal Program	Open Proposal Program	structural_information		""			structural_information	
 Data Not Expected	dataStatus	Data Not Expected	Data Not Expected	metadata		""			metadata	
 Cincinnati Children's Hospital Medical Center	institutions	Cincinnati Children's Hospital Medical Center	Cincinnati Childrens Hospital Medical Center	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147676	grantDOI	https://doi.org/10.54464/pc.gr.147676	https://doi.org/10.54464/pc.gr.147676	metadata		""			metadata	
-Cell Culture Initiative	initiative	Cell Culture Initiative	Cell Culture Initiative	metadata		""			metadata	
+Cell Culture Initiative	initiative	Cell Culture Initiative	Cell Culture Initiative	structural_information		""			structural_information	
 syn7239479	relatedStudies	syn7239479	syn7239479	metadata		""			metadata	
 National Center for Advancing Translational Sciences	institutions	National Center for Advancing Translational Sciences	National Center for Advancing Translational Sciences	metadata		""			metadata	
 report	dataType	report	report	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147694	grantDOI	https://doi.org/10.54464/pc.gr.147694	https://doi.org/10.54464/pc.gr.147694	metadata		""			metadata	
-Patient Reported Outcomes	initiative	Patient Reported Outcomes	Patient Reported Outcomes	metadata		""			metadata	
+Patient Reported Outcomes	initiative	Patient Reported Outcomes	Patient Reported Outcomes	structural_information		""			structural_information	
 surveyData	dataType	surveyData	surveyData	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147664	grantDOI	https://doi.org/10.54464/pc.gr.147664	https://doi.org/10.54464/pc.gr.147664	metadata		""			metadata	
 Galen Research	institutions	Galen Research	Galen Research	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147663	grantDOI	https://doi.org/10.54464/pc.gr.147663	https://doi.org/10.54464/pc.gr.147663	metadata		""			metadata	
-Francis S. Collins Scholars Program	initiative	Francis S. Collins Scholars Program	Francis S. Collins Scholars Program	metadata		""			metadata	
+Francis S. Collins Scholars Program	initiative	Francis S. Collins Scholars Program	Francis S. Collins Scholars Program	structural_information		""			structural_information	
 Johns Hopkins Medical Institute	institutions	Johns Hopkins Medical Institute	Johns Hopkins Medical Institute	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147653	grantDOI	https://doi.org/10.54464/pc.gr.147653	https://doi.org/10.54464/pc.gr.147653	metadata		""			metadata	
 Northwestern University	institutions	Northwestern University	Northwestern University	metadata		""			metadata	
@@ -3779,7 +3779,7 @@ https://doi.org/10.54464/pc.gr.147675	grantDOI	https://doi.org/10.54464/pc.gr.14
 Institut d'Investigació en Ciències de la Salut Germans Trias i Pujol (IGTP)	institutions	Institut d'Investigació en Ciències de la Salut Germans Trias i Pujol (IGTP)	Institut dInvestigació en Ciències de la Salut Germans Trias i Pujol (IGTP)	metadata		""			metadata	
 AlignedReads	dataType	AlignedReads	AlignedReads	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147685	grantDOI	https://doi.org/10.54464/pc.gr.147685	https://doi.org/10.54464/pc.gr.147685	metadata		""			metadata	
-Independent	initiative	Independent	Independent	metadata		""			metadata	
+Independent	initiative	Independent	Independent	structural_information		""			structural_information	
 HudsonAlpha	institutions	HudsonAlpha	HudsonAlpha	metadata		""			metadata	
 clinical	dataType	clinical	clinical	metadata		""			metadata	
 proteomics	dataType	proteomics	proteomics	metadata		""			metadata	
@@ -3845,7 +3845,7 @@ https://doi.org/10.48105/pc.gr.88399	grantDOI	https://doi.org/10.48105/pc.gr.883
 https://doi.org/10.48105/pc.gr.88666	grantDOI	https://doi.org/10.48105/pc.gr.88666	https://doi.org/10.48105/pc.gr.88666	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.88421	grantDOI	https://doi.org/10.48105/pc.gr.88421	https://doi.org/10.48105/pc.gr.88421	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.88390	grantDOI	https://doi.org/10.48105/pc.gr.88390	https://doi.org/10.48105/pc.gr.88390	metadata		""			metadata	
-Cutaneous Neurofibroma Initiative	initiative	Cutaneous Neurofibroma Initiative	Cutaneous Neurofibroma Initiative	metadata		""			metadata	
+Cutaneous Neurofibroma Initiative	initiative	Cutaneous Neurofibroma Initiative	Cutaneous Neurofibroma Initiative	structural_information		""			structural_information	
 immunofluorescence	dataType	immunofluorescence	immunofluorescence	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147699	grantDOI	https://doi.org/10.54464/pc.gr.147699	https://doi.org/10.54464/pc.gr.147699	metadata		""			metadata	
 IBENS	institutions	IBENS	IBENS	metadata		""			metadata	
@@ -3882,13 +3882,13 @@ University of Manchester	institutions	University of Manchester	University of Man
 https://doi.org/10.54464/pc.gr.147658	grantDOI	https://doi.org/10.54464/pc.gr.147658	https://doi.org/10.54464/pc.gr.147658	metadata		""			metadata	
 California Institute of Technology	institutions	California Institute of Technology	California Institute of Technology	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.88587	grantDOI	https://doi.org/10.48105/pc.gr.88587	https://doi.org/10.48105/pc.gr.88587	metadata		""			metadata	
-Opening the Data Drawers	initiative	Opening the Data Drawers	Opening the Data Drawers	metadata		""			metadata	
+Opening the Data Drawers	initiative	Opening the Data Drawers	Opening the Data Drawers	structural_information		""			structural_information	
 https://doi.org/10.48105/pc.gr.141958	grantDOI	https://doi.org/10.48105/pc.gr.141958	https://doi.org/10.48105/pc.gr.141958	metadata		""			metadata	
-Neurofibromatosis Therapeutic Consortium	initiative	Neurofibromatosis Therapeutic Consortium	Neurofibromatosis Therapeutic Consortium	metadata		""			metadata	
+Neurofibromatosis Therapeutic Consortium	initiative	Neurofibromatosis Therapeutic Consortium	Neurofibromatosis Therapeutic Consortium	structural_information		""			structural_information	
 https://doi.org/10.48105/pc.gr.88634	grantDOI	https://doi.org/10.48105/pc.gr.88634	https://doi.org/10.48105/pc.gr.88634	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.88635	grantDOI	https://doi.org/10.48105/pc.gr.88635	https://doi.org/10.48105/pc.gr.88635	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.88636	grantDOI	https://doi.org/10.48105/pc.gr.88636	https://doi.org/10.48105/pc.gr.88636	metadata		""			metadata	
-Drug Discovery Initiative Registered Reports	initiative	Drug Discovery Initiative Registered Reports	Drug Discovery Initiative Registered Reports	metadata		""			metadata	
+Drug Discovery Initiative Registered Reports	initiative	Drug Discovery Initiative Registered Reports	Drug Discovery Initiative Registered Reports	structural_information		""			structural_information	
 Germans Trias I Pujol Research Institute (IGTP)	institutions	Germans Trias I Pujol Research Institute (IGTP)	Germans Trias I Pujol Research Institute (IGTP)	metadata		""			metadata	
 Hospital Universitari Germans Trias i Pujol (HUGTP)	institutions	Hospital Universitari Germans Trias i Pujol (HUGTP)	Hospital Universitari Germans Trias i Pujol (HUGTP)	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.90471	grantDOI	https://doi.org/10.48105/pc.gr.90471	https://doi.org/10.48105/pc.gr.90471	metadata		""			metadata	
@@ -3897,7 +3897,7 @@ https://doi.org/10.48105/pc.gr.88646	grantDOI	https://doi.org/10.48105/pc.gr.886
 https://doi.org/10.48105/pc.gr.88647	grantDOI	https://doi.org/10.48105/pc.gr.88647	https://doi.org/10.48105/pc.gr.88647	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.88648	grantDOI	https://doi.org/10.48105/pc.gr.88648	https://doi.org/10.48105/pc.gr.88648	metadata		""			metadata	
 GFF	fundingAgency	GFF	GFF	metadata		""			metadata	
-Gene Therapy Initiative	initiative	Gene Therapy Initiative	Gene Therapy Initiative	metadata		""			metadata	
+Gene Therapy Initiative	initiative	Gene Therapy Initiative	Gene Therapy Initiative	structural_information		""			structural_information	
 University of Alabama	institutions	University of Alabama	University of Alabama	metadata		""			metadata	
 Birmingham	institutions	Birmingham	Birmingham	metadata		""			metadata	
 Duke University	institutions	Duke University	Duke University	metadata		""			metadata	
@@ -3912,7 +3912,7 @@ Recombinetics	institutions	Recombinetics	Recombinetics	metadata		""			metadata
 University of Minnesota	institutions	University of Minnesota	University of Minnesota	metadata		""			metadata	
 Gentamicin Concentrations	dataType	Gentamicin Concentrations	Gentamicin Concentrations	metadata		""			metadata	
 Routine monitoring	dataType	Routine monitoring	Routine monitoring	metadata		""			metadata	
-Vision Restoration Initiative	initiative	Vision Restoration Initiative	Vision Restoration Initiative	metadata		""			metadata	
+Vision Restoration Initiative	initiative	Vision Restoration Initiative	Vision Restoration Initiative	structural_information		""			structural_information	
 Boston Children's Hospital	institutions	Boston Children's Hospital	Boston Childrens Hospital	metadata		""			metadata	
 Stanford University	institutions	Stanford University	Stanford University	metadata		""			metadata	
 	manifestation		""	metadata		;syn30124420			dicom_experimental_data;metadata	
@@ -3920,8 +3920,8 @@ Massachusetts Eye and Ear Infirmary	institutions	Massachusetts Eye and Ear Infir
 University of Michigan	institutions	University of Michigan	University of Michigan	metadata		""			metadata	
 University of Washington	institutions	University of Washington	University of Washington	metadata		""			metadata	
 NIH-NCI	fundingAgency	NIH-NCI	NIH-NCI	metadata		""			metadata	
-MPNST Patient-Derived Model Centers	initiative	MPNST Patient-Derived Model Centers	MPNST Patient-Derived Model Centers	metadata		""			metadata	
-Young Investigator Award	initiative	Young Investigator Award	Young Investigator Award	metadata		""			metadata	
+MPNST Patient-Derived Model Centers	initiative	MPNST Patient-Derived Model Centers	MPNST Patient-Derived Model Centers	structural_information		""			structural_information	
+Young Investigator Award	initiative	Young Investigator Award	Young Investigator Award	structural_information		""			structural_information	
 https://doi.org/10.48105/pc.gr.93156	grantDOI	https://doi.org/10.48105/pc.gr.93156	https://doi.org/10.48105/pc.gr.93156	metadata		""			metadata	
 University of California San Francisco	institutions	University of California San Francisco	University of California San Francisco	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.93154	grantDOI	https://doi.org/10.48105/pc.gr.93154	https://doi.org/10.48105/pc.gr.93154	metadata		""			metadata	
@@ -3935,13 +3935,13 @@ University of Plymouth	institutions	University of Plymouth	University of Plymout
 https://doi.org/10.48105/pc.gr.93158	grantDOI	https://doi.org/10.48105/pc.gr.93158	https://doi.org/10.48105/pc.gr.93158	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.93157	grantDOI	https://doi.org/10.48105/pc.gr.93157	https://doi.org/10.48105/pc.gr.93157	metadata		""			metadata	
 Fundación Proyecto Neurofibromatosis	fundingAgency	Fundación Proyecto Neurofibromatosis	Fundación Proyecto Neurofibromatosis	metadata		""			metadata	
-Other	initiative	Other	Other	metadata		""			metadata	
+Other	initiative	Other	Other	structural_information		""			structural_information	
 https://doi.org/10.48105/pc.gr.141322	grantDOI	https://doi.org/10.48105/pc.gr.141322	https://doi.org/10.48105/pc.gr.141322	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.141323	grantDOI	https://doi.org/10.48105/pc.gr.141323	https://doi.org/10.48105/pc.gr.141323	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.141557	grantDOI	https://doi.org/10.48105/pc.gr.141557	https://doi.org/10.48105/pc.gr.141557	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.141558	grantDOI	https://doi.org/10.48105/pc.gr.141558	https://doi.org/10.48105/pc.gr.141558	metadata		""			metadata	
 CDMRP	fundingAgency	CDMRP	CDMRP	metadata		""			metadata	
-NFRP New Investigator Award	initiative	NFRP New Investigator Award	NFRP New Investigator Award	metadata		""			metadata	
+NFRP New Investigator Award	initiative	NFRP New Investigator Award	NFRP New Investigator Award	structural_information		""			structural_information	
 https://doi.org/10.54464/pc.gr.147693	grantDOI	https://doi.org/10.54464/pc.gr.147693	https://doi.org/10.54464/pc.gr.147693	metadata		""			metadata	
  Children’s Cancer Foundation	fundingAgency	 Children’s Cancer Foundation	 Children’s Cancer Foundation	metadata		""			metadata	
  Cancer Research Foundation	fundingAgency	 Cancer Research Foundation	 Cancer Research Foundation	metadata		""			metadata	
@@ -3975,12 +3975,12 @@ https://doi.org/10.48105/pc.gr.146717	grantDOI	https://doi.org/10.48105/pc.gr.14
 University of Wisconsin-Milwaukee	institutions	University of Wisconsin-Milwaukee	University of Wisconsin-Milwaukee	metadata		""			metadata	
  https://doi.org/10.48105/pc.gr.146715	grantDOI	 https://doi.org/10.48105/pc.gr.146715	 https://doi.org/10.48105/pc.gr.146715	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147682	grantDOI	https://doi.org/10.54464/pc.gr.147682	https://doi.org/10.54464/pc.gr.147682	metadata		""			metadata	
-DHART-SPORE Developmental Research Program	initiative	DHART-SPORE Developmental Research Program	DHART-SPORE Developmental Research Program	metadata		""			metadata	
+DHART-SPORE Developmental Research Program	initiative	DHART-SPORE Developmental Research Program	DHART-SPORE Developmental Research Program	structural_information		""			structural_information	
 https://doi.org/10.54464/pc.gr.147707	grantDOI	https://doi.org/10.54464/pc.gr.147707	https://doi.org/10.54464/pc.gr.147707	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147697	grantDOI	https://doi.org/10.54464/pc.gr.147697	https://doi.org/10.54464/pc.gr.147697	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147835	grantDOI	https://doi.org/10.54464/pc.gr.147835	https://doi.org/10.54464/pc.gr.147835	metadata		""			metadata	
 Indiana University Match Funds	fundingAgency	Indiana University Match Funds	Indiana University Match Funds	metadata		""			metadata	
-DHART-SPORE Career Enhancement Program	initiative	DHART-SPORE Career Enhancement Program	DHART-SPORE Career Enhancement Program	metadata		""			metadata	
+DHART-SPORE Career Enhancement Program	initiative	DHART-SPORE Career Enhancement Program	DHART-SPORE Career Enhancement Program	structural_information		""			structural_information	
 Fox Chase Cancer Center	institutions	Fox Chase Cancer Center	Fox Chase Cancer Center	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.151488	grantDOI	https://doi.org/10.48105/pc.gr.151488	https://doi.org/10.48105/pc.gr.151488	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.151540	grantDOI	https://doi.org/10.48105/pc.gr.151540	https://doi.org/10.48105/pc.gr.151540	metadata		""			metadata	
@@ -3989,7 +3989,7 @@ Augusta University	institutions	Augusta University	Augusta University	metadata		
 https://doi.org/10.48105/pc.gr.151701	grantDOI	https://doi.org/10.48105/pc.gr.151701	https://doi.org/10.48105/pc.gr.151701	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.143775	grantDOI	https://doi.org/10.54464/pc.gr.143775	https://doi.org/10.54464/pc.gr.143775	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.150998	grantDOI	https://doi.org/10.48105/pc.gr.150998	https://doi.org/10.48105/pc.gr.150998	metadata		""			metadata	
-Gene Replacement Initiative	initiative	Gene Replacement Initiative	Gene Replacement Initiative	metadata		""			metadata	
+Gene Replacement Initiative	initiative	Gene Replacement Initiative	Gene Replacement Initiative	structural_information		""			structural_information	
 University of Virginia School of Medicine	institutions	University of Virginia School of Medicine	University of Virginia School of Medicine	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.152638	grantDOI	https://doi.org/10.54464/pc.gr.152638	https://doi.org/10.54464/pc.gr.152638	metadata		""			metadata	
 https://doi.org/10.54464/JHU-NTAP.1514662.pc.gr.231197	grantDOI	https://doi.org/10.54464/JHU-NTAP.1514662.pc.gr.231197	https://doi.org/10.54464/JHU-NTAP.1514662.pc.gr.231197	metadata		""			metadata	
@@ -3998,7 +3998,7 @@ https://doi.org/10.54464/pc.gr.152877	grantDOI	https://doi.org/10.54464/pc.gr.15
 Johns Hopkins University School of Medicine	institutions	Johns Hopkins University School of Medicine	Johns Hopkins University School of Medicine	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147837	grantDOI	https://doi.org/10.54464/pc.gr.147837	https://doi.org/10.54464/pc.gr.147837	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.148254	grantDOI	https://doi.org/10.54464/pc.gr.148254	https://doi.org/10.54464/pc.gr.148254	metadata		""			metadata	
-NFRP Investigator-Initiated Research Award	initiative	NFRP Investigator-Initiated Research Award	NFRP Investigator-Initiated Research Award	metadata		""			metadata	
+NFRP Investigator-Initiated Research Award	initiative	NFRP Investigator-Initiated Research Award	NFRP Investigator-Initiated Research Award	structural_information		""			structural_information	
 Bispebebjerg University Hospital	institutions	Bispebebjerg University Hospital	Bispebebjerg University Hospital	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.152840	grantDOI	https://doi.org/10.54464/pc.gr.152840	https://doi.org/10.54464/pc.gr.152840	metadata		""			metadata	
 University of California	institutions	University of California	University of California	metadata		""			metadata	
@@ -4006,7 +4006,7 @@ Irvine	institutions	Irvine	Irvine	metadata		""			metadata
 https://doi.org/10.54464/pc.gr.151709	grantDOI	https://doi.org/10.54464/pc.gr.151709	https://doi.org/10.54464/pc.gr.151709	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.151617	grantDOI	https://doi.org/10.54464/pc.gr.151617	https://doi.org/10.54464/pc.gr.151617	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.152771	grantDOI	https://doi.org/10.54464/pc.gr.152771	https://doi.org/10.54464/pc.gr.152771	metadata		""			metadata	
-Genomics of MPNST (GeM) Consortium	initiative	Genomics of MPNST (GeM) Consortium	Genomics of MPNST (GeM) Consortium	metadata		""			metadata	
+Genomics of MPNST (GeM) Consortium	initiative	Genomics of MPNST (GeM) Consortium	Genomics of MPNST (GeM) Consortium	structural_information		""			structural_information	
 Battelle Memorial Institute	institutions	Battelle Memorial Institute	Battelle Memorial Institute	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.154744	grantDOI	https://doi.org/10.48105/pc.gr.154744	https://doi.org/10.48105/pc.gr.154744	metadata		""			metadata	
 University Health Network	institutions	University Health Network	University Health Network	metadata		""			metadata	
@@ -4024,7 +4024,7 @@ Vlaams Instituut voor Biotechnologie	institutions	Vlaams Instituut voor Biotechn
 https://doi.org/10.48105/pc.gr.154748	grantDOI	https://doi.org/10.48105/pc.gr.154748	https://doi.org/10.48105/pc.gr.154748	metadata		""			metadata	
 Research Institute at Nationwide Children's Hospital	institutions	Research Institute at Nationwide Children's Hospital	Research Institute at Nationwide Childrens Hospital	metadata		""			metadata	
 Harvard University	institutions	Harvard University	Harvard University	metadata		""			metadata	
-Brain Tumor Initiative	initiative	Brain Tumor Initiative	Brain Tumor Initiative	metadata		""			metadata	
+Brain Tumor Initiative	initiative	Brain Tumor Initiative	Brain Tumor Initiative	structural_information		""			structural_information	
 Virginia Commonwealth University	institutions	Virginia Commonwealth University	Virginia Commonwealth University	metadata		""			metadata	
 particle characterization	dataType	particle characterization	particle characterization	metadata		""			metadata	
 University of Rochester	institutions	University of Rochester	University of Rochester	metadata		""			metadata	
@@ -4038,7 +4038,7 @@ https://www.doi.org/10.54464/pc.gr.153996	grantDOI	https://www.doi.org/10.54464/
 https://doi.org/10.54464/pc.gr.147690	grantDOI	https://doi.org/10.54464/pc.gr.147690	https://doi.org/10.54464/pc.gr.147690	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.159365	grantDOI	https://doi.org/10.54464/pc.gr.159365	https://doi.org/10.54464/pc.gr.159365	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.154848	grantDOI	https://doi.org/10.54464/pc.gr.154848	https://doi.org/10.54464/pc.gr.154848	metadata		""			metadata	
-Contract Award with LOI	initiative	Contract Award with LOI	Contract Award with LOI	metadata		""			metadata	
+Contract Award with LOI	initiative	Contract Award with LOI	Contract Award with LOI	structural_information		""			structural_information	
 Emory University	institutions	Emory University	Emory University	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.160816	grantDOI	https://doi.org/10.48105/pc.gr.160816	https://doi.org/10.48105/pc.gr.160816	metadata		""			metadata	
 The Regents of the University of California	institutions	The Regents of the University of California	The Regents of the University of California	metadata		""			metadata	
@@ -4047,20 +4047,20 @@ Yale University	institutions	Yale University	Yale University	metadata		""			meta
 https://doi.org/10.48105/pc.gr.160738	grantDOI	https://doi.org/10.48105/pc.gr.160738	https://doi.org/10.48105/pc.gr.160738	metadata		""			metadata	
 NCI Center for Cancer Research	institutions	NCI Center for Cancer Research	NCI Center for Cancer Research	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.156968	grantDOI	https://doi.org/10.48105/pc.gr.156968	https://doi.org/10.48105/pc.gr.156968	metadata		""			metadata	
-DHART-SPORE Project 1	initiative	DHART-SPORE Project 1	DHART-SPORE Project 1	metadata		""			metadata	
+DHART-SPORE Project 1	initiative	DHART-SPORE Project 1	DHART-SPORE Project 1	structural_information		""			structural_information	
 Partially Available	dataStatus	Partially Available	Partially Available	metadata		""			metadata	
 Pharmacokinetic Study	dataType	Pharmacokinetic Study	Pharmacokinetic Study	metadata		""			metadata	
-DHART-SPORE Project 2	initiative	DHART-SPORE Project 2	DHART-SPORE Project 2	metadata		""			metadata	
-DHART-SPORE Project 3	initiative	DHART-SPORE Project 3	DHART-SPORE Project 3	metadata		""			metadata	
+DHART-SPORE Project 2	initiative	DHART-SPORE Project 2	DHART-SPORE Project 2	structural_information		""			structural_information	
+DHART-SPORE Project 3	initiative	DHART-SPORE Project 3	DHART-SPORE Project 3	structural_information		""			structural_information	
 hgnc:11164	human_gene_protein	SNRPN	SMN;SNRPB;>sp|P63162|RSMN_HUMAN Small nuclear ribonucleoprotein-associated protein N OS=Homo sapiens OX=9606 GN=SNRPN PE=1 SV=1;Snrpn;SNRPN	Description;metadata;Gene Symbol;Beta and Alpha Gene Symbol Red are Ca related genes (24, ~10%) Pink Fill means both A and B mediated;Alpha Gene Symbol Ca regulated are in red. 5/159, ~3.5%;Gene Symbol2;Gene names;Gene	https://bioregistry.io/hgnc:11164	syn6179516;syn6179394;syn51200082;syn18457645;syn26484490;syn6179521;syn6182361;syn23584217			tabular_experimental_data;metadata	
-DHART-SPORE Project 4	initiative	DHART-SPORE Project 4	DHART-SPORE Project 4	metadata		""			metadata	
+DHART-SPORE Project 4	initiative	DHART-SPORE Project 4	DHART-SPORE Project 4	structural_information		""			structural_information	
 City of Hope	institutions	City of Hope	City of Hope	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147711	grantDOI	https://doi.org/10.54464/pc.gr.147711	https://doi.org/10.54464/pc.gr.147711	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147709	grantDOI	https://doi.org/10.54464/pc.gr.147709	https://doi.org/10.54464/pc.gr.147709	metadata		""			metadata	
-Contract Award	initiative	Contract Award	Contract Award	metadata		""			metadata	
+Contract Award	initiative	Contract Award	Contract Award	structural_information		""			structural_information	
 https://doi.org/10.48105/CTF.CTF-2023-04-001.pc.gr.168177	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-04-001.pc.gr.168177	https://doi.org/10.48105/CTF.CTF-2023-04-001.pc.gr.168177	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.147710	grantDOI	https://doi.org/10.54464/pc.gr.147710	https://doi.org/10.54464/pc.gr.147710	metadata		""			metadata	
-Biology and Therapeutic Development for Cutaneous Neurofibromas	initiative	Biology and Therapeutic Development for Cutaneous Neurofibromas	Biology and Therapeutic Development for Cutaneous Neurofibromas	metadata		""			metadata	
+Biology and Therapeutic Development for Cutaneous Neurofibromas	initiative	Biology and Therapeutic Development for Cutaneous Neurofibromas	Biology and Therapeutic Development for Cutaneous Neurofibromas	structural_information		""			structural_information	
 Pacific Northwest National Laboratory	institutions	Pacific Northwest National Laboratory	Pacific Northwest National Laboratory	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.160969	grantDOI	https://doi.org/10.54464/pc.gr.160969	https://doi.org/10.54464/pc.gr.160969	metadata		""			metadata	
 true	diseaseFocus	true	true	metadata		""			metadata	
@@ -4082,12 +4082,12 @@ https://doi.org/10.54464/pc.gr.160968	grantDOI	https://doi.org/10.54464/pc.gr.16
 Medical College of Wisconsin	institutions	Medical College of Wisconsin	Medical College of Wisconsin	metadata		""			metadata	
 https://doi.org/10.54464/JHU-NTAP.971876.pc.gr.168992	grantDOI	https://doi.org/10.54464/JHU-NTAP.971876.pc.gr.168992	https://doi.org/10.54464/JHU-NTAP.971876.pc.gr.168992	metadata		""			metadata	
 https://doi.org/10.48105/pc.gr.148257	grantDOI	https://doi.org/10.48105/pc.gr.148257	https://doi.org/10.48105/pc.gr.148257	metadata		""			metadata	
-Investigator-Initiated Research Award	initiative	Investigator-Initiated Research Award	Investigator-Initiated Research Award	metadata		""			metadata	
-Synergistic Idea Award	initiative	Synergistic Idea Award	Synergistic Idea Award	metadata		""			metadata	
+Investigator-Initiated Research Award	initiative	Investigator-Initiated Research Award	Investigator-Initiated Research Award	structural_information		""			structural_information	
+Synergistic Idea Award	initiative	Synergistic Idea Award	Synergistic Idea Award	structural_information		""			structural_information	
 https://doi.org/10.48105/CTF.CTF-2023-05-001.pc.gr.172000	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-05-001.pc.gr.172000	https://doi.org/10.48105/CTF.CTF-2023-05-001.pc.gr.172000	metadata		""			metadata	
 https://doi.org/10.48105/CTF.CTF-2023-01-006.pc.gr.172004	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-01-006.pc.gr.172004	https://doi.org/10.48105/CTF.CTF-2023-01-006.pc.gr.172004	metadata		""			metadata	
 https://doi.org/10.48105/CTF.CTF-2023-01-004.pc.gr.172003	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-01-004.pc.gr.172003	https://doi.org/10.48105/CTF.CTF-2023-01-004.pc.gr.172003	metadata		""			metadata	
-Drug Discovery Initiative	initiative	Drug Discovery Initiative	Drug Discovery Initiative	metadata		""			metadata	
+Drug Discovery Initiative	initiative	Drug Discovery Initiative	Drug Discovery Initiative	structural_information		""			structural_information	
 https://doi.org/10.48105/CTF.CTF-2023-05-002.pc.gr.171999	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-05-002.pc.gr.171999	https://doi.org/10.48105/CTF.CTF-2023-05-002.pc.gr.171999	metadata		""			metadata	
 https://doi.org/10.48105/CTF.CTF-2023-01-009.pc.gr.172011	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-01-009.pc.gr.172011	https://doi.org/10.48105/CTF.CTF-2023-01-009.pc.gr.172011	metadata		""			metadata	
 https://doi.org/10.54464/JHU-NTAP.1247569.pc.gr.187901	grantDOI	https://doi.org/10.54464/JHU-NTAP.1247569.pc.gr.187901	https://doi.org/10.54464/JHU-NTAP.1247569.pc.gr.187901	metadata		""			metadata	
@@ -4097,7 +4097,7 @@ https://doi.org/10.48105/pc.gr.88572	grantDOI	https://doi.org/10.48105/pc.gr.885
 https://doi.org/10.48105/CTF.CTF-2023-01-002.pc.gr.172005	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-01-002.pc.gr.172005	https://doi.org/10.48105/CTF.CTF-2023-01-002.pc.gr.172005	metadata		""			metadata	
 Mayo Clinic	institutions	Mayo Clinic	Mayo Clinic	metadata		""			metadata	
 https://doi.org/10.48105/CTF.CTF-2023-01-007.pc.gr.172008	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-01-007.pc.gr.172008	https://doi.org/10.48105/CTF.CTF-2023-01-007.pc.gr.172008	metadata		""			metadata	
-Clinical Research Award	initiative	Clinical Research Award	Clinical Research Award	metadata		""			metadata	
+Clinical Research Award	initiative	Clinical Research Award	Clinical Research Award	structural_information		""			structural_information	
 https://doi.org/10.48105/CTF.CTF-2023-10-003.pc.gr.175365	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-10-003.pc.gr.175365	https://doi.org/10.48105/CTF.CTF-2023-10-003.pc.gr.175365	metadata		""			metadata	
 Bellvitge Biomedical Research Institute	institutions	Bellvitge Biomedical Research Institute	Bellvitge Biomedical Research Institute	metadata		""			metadata	
 https://doi.org/10.48105/CTF.CTF-2023-01-003.pc.gr.172010	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-01-003.pc.gr.172010	https://doi.org/10.48105/CTF.CTF-2023-01-003.pc.gr.172010	metadata		""			metadata	
@@ -4110,10 +4110,10 @@ https://doi.org/10.48105/CTF.CTF-2023-01-001.pc.gr.172006	grantDOI	https://doi.o
 https://reporter.nih.gov/search/jxiS96i18UCvyGMpzGLrgg/project-details/10660326	grantDOI	https://reporter.nih.gov/search/jxiS96i18UCvyGMpzGLrgg/project-details/10660326	https://reporter.nih.gov/search/jxiS96i18UCvyGMpzGLrgg/project-details/10660326	metadata		""			metadata	
 https://doi.org/10.54464/JHU-NTAP.1306983.pc.gr.192260	grantDOI	https://doi.org/10.54464/JHU-NTAP.1306983.pc.gr.192260	https://doi.org/10.54464/JHU-NTAP.1306983.pc.gr.192260	metadata		""			metadata	
 https://doi.org/10.54464/pc.gr.160964	grantDOI	https://doi.org/10.54464/pc.gr.160964	https://doi.org/10.54464/pc.gr.160964	metadata		""			metadata	
-Partnership	initiative	Partnership	Partnership	metadata		""			metadata	
+Partnership	initiative	Partnership	Partnership	structural_information		""			structural_information	
 https://doi.org/10.54464/pc.gr.161385	grantDOI	https://doi.org/10.54464/pc.gr.161385	https://doi.org/10.54464/pc.gr.161385	metadata		""			metadata	
 https://doi.org/10.54464/JHU-NTAP.1262618.pc.gr.188890	grantDOI	https://doi.org/10.54464/JHU-NTAP.1262618.pc.gr.188890	https://doi.org/10.54464/JHU-NTAP.1262618.pc.gr.188890	metadata		""			metadata	
-Special Call on Neurofibromatosis and Schwannomatosis Pain	initiative	Special Call on Neurofibromatosis and Schwannomatosis Pain	Special Call on Neurofibromatosis and Schwannomatosis Pain	metadata		""			metadata	
+Special Call on Neurofibromatosis and Schwannomatosis Pain	initiative	Special Call on Neurofibromatosis and Schwannomatosis Pain	Special Call on Neurofibromatosis and Schwannomatosis Pain	structural_information		""			structural_information	
 https://doi.org/10.48105/CTF.2023-04-006.pc.gr.189104	grantDOI	https://doi.org/10.48105/CTF.2023-04-006.pc.gr.189104	https://doi.org/10.48105/CTF.2023-04-006.pc.gr.189104	metadata		""			metadata	
 Henri Mondor Hospital Paris Est Creteil France	institutions	Henri Mondor Hospital Paris Est Creteil France	Henri Mondor Hospital Paris Est Creteil France	metadata		""			metadata	
 https://doi.org/10.54464/JHU-NTAP.1274594.pc.gr.189859	grantDOI	https://doi.org/10.54464/JHU-NTAP.1274594.pc.gr.189859	https://doi.org/10.54464/JHU-NTAP.1274594.pc.gr.189859	metadata		""			metadata	
@@ -4132,7 +4132,7 @@ https://doi.org/10.48105/pc.gr.158378	grantDOI	https://doi.org/10.48105/pc.gr.15
 https://doi.org/10.48105/CTF.CTF-2023-05-004.pc.gr.172002	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-05-004.pc.gr.172002	https://doi.org/10.48105/CTF.CTF-2023-05-004.pc.gr.172002	metadata		""			metadata	
 Oregon Health and Science University	institutions	Oregon Health and Science University	Oregon Health and Science University	metadata		""			metadata	
 https://doi.org/10.48105/CTF.CTF-2023-05-003.pc.gr.172001	grantDOI	https://doi.org/10.48105/CTF.CTF-2023-05-003.pc.gr.172001	https://doi.org/10.48105/CTF.CTF-2023-05-003.pc.gr.172001	metadata		""			metadata	
-Next Generation Models	initiative	Next Generation Models	Next Generation Models	metadata		""			metadata	
+Next Generation Models	initiative	Next Generation Models	Next Generation Models	structural_information		""			structural_information	
 University of Minnesota, Twin Cities	institutions	University of Minnesota, Twin Cities	University of Minnesota, Twin Cities	metadata		""			metadata	
 https://doi.org/10.48105/ctf.2024-01-007.pc.gr.195072	grantDOI	https://doi.org/10.48105/ctf.2024-01-007.pc.gr.195072	https://doi.org/10.48105/ctf.2024-01-007.pc.gr.195072	metadata		""			metadata	
 Leibniz Institute on Aging – Fritz Lipmann Institute	institutions	Leibniz Institute on Aging – Fritz Lipmann Institute	Leibniz Institute on Aging – Fritz Lipmann Institute	metadata		""			metadata	
@@ -22541,3 +22541,4 @@ US	Modality	US	""	""		syn30124420			dicom_experimental_data
 FUJIFILM VisualSonics, Inc.	Manufacturer	FUJIFILM VisualSonics, Inc.	""	""		syn30124420			dicom_experimental_data	
 DERIVED	pixel_data_characteristics	DERIVED	""	""		syn30124420			dicom_experimental_data	
 SECONDARY	patient_examination_relationship	SECONDARY	""	""		syn30124420			dicom_experimental_data	
+tumor 6	physican_comments	tumor 6	""	""		syn30124420			dicom_experimental_data	
