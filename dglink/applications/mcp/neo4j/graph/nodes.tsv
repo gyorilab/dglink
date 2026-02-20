@@ -3915,7 +3915,7 @@ Routine monitoring	dataType	Routine monitoring	Routine monitoring	metadata		""		
 Vision Restoration Initiative	initiative	Vision Restoration Initiative	Vision Restoration Initiative	structural_information		""			structural_information	
 Boston Children's Hospital	institutions	Boston Children's Hospital	Boston Childrens Hospital	metadata		""			metadata	
 Stanford University	institutions	Stanford University	Stanford University	metadata		""			metadata	
-	manifestation		""	metadata		;syn30124420			dicom_experimental_data;metadata	
+Missing	manifestation		""	metadata		;syn30124420			dicom_experimental_data;metadata	
 Massachusetts Eye and Ear Infirmary	institutions	Massachusetts Eye and Ear Infirmary	Massachusetts Eye and Ear Infirmary	metadata		""			metadata	
 University of Michigan	institutions	University of Michigan	University of Michigan	metadata		""			metadata	
 University of Washington	institutions	University of Washington	University of Washington	metadata		""			metadata	
