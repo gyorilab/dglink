@@ -1,0 +1,56 @@
+fp	sheet	column	group_identifier	is_entity_col
+/Users/buzgalbraith/.synapseCache/479/94800479/NF2+_AC-CRISPR drug treatment.xlsx	sheet1	field1	syn27761862	True
+/Users/buzgalbraith/.synapseCache/33/37740033/CTF-UCF-Cenix-CompleteCompoundData-all passes in one tab_ to release_FINAL_cleaned.xlsx	legend	Overview of experimental rounds	syn5562324	False
+/Users/buzgalbraith/.synapseCache/311/9437311/Synodos_DrugScreen_processed_data.tsv	synodos_drugscreen_processed_data	drug	syn2343195	True
+/Users/buzgalbraith/.synapseCache/403/8916403/Blakeley_670_RESPONSES_2016-04-08_111853222_042216.xlsx	report	field8	syn4939874	False
+/Users/buzgalbraith/.synapseCache/179/15489179/NF study data_IUSM 5.16.2017_responses.csv	nf-study-data_iusm-5.16.2017_responses	skin4	syn4939878	False
+/Users/buzgalbraith/.synapseCache/351/8445351/GA_affy_CHP.xlsx	metadata	field10	syn4939890	False
+/Users/buzgalbraith/.synapseCache/638/7418638/HFF_10x10_CCG_16h_metadata.csv	hff_10x10_ccg_16h_metadata	RowTarget	syn4939906	True
+/Users/buzgalbraith/.synapseCache/630/147381630/samplesheet.valid.csv	samplesheet.valid	fastq_1	syn4984604	False
+/Users/buzgalbraith/.synapseCache/618/42391618/F1 Generation Weights_7-1-19_FIN.xlsx	compiled	Animal ID	syn5610418	False
+/Users/buzgalbraith/.synapseCache/986/128968986/synapse_storage_manifest_rnaseqtemplate.csv	synapse_storage_manifest_rnaseqtemplate	specimenPreparationMethod	syn7217928	False
+/Users/buzgalbraith/.synapseCache/146/14454146/pharmacology comparison - NeXT library versus current collection.xlsx	potency-100nm	Assessment	syn7239560	False
+/Users/buzgalbraith/.synapseCache/22/161799022/AL002-001.xlsx	al002-001	field2	syn8012530	False
+/Users/buzgalbraith/.synapseCache/130/85158130/112921_Kinome_Walker_Synapse.xlsx	key	Cell line	syn8016599	True
+/Users/buzgalbraith/.synapseCache/480/127886480/synapse_storage_manifest_clinicalassaytemplate.csv	synapse_storage_manifest_clinicalassaytemplate	fileFormat	syn8016635	False
+/Users/buzgalbraith/.synapseCache/911/79744911/fig36B hydrolysis.xlsx	foglio1	field22	syn8016650	True
+/Users/buzgalbraith/.synapseCache/420/102730420/synapse_storage_manifest.csv	synapse_storage_manifest	studyName	syn11374333	False
+/Users/buzgalbraith/.synapseCache/706/62929706/P0 vs P5 sphere comparison.xlsx	default	Description	syn11374337	True
+/Users/buzgalbraith/.synapseCache/94/101467094/synapse_storage_manifest.csv	synapse_storage_manifest	initiative	syn11374339	True
+/Users/buzgalbraith/.synapseCache/770/123295770/Mast_cell_count_data_Kallionpaa_et_al_Dermatology_2022.xlsx	documentation	field2	syn11374341	False
+/Users/buzgalbraith/.synapseCache/867/122536867/synapse_storage_manifest_imagingassaytemplate.csv	synapse_storage_manifest_imagingassaytemplate	Uuid	syn11374345	False
+/Users/buzgalbraith/.synapseCache/679/124495679/samplesheet.valid.csv	samplesheet.valid	sample	syn11374349	False
+/Users/buzgalbraith/.synapseCache/757/65337757/NF_SoragniLab-Seq-data.xlsx	legend	NF007=Patient7; -2=Tumor 2; -3-6=Pooled tumors 3 to 6; M=Mammocult base; D=DMEM base; S=StemPro base; +C=with cytokines; +F=with forskoline	syn11374354	False
+/Users/buzgalbraith/.synapseCache/581/95617581/synapse_storage_manifest.csv	synapse_storage_manifest	cellType	syn11374357	True
+/Users/buzgalbraith/.synapseCache/414/43057414/drug_target_associations_v_3_0_1.csv	drug_target_associations_v_3_0_1	cv	syn11672851	False
+/Users/buzgalbraith/.synapseCache/744/102697744/synapse_storage_manifest.csv	synapse_storage_manifest	dataType	syn11681835	True
+/Users/buzgalbraith/.synapseCache/606/24416606/ajcr0051392suppltab.xlsx	table-s1	field2	syn11817821	True
+/Users/buzgalbraith/.synapseCache/426/39718426/Electrophysiology.xlsx	sheet1	Property	syn18904024	False
+/Users/buzgalbraith/.synapseCache/475/73908475/TMM_normed_counts_full.xlsx	cpm	field1	syn21650484	True
+/Users/buzgalbraith/.synapseCache/541/90840541/Mouse AAV 20220219 EdU+cells.xlsx	a-and-b-edu	field6	syn21650493	False
+/Users/buzgalbraith/.synapseCache/154/67484154/NF OSI Drug Screening manifest.xlsx	column-headers	field5	syn21984813	False
+/Users/buzgalbraith/.synapseCache/776/68964776/siglec_4_7_9_fc_20201112.xlsx	sheet1	condition	syn22267284	False
+/Users/buzgalbraith/.synapseCache/976/122302976/AZD1208_Saracatinib_20uMAddedDose (Autosaved).xlsx	all-data-graphs	field22	syn22267330	True
+/Users/buzgalbraith/.synapseCache/765/85158765/DiGly proteomics.xlsx	digly-proteomics	field4	syn22268689	True
+/Users/buzgalbraith/.synapseCache/395/124963395/synapse_storage_manifest_epigeneticsassaytemplate.csv	synapse_storage_manifest_epigeneticsassaytemplate	fundingAgency	syn22392179	False
+/Users/buzgalbraith/.synapseCache/325/80929325/synapse_storage_manifest.csv	synapse_storage_manifest	specimenID	syn23651229	False
+/Users/buzgalbraith/.synapseCache/491/87840491/IHC protocol for iNF-07E on Leica Bond instrument.xlsx	sheet1	field3	syn23662493	False
+/Users/buzgalbraith/.synapseCache/875/74492875/Sample_sheet_Blood_de identified.csv	sample_sheet_blood_de-identified	field5	syn24875850	False
+/Users/buzgalbraith/.synapseCache/837/96860837/Hsc_PhosphoProteomics_Trial01.xlsx	romicsdata	fasta.headers	syn26238842	True
+/Users/buzgalbraith/.synapseCache/999/146672999/sra_metadata_8ad02f8b-e9cf-42a1-b7a6-634efd00e705.csv	sra_metadata_8ad02f8b-e9cf-42a1-b7a6-634efd00e705	Sample	syn26241781	False
+/Users/buzgalbraith/.synapseCache/242/124578242/genelist.xlsx	in	name	syn26347297	True
+/Users/buzgalbraith/.synapseCache/578/150435578/Adherence Barriers Questionnaire Data.xlsx	sheet1	away from home	syn26438193	False
+/Users/buzgalbraith/.synapseCache/536/96396536/synapse_storage_manifest.csv	synapse_storage_manifest	resourceType	syn26957643	False
+/Users/buzgalbraith/.synapseCache/939/126584939/synapse_storage_manifest_updatemilestonereport.csv	synapse_storage_manifest_updatemilestonereport	eTag	syn31619419	False
+/Users/buzgalbraith/.synapseCache/835/158680835/NF105-NF108_Specimens Inventory_final.xlsx	sheet1	field6	syn31748644	False
+/Users/buzgalbraith/.synapseCache/878/125676878/synapse_storage_manifest_wgstemplate.csv	synapse_storage_manifest_wgstemplate	new_ega_id	syn32128792	False
+/Users/buzgalbraith/.synapseCache/257/143430257/JCI176748.sdval.xlsx	figure-1a	field1	syn37861830	False
+/Users/buzgalbraith/.synapseCache/990/19796990/NF1 HTS primary screening data with structures UMN 2_22_17.csv	nf1-hts-primary-screening-data-with-structures-umn-2_22_17	Well.Ref.	syn52740594	False
+/Users/buzgalbraith/.synapseCache/568/158558568/synapse_storage_manifest_protocoltemplate.csv	synapse_storage_manifest_protocoltemplate	fileFormat	syn56421718	False
+/Users/buzgalbraith/.synapseCache/400/151284400/Osundiji_data_de_30DEC24.xlsx	osundiji-data-30dec24	PANEL_OTH	syn61696875	True
+/Users/buzgalbraith/.synapseCache/266/149556266/raw_counts_MPNST_cell_lines.xlsx	raw-counts-mpnst-cell-lines	None2	syn63944395	True
+/Users/buzgalbraith/.synapseCache/631/160231631/SRR31653884.runinfo_ftp.tsv	srr31653884.runinfo_ftp	secondary_sample_accession	syn68634225	False
+/Users/buzgalbraith/.synapseCache/552/94800552/NF2+_MN525 drug treatment.xlsx	sheet1	field1	syn27761862	True
+/Users/buzgalbraith/.synapseCache/735/9438735/Synodos_DrugScreen_combined_rawData.tsv	synodos_drugscreen_combined_rawdata	experiment	syn2343195	False
+/Users/buzgalbraith/.synapseCache/395/8916395/H_Blakeley_022216_SIF_converted.csv	h_blakeley_022216_sif_converted	Investigator_Column_1	syn4939874	False
+/Users/buzgalbraith/.synapseCache/181/15489181/NF study data_IUSM 5.16.2017_variables.csv	nf-study-data_iusm-5.16.2017_variables	Variable_Name	syn4939878	False
