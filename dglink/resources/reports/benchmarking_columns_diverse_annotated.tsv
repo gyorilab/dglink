@@ -54,3 +54,49 @@ fp	sheet	column	group_identifier	is_entity_col
 /Users/buzgalbraith/.synapseCache/735/9438735/Synodos_DrugScreen_combined_rawData.tsv	synodos_drugscreen_combined_rawdata	experiment	syn2343195	False
 /Users/buzgalbraith/.synapseCache/395/8916395/H_Blakeley_022216_SIF_converted.csv	h_blakeley_022216_sif_converted	Investigator_Column_1	syn4939874	False
 /Users/buzgalbraith/.synapseCache/181/15489181/NF study data_IUSM 5.16.2017_variables.csv	nf-study-data_iusm-5.16.2017_variables	Variable_Name	syn4939878	False
+/Users/buzgalbraith/.synapseCache/999/8491999/phenoData-detailed.csv	phenodata-detailed	Sample	syn4939890	False
+/Users/buzgalbraith/.synapseCache/644/7418644/HFF_10x10_CTG_48h_metadata.csv	hff_10x10_ctg_48h_metadata	ColConcs	syn4939906	False
+/Users/buzgalbraith/.synapseCache/825/147383825/salmon.merged.gene_counts.tsv	salmon.merged.gene_counts	gene_name	syn4984604	True
+/Users/buzgalbraith/.synapseCache/620/42391620/Weimer Behavior Data_7-1-19_FIN.xlsx	tumor-burden	Subline_Origin	syn5610418	False
+/Users/buzgalbraith/.synapseCache/333/127374333/7-18-16drugLDN193181-2D_1500cellsRawdata   .xlsx	sheet1	field13	syn7217928	False
+/Users/buzgalbraith/.synapseCache/493/14125493/cell_data_aggregated.csv	cell_data_aggregated	Assay cell type	syn7239560	True
+/Users/buzgalbraith/.synapseCache/951/161798951/AL002-002.xlsx	al002-002	field36	syn8012530	False
+/Users/buzgalbraith/.synapseCache/151/85158151/112921_Phosphoproteome_Walker_Synapse.xlsx	table	field2	syn8016599	False
+/Users/buzgalbraith/.synapseCache/912/79744912/fig36C hydrolysis-subparticle.xlsx	foglio1	field1	syn8016650	False
+/Users/buzgalbraith/.synapseCache/388/102730388/synapse_storage_manifest.csv	synapse_storage_manifest	fileFormat	syn11374333	False
+/Users/buzgalbraith/.synapseCache/943/36100943/Generation of NF1 KO animals.xlsx	feuil1	Generation of NF1 KO and control newborn, young and adult mice	syn11374337	False
+/Users/buzgalbraith/.synapseCache/603/100798603/28cNF_snpEff.csv	28cnf_snpeff	Name	syn11374339	False
+/Users/buzgalbraith/.synapseCache/728/123342728/TCR_sequencing_Kallionpaa_et_al.xlsx	documentation	field2	syn11374341	False
+/Users/buzgalbraith/.synapseCache/414/122561414/synapse_storage_manifest_updatemilestonereport.csv	synapse_storage_manifest_updatemilestonereport	initiative	syn11374345	True
+/Users/buzgalbraith/.synapseCache/814/124496814/salmon.merged.gene_counts.tsv	salmon.merged.gene_counts	gene_id	syn11374349	False
+/Users/buzgalbraith/.synapseCache/302/78767302/NF1 FCM DATA NEW.csv	nf1-fcm-data-new	field2	syn11374354	True
+/Users/buzgalbraith/.synapseCache/670/122474670/synapse_storage_manifest_rnaseqtemplate.csv	synapse_storage_manifest_rnaseqtemplate	Uuid	syn11374357	False
+/Users/buzgalbraith/.synapseCache/7/74412007/cmpd_links_v4.csv	cmpd_links_v4	link	syn11672851	False
+/Users/buzgalbraith/.synapseCache/154/131212154/synapse_storage_manifest_rnaseqtemplate (2).csv	synapse_storage_manifest_rnaseqtemplate-2	individualID	syn11681835	False
+/Users/buzgalbraith/.synapseCache/515/27770515/JField_MatrixToColumn.xls	jfield_matrixtocolumn	Conc_Units	syn11817821	False
+/Users/buzgalbraith/.synapseCache/428/39718428/HPLC.xlsx	sheet1	Mouse	syn18904024	False
+/Users/buzgalbraith/.synapseCache/747/148846747/synapse_storage_manifest_rnaseqtemplate.csv	synapse_storage_manifest_rnaseqtemplate	libraryPreparationMethod	syn21650484	False
+/Users/buzgalbraith/.synapseCache/669/90841669/synapse_storage_manifest.csv	synapse_storage_manifest	dataSubtype	syn21650493	False
+/Users/buzgalbraith/.synapseCache/826/145477826/JH-2-001-J1_Normal_segments.tsv	jh-2-001-j1_normal_segments	JH-2-001-J1_Normal.GT	syn21984813	False
+/Users/buzgalbraith/.synapseCache/772/65781772/NFcells_20200930_siglec7and9_raw.xls	nfcells_20200930_siglec7and9_raw	Depth	syn22267284	False
+/Users/buzgalbraith/.synapseCache/983/122302983/Drug_DoseKillCurves_AI formatting.xlsx	all-data-graphs	field1	syn22267330	False
+/Users/buzgalbraith/.synapseCache/767/85158767/TMT.xlsx	tmt	List of proteins differentially abundant in LZTR1-/- compared to  LZTR1+/+ cells quantified by TMT.	syn22268689	False
+/Users/buzgalbraith/.synapseCache/62/124990062/synapse_storage_manifest_genomicsassaytemplateextended.csv	synapse_storage_manifest_genomicsassaytemplateextended	fileFormat	syn22392179	False
+/Users/buzgalbraith/.synapseCache/456/88957456/Sandwich ELISA_final.xlsx	20210204-sandwich-elisa	field2	syn23662493	False
+/Users/buzgalbraith/.synapseCache/755/96860755/Hsc_Proteomics_Trial01.xlsx	export-file	majority.protein.ids	syn26238842	False
+/Users/buzgalbraith/.synapseCache/798/164432798/synapse_storage_manifest_scrnaseqtemplate.csv	synapse_storage_manifest_scrnaseqtemplate	assay	syn26241781	True
+/Users/buzgalbraith/.synapseCache/296/133266296/DifferentialExpression_JHUBiobank_MPNSTvPNF.csv	differentialexpression_jhubiobank_mpnstvpnf	Genes	syn26347297	True
+/Users/buzgalbraith/.synapseCache/628/150462628/synapse_storage_manifest_clinicalassaytemplate.csv	synapse_storage_manifest_clinicalassaytemplate	entityId	syn26438193	False
+/Users/buzgalbraith/.synapseCache/918/96312918/HFUS Longitudinal Data for Synapse_Riccardi and Ablon Scales_1Mar22.xlsx	spreadsheet-notes	field1	syn26957643	False
+/Users/buzgalbraith/.synapseCache/249/14786249/NF1 HTS primary screening data with structures UMN 2_22_17.xlsx	report	Supplier	syn52740594	False
+/Users/buzgalbraith/.synapseCache/629/160231629/SRR31653885.runinfo_ftp.tsv	srr31653885.runinfo_ftp	scientific_name	syn68634225	True
+/Users/buzgalbraith/.synapseCache/558/94800558/NF2+_MN623 drug treatment.xlsx	sheet1	field2	syn27761862	True
+/Users/buzgalbraith/.synapseCache/936/9792936/Synodos_kinome_baseline_LFQ_data.tsv	synodos_kinome_baseline_lfq_data	VS11	syn2343195	False
+/Users/buzgalbraith/.synapseCache/397/8916397/MasterSampleKey_051216_9317.csv	mastersamplekey_051216_9317	DNA Source	syn4939874	True
+/Users/buzgalbraith/.synapseCache/584/7418584/iPNF05.5_10x10_CCG_16h_metadata.csv	ipnf05.5_10x10_ccg_16h_metadata	RowName	syn4939906	True
+/Users/buzgalbraith/.synapseCache/819/147383819/salmon.merged.gene_counts_length_scaled.tsv	salmon.merged.gene_counts_length_scaled	gene_name	syn4984604	True
+/Users/buzgalbraith/.synapseCache/621/42391621/Weimer IHC-HPLC Data_7-1-19_FIN.xlsx	olig2	field1	syn5610418	False
+/Users/buzgalbraith/.synapseCache/313/127374313/7-18-16drugLDN193181-3D_4000cellsRawdata.xlsx	sheet1	field17	syn7217928	False
+/Users/buzgalbraith/.synapseCache/499/14125499/chembl_cell_system_data.csv	chembl_cell_system_data	Assay cell type	syn7239560	True
+/Users/buzgalbraith/.synapseCache/960/161798960/AL002-005.xlsx	al002-005	field8	syn8012530	False
+/Users/buzgalbraith/.synapseCache/150/85158150/112921_Total Proteome_Walker_Synapse.xlsx	table	field2	syn8016599	False
