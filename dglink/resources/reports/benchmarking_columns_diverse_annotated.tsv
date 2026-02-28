@@ -235,7 +235,7 @@ fp	sheet	column	group_identifier	is_entity_col
 /Users/buzgalbraith/.synapseCache/526/27770526/User008_analysis_template_V3.2.xlsx	instructions	field2	syn11817821	False
 /Users/buzgalbraith/.synapseCache/132/42890132/Supplementary_Statistical_Analysis.xlsx	histology	field7	syn18904024	False
 /Users/buzgalbraith/.synapseCache/446/90425446/synapse_storage_manifest.csv	synapse_storage_manifest	dataType	syn21650484	False
-/Users/buzgalbraith/.synapseCache/974/90225974/synapse_storage_manifest.csv	synapse_storage_manifest	species	syn21650493	False
+/Users/buzgalbraith/.synapseCache/974/90225974/synapse_storage_manifest.csv	synapse_storage_manifest	species	syn21650493	True
 /Users/buzgalbraith/.synapseCache/844/145477844/JH-2-010-J1_Normal_segments.tsv	jh-2-010-j1_normal_segments	ID	syn21984813	False
 /Users/buzgalbraith/.synapseCache/500/150086500/syn23573389_synapse_storage_manifest.csv	syn23573389_synapse_storage_manifest	Component	syn22267284	False
 /Users/buzgalbraith/.synapseCache/782/150193782/synapse_storage_manifest_imagingassaytemplate.csv	synapse_storage_manifest_imagingassaytemplate	Filename	syn22267330	False
