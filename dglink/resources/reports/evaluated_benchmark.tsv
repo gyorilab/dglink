@@ -1,0 +1,250 @@
+column	heuristic_vote	llm_vote	hiercahal_vote	is_entity_col	sheet	group_identifier	file_path
+field1	false	false	false	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/479/94800479/NF2+_AC-CRISPR drug treatment.xlsx
+Overview of experimental rounds	true	false	false	false	legend	syn5562324	/Users/buzgalbraith/.synapseCache/33/37740033/CTF-UCF-Cenix-CompleteCompoundData-all passes in one tab_ to release_FINAL_cleaned.xlsx
+drug	true	true	true	true	synodos_drugscreen_processed_data	syn2343195	/Users/buzgalbraith/.synapseCache/311/9437311/Synodos_DrugScreen_processed_data.tsv
+field8	true	false	false	false	report	syn4939874	/Users/buzgalbraith/.synapseCache/403/8916403/Blakeley_670_RESPONSES_2016-04-08_111853222_042216.xlsx
+skin4	false	false	false	false	nf-study-data_iusm-5.16.2017_responses	syn4939878	/Users/buzgalbraith/.synapseCache/179/15489179/NF study data_IUSM 5.16.2017_responses.csv
+field10	true	true	true	true	metadata	syn4939890	/Users/buzgalbraith/.synapseCache/351/8445351/GA_affy_CHP.xlsx
+RowTarget	true	false	false	true	hff_10x10_ccg_16h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/638/7418638/HFF_10x10_CCG_16h_metadata.csv
+fastq_1	true	false	false	false	samplesheet.valid	syn4984604	/Users/buzgalbraith/.synapseCache/630/147381630/samplesheet.valid.csv
+Animal ID	false	false	false	false	compiled	syn5610418	/Users/buzgalbraith/.synapseCache/618/42391618/F1 Generation Weights_7-1-19_FIN.xlsx
+specimenPreparationMethod	false	false	false	false	synapse_storage_manifest_rnaseqtemplate	syn7217928	/Users/buzgalbraith/.synapseCache/986/128968986/synapse_storage_manifest_rnaseqtemplate.csv
+Assessment	false	false	false	false	potency-100nm	syn7239560	/Users/buzgalbraith/.synapseCache/146/14454146/pharmacology comparison - NeXT library versus current collection.xlsx
+field2	true	true	true	false	al002-001	syn8012530	/Users/buzgalbraith/.synapseCache/22/161799022/AL002-001.xlsx
+Cell line	true	true	true	true	key	syn8016599	/Users/buzgalbraith/.synapseCache/130/85158130/112921_Kinome_Walker_Synapse.xlsx
+fileFormat	false	false	false	false	synapse_storage_manifest_clinicalassaytemplate	syn8016635	/Users/buzgalbraith/.synapseCache/480/127886480/synapse_storage_manifest_clinicalassaytemplate.csv
+field22	false	false	false	false	foglio1	syn8016650	/Users/buzgalbraith/.synapseCache/911/79744911/fig36B hydrolysis.xlsx
+studyName	true	false	false	false	synapse_storage_manifest	syn11374333	/Users/buzgalbraith/.synapseCache/420/102730420/synapse_storage_manifest.csv
+Description	false	true	false	true	default	syn11374337	/Users/buzgalbraith/.synapseCache/706/62929706/P0 vs P5 sphere comparison.xlsx
+initiative	true	false	false	false	synapse_storage_manifest	syn11374339	/Users/buzgalbraith/.synapseCache/94/101467094/synapse_storage_manifest.csv
+field2	true	false	false	false	documentation	syn11374341	/Users/buzgalbraith/.synapseCache/770/123295770/Mast_cell_count_data_Kallionpaa_et_al_Dermatology_2022.xlsx
+Uuid	false	false	false	false	synapse_storage_manifest_imagingassaytemplate	syn11374345	/Users/buzgalbraith/.synapseCache/867/122536867/synapse_storage_manifest_imagingassaytemplate.csv
+sample	false	false	false	false	samplesheet.valid	syn11374349	/Users/buzgalbraith/.synapseCache/679/124495679/samplesheet.valid.csv
+NF007=Patient7; -2=Tumor 2; -3-6=Pooled tumors 3 to 6; M=Mammocult base; D=DMEM base; S=StemPro base; +C=with cytokines; +F=with forskoline	false	false	false	false	legend	syn11374354	/Users/buzgalbraith/.synapseCache/757/65337757/NF_SoragniLab-Seq-data.xlsx
+cellType	false	false	false	true	synapse_storage_manifest	syn11374357	/Users/buzgalbraith/.synapseCache/581/95617581/synapse_storage_manifest.csv
+cv	true	true	true	false	drug_target_associations_v_3_0_1	syn11672851	/Users/buzgalbraith/.synapseCache/414/43057414/drug_target_associations_v_3_0_1.csv
+dataType	false	false	false	true	synapse_storage_manifest	syn11681835	/Users/buzgalbraith/.synapseCache/744/102697744/synapse_storage_manifest.csv
+field2	false	true	false	true	table-s1	syn11817821	/Users/buzgalbraith/.synapseCache/606/24416606/ajcr0051392suppltab.xlsx
+Property	true	false	false	false	sheet1	syn18904024	/Users/buzgalbraith/.synapseCache/426/39718426/Electrophysiology.xlsx
+field1	false	true	false	true	cpm	syn21650484	/Users/buzgalbraith/.synapseCache/475/73908475/TMM_normed_counts_full.xlsx
+field6	false	false	false	false	a-and-b-edu	syn21650493	/Users/buzgalbraith/.synapseCache/541/90840541/Mouse AAV 20220219 EdU+cells.xlsx
+field5	true	false	false	false	column-headers	syn21984813	/Users/buzgalbraith/.synapseCache/154/67484154/NF OSI Drug Screening manifest.xlsx
+condition	false	false	false	false	sheet1	syn22267284	/Users/buzgalbraith/.synapseCache/776/68964776/siglec_4_7_9_fc_20201112.xlsx
+field22	true	true	true	true	all-data-graphs	syn22267330	/Users/buzgalbraith/.synapseCache/976/122302976/AZD1208_Saracatinib_20uMAddedDose (Autosaved).xlsx
+field4	true	true	true	true	digly-proteomics	syn22268689	/Users/buzgalbraith/.synapseCache/765/85158765/DiGly proteomics.xlsx
+fundingAgency	true	false	false	false	synapse_storage_manifest_epigeneticsassaytemplate	syn22392179	/Users/buzgalbraith/.synapseCache/395/124963395/synapse_storage_manifest_epigeneticsassaytemplate.csv
+specimenID	false	false	false	false	synapse_storage_manifest	syn23651229	/Users/buzgalbraith/.synapseCache/325/80929325/synapse_storage_manifest.csv
+field3	false	false	false	false	sheet1	syn23662493	/Users/buzgalbraith/.synapseCache/491/87840491/IHC protocol for iNF-07E on Leica Bond instrument.xlsx
+field5	false	false	false	false	sample_sheet_blood_de-identified	syn24875850	/Users/buzgalbraith/.synapseCache/875/74492875/Sample_sheet_Blood_de identified.csv
+fasta.headers	false	true	false	true	romicsdata	syn26238842	/Users/buzgalbraith/.synapseCache/837/96860837/Hsc_PhosphoProteomics_Trial01.xlsx
+Sample	false	false	false	false	sra_metadata_8ad02f8b-e9cf-42a1-b7a6-634efd00e705	syn26241781	/Users/buzgalbraith/.synapseCache/999/146672999/sra_metadata_8ad02f8b-e9cf-42a1-b7a6-634efd00e705.csv
+name	true	false	false	true	in	syn26347297	/Users/buzgalbraith/.synapseCache/242/124578242/genelist.xlsx
+away from home	true	false	false	false	sheet1	syn26438193	/Users/buzgalbraith/.synapseCache/578/150435578/Adherence Barriers Questionnaire Data.xlsx
+resourceType	false	false	false	false	synapse_storage_manifest	syn26957643	/Users/buzgalbraith/.synapseCache/536/96396536/synapse_storage_manifest.csv
+eTag	false	false	false	false	synapse_storage_manifest_updatemilestonereport	syn31619419	/Users/buzgalbraith/.synapseCache/939/126584939/synapse_storage_manifest_updatemilestonereport.csv
+field6	true	true	true	false	sheet1	syn31748644	/Users/buzgalbraith/.synapseCache/835/158680835/NF105-NF108_Specimens Inventory_final.xlsx
+new_ega_id	false	false	false	false	synapse_storage_manifest_wgstemplate	syn32128792	/Users/buzgalbraith/.synapseCache/878/125676878/synapse_storage_manifest_wgstemplate.csv
+field1	true	true	true	true	figure-1a	syn37861830	/Users/buzgalbraith/.synapseCache/257/143430257/JCI176748.sdval.xlsx
+Well.Ref.	false	false	false	false	nf1-hts-primary-screening-data-with-structures-umn-2_22_17	syn52740594	/Users/buzgalbraith/.synapseCache/990/19796990/NF1 HTS primary screening data with structures UMN 2_22_17.csv
+fileFormat	true	false	false	false	synapse_storage_manifest_protocoltemplate	syn56421718	/Users/buzgalbraith/.synapseCache/568/158558568/synapse_storage_manifest_protocoltemplate.csv
+PANEL_OTH	false	true	false	true	osundiji-data-30dec24	syn61696875	/Users/buzgalbraith/.synapseCache/400/151284400/Osundiji_data_de_30DEC24.xlsx
+None2	true	false	false	true	raw-counts-mpnst-cell-lines	syn63944395	/Users/buzgalbraith/.synapseCache/266/149556266/raw_counts_MPNST_cell_lines.xlsx
+secondary_sample_accession	false	false	false	false	srr31653884.runinfo_ftp	syn68634225	/Users/buzgalbraith/.synapseCache/631/160231631/SRR31653884.runinfo_ftp.tsv
+field1	false	false	false	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/552/94800552/NF2+_MN525 drug treatment.xlsx
+experiment	true	false	false	false	synodos_drugscreen_combined_rawdata	syn2343195	/Users/buzgalbraith/.synapseCache/735/9438735/Synodos_DrugScreen_combined_rawData.tsv
+Investigator_Column_1	false	false	false	false	h_blakeley_022216_sif_converted	syn4939874	/Users/buzgalbraith/.synapseCache/395/8916395/H_Blakeley_022216_SIF_converted.csv
+Variable_Name	true	true	true	false	nf-study-data_iusm-5.16.2017_variables	syn4939878	/Users/buzgalbraith/.synapseCache/181/15489181/NF study data_IUSM 5.16.2017_variables.csv
+Sample	false	false	false	false	phenodata-detailed	syn4939890	/Users/buzgalbraith/.synapseCache/999/8491999/phenoData-detailed.csv
+ColConcs	false	false	false	false	hff_10x10_ctg_48h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/644/7418644/HFF_10x10_CTG_48h_metadata.csv
+gene_name	true	true	true	true	salmon.merged.gene_counts	syn4984604	/Users/buzgalbraith/.synapseCache/825/147383825/salmon.merged.gene_counts.tsv
+Subline_Origin	true	true	true	false	tumor-burden	syn5610418	/Users/buzgalbraith/.synapseCache/620/42391620/Weimer Behavior Data_7-1-19_FIN.xlsx
+field13	false	false	false	false	sheet1	syn7217928	/Users/buzgalbraith/.synapseCache/333/127374333/7-18-16drugLDN193181-2D_1500cellsRawdata   .xlsx
+Assay cell type	false	true	false	true	cell_data_aggregated	syn7239560	/Users/buzgalbraith/.synapseCache/493/14125493/cell_data_aggregated.csv
+field36	true	false	false	false	al002-002	syn8012530	/Users/buzgalbraith/.synapseCache/951/161798951/AL002-002.xlsx
+field2	false	false	false	false	table	syn8016599	/Users/buzgalbraith/.synapseCache/151/85158151/112921_Phosphoproteome_Walker_Synapse.xlsx
+field1	true	true	true	true	foglio1	syn8016650	/Users/buzgalbraith/.synapseCache/912/79744912/fig36C hydrolysis-subparticle.xlsx
+fileFormat	false	false	false	false	synapse_storage_manifest	syn11374333	/Users/buzgalbraith/.synapseCache/388/102730388/synapse_storage_manifest.csv
+Generation of NF1 KO and control newborn, young and adult mice	true	true	true	false	feuil1	syn11374337	/Users/buzgalbraith/.synapseCache/943/36100943/Generation of NF1 KO animals.xlsx
+Name	false	false	false	false	28cnf_snpeff	syn11374339	/Users/buzgalbraith/.synapseCache/603/100798603/28cNF_snpEff.csv
+field2	true	false	false	false	documentation	syn11374341	/Users/buzgalbraith/.synapseCache/728/123342728/TCR_sequencing_Kallionpaa_et_al.xlsx
+initiative	true	false	false	false	synapse_storage_manifest_updatemilestonereport	syn11374345	/Users/buzgalbraith/.synapseCache/414/122561414/synapse_storage_manifest_updatemilestonereport.csv
+gene_id	false	false	false	false	salmon.merged.gene_counts	syn11374349	/Users/buzgalbraith/.synapseCache/814/124496814/salmon.merged.gene_counts.tsv
+field2	true	true	true	true	nf1-fcm-data-new	syn11374354	/Users/buzgalbraith/.synapseCache/302/78767302/NF1 FCM DATA NEW.csv
+Uuid	false	false	false	false	synapse_storage_manifest_rnaseqtemplate	syn11374357	/Users/buzgalbraith/.synapseCache/670/122474670/synapse_storage_manifest_rnaseqtemplate.csv
+link	false	false	false	false	cmpd_links_v4	syn11672851	/Users/buzgalbraith/.synapseCache/7/74412007/cmpd_links_v4.csv
+individualID	false	false	false	false	synapse_storage_manifest_rnaseqtemplate-2	syn11681835	/Users/buzgalbraith/.synapseCache/154/131212154/synapse_storage_manifest_rnaseqtemplate (2).csv
+Conc_Units	true	false	false	false	jfield_matrixtocolumn	syn11817821	/Users/buzgalbraith/.synapseCache/515/27770515/JField_MatrixToColumn.xls
+Mouse	true	true	true	true	sheet1	syn18904024	/Users/buzgalbraith/.synapseCache/428/39718428/HPLC.xlsx
+libraryPreparationMethod	false	false	false	false	synapse_storage_manifest_rnaseqtemplate	syn21650484	/Users/buzgalbraith/.synapseCache/747/148846747/synapse_storage_manifest_rnaseqtemplate.csv
+dataSubtype	false	false	false	false	synapse_storage_manifest	syn21650493	/Users/buzgalbraith/.synapseCache/669/90841669/synapse_storage_manifest.csv
+JH-2-001-J1_Normal.GT	false	false	false	false	jh-2-001-j1_normal_segments	syn21984813	/Users/buzgalbraith/.synapseCache/826/145477826/JH-2-001-J1_Normal_segments.tsv
+Depth	false	false	false	false	nfcells_20200930_siglec7and9_raw	syn22267284	/Users/buzgalbraith/.synapseCache/772/65781772/NFcells_20200930_siglec7and9_raw.xls
+field1	false	true	false	false	all-data-graphs	syn22267330	/Users/buzgalbraith/.synapseCache/983/122302983/Drug_DoseKillCurves_AI formatting.xlsx
+List of proteins differentially abundant in LZTR1-/- compared to  LZTR1+/+ cells quantified by TMT.	false	false	false	false	tmt	syn22268689	/Users/buzgalbraith/.synapseCache/767/85158767/TMT.xlsx
+fileFormat	false	false	false	false	synapse_storage_manifest_genomicsassaytemplateextended	syn22392179	/Users/buzgalbraith/.synapseCache/62/124990062/synapse_storage_manifest_genomicsassaytemplateextended.csv
+field2	false	false	false	false	20210204-sandwich-elisa	syn23662493	/Users/buzgalbraith/.synapseCache/456/88957456/Sandwich ELISA_final.xlsx
+majority.protein.ids	false	false	false	false	export-file	syn26238842	/Users/buzgalbraith/.synapseCache/755/96860755/Hsc_Proteomics_Trial01.xlsx
+assay	true	true	true	true	synapse_storage_manifest_scrnaseqtemplate	syn26241781	/Users/buzgalbraith/.synapseCache/798/164432798/synapse_storage_manifest_scrnaseqtemplate.csv
+Genes	true	true	true	true	differentialexpression_jhubiobank_mpnstvpnf	syn26347297	/Users/buzgalbraith/.synapseCache/296/133266296/DifferentialExpression_JHUBiobank_MPNSTvPNF.csv
+entityId	false	false	false	false	synapse_storage_manifest_clinicalassaytemplate	syn26438193	/Users/buzgalbraith/.synapseCache/628/150462628/synapse_storage_manifest_clinicalassaytemplate.csv
+field1	false	false	false	false	spreadsheet-notes	syn26957643	/Users/buzgalbraith/.synapseCache/918/96312918/HFUS Longitudinal Data for Synapse_Riccardi and Ablon Scales_1Mar22.xlsx
+Supplier	false	false	false	false	report	syn52740594	/Users/buzgalbraith/.synapseCache/249/14786249/NF1 HTS primary screening data with structures UMN 2_22_17.xlsx
+scientific_name	true	true	true	true	srr31653885.runinfo_ftp	syn68634225	/Users/buzgalbraith/.synapseCache/629/160231629/SRR31653885.runinfo_ftp.tsv
+field2	true	true	true	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/558/94800558/NF2+_MN623 drug treatment.xlsx
+VS11	true	false	false	false	synodos_kinome_baseline_lfq_data	syn2343195	/Users/buzgalbraith/.synapseCache/936/9792936/Synodos_kinome_baseline_LFQ_data.tsv
+DNA Source	true	true	true	true	mastersamplekey_051216_9317	syn4939874	/Users/buzgalbraith/.synapseCache/397/8916397/MasterSampleKey_051216_9317.csv
+RowName	true	true	true	true	ipnf05.5_10x10_ccg_16h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/584/7418584/iPNF05.5_10x10_CCG_16h_metadata.csv
+gene_name	true	true	true	true	salmon.merged.gene_counts_length_scaled	syn4984604	/Users/buzgalbraith/.synapseCache/819/147383819/salmon.merged.gene_counts_length_scaled.tsv
+field1	true	true	true	true	olig2	syn5610418	/Users/buzgalbraith/.synapseCache/621/42391621/Weimer IHC-HPLC Data_7-1-19_FIN.xlsx
+field17	true	false	false	false	sheet1	syn7217928	/Users/buzgalbraith/.synapseCache/313/127374313/7-18-16drugLDN193181-3D_4000cellsRawdata.xlsx
+Assay cell type	false	true	false	true	chembl_cell_system_data	syn7239560	/Users/buzgalbraith/.synapseCache/499/14125499/chembl_cell_system_data.csv
+field8	true	false	false	false	al002-005	syn8012530	/Users/buzgalbraith/.synapseCache/960/161798960/AL002-005.xlsx
+field2	false	false	false	false	table	syn8016599	/Users/buzgalbraith/.synapseCache/150/85158150/112921_Total Proteome_Walker_Synapse.xlsx
+field4	false	false	false	false	glut	syn8016650	/Users/buzgalbraith/.synapseCache/79/79745079/fig37A CRC.xlsx
+Preparation of Selumetinib for per-os delivery	true	true	true	true	feuil1	syn11374337	/Users/buzgalbraith/.synapseCache/948/36100948/Preparation of Selumetinib .xlsx
+Name	false	false	false	false	freebayes_28cnf_snpeff	syn11374339	/Users/buzgalbraith/.synapseCache/618/100798618/FreeBayes_28cNF_snpEff.csv
+field2	true	false	false	false	documentation	syn11374341	/Users/buzgalbraith/.synapseCache/625/123299625/Immune_cell_densities_Kallionpaa_et_al.xlsx
+field1	true	true	true	true	sheet1	syn11374345	/Users/buzgalbraith/.synapseCache/647/41258647/Raw qPCR relative expression data.xlsx
+gene_name	true	false	false	true	salmon.merged.gene_counts_length_scaled	syn11374349	/Users/buzgalbraith/.synapseCache/815/124496815/salmon.merged.gene_counts_length_scaled.tsv
+S100	false	false	false	false	nf1-fcm-data	syn11374354	/Users/buzgalbraith/.synapseCache/66/78509066/NF1 FCM DATA.csv
+eTag	false	false	false	false	synapse_storage_manifest	syn11374357	/Users/buzgalbraith/.synapseCache/878/85566878/synapse_storage_manifest.csv
+inchi	true	true	true	false	compound_structures_v4	syn11672851	/Users/buzgalbraith/.synapseCache/6/74408006/compound_structures_v4.csv
+comments	false	false	false	false	synapse_storage_manifest	syn11681835	/Users/buzgalbraith/.synapseCache/965/102697965/synapse_storage_manifest.csv
+1. Complete the plate key worksheet with experimental data	true	false	false	false	instructions	syn11817821	/Users/buzgalbraith/.synapseCache/513/27770513/User008_analysis_template.xlsx
+Measure	true	true	true	false	sheet1	syn18904024	/Users/buzgalbraith/.synapseCache/88/42890088/Looming_Stimulus.xlsx
+species	true	true	true	true	synapse_storage_manifest-2	syn21650484	/Users/buzgalbraith/.synapseCache/229/148342229/synapse_storage_manifest (2).csv
+genePerturbed	true	true	true	true	synapse_storage_manifest	syn21650493	/Users/buzgalbraith/.synapseCache/363/90842363/synapse_storage_manifest.csv
+FILTER	false	false	false	false	jh-2-002-j1_normal_segments	syn21984813	/Users/buzgalbraith/.synapseCache/836/145477836/JH-2-002-J1_Normal_segments.tsv
+field3	false	false	false	false	summary	syn22267284	/Users/buzgalbraith/.synapseCache/443/69099443/023_cell_O_Glycan.xlsx
+field1	false	true	false	false	all-data-graphs	syn22267330	/Users/buzgalbraith/.synapseCache/975/122302975/Drugs_erbB3KD.xlsx
+field3	true	true	true	true	ip-ms	syn22268689	/Users/buzgalbraith/.synapseCache/766/85158766/immunoprecipitation mass spectrometry.xlsx
+fundingAgency	true	false	false	false	synapse_storage_manifest_westemplate	syn22392179	/Users/buzgalbraith/.synapseCache/577/124964577/synapse_storage_manifest_westemplate.csv
+experimentalTimepoint	false	false	false	false	synapse_storage_manifest	syn23662493	/Users/buzgalbraith/.synapseCache/398/72717398/synapse_storage_manifest.csv
+specimenID	false	false	false	false	proteomics_manifest	syn26238842	/Users/buzgalbraith/.synapseCache/202/150086202/proteomics_manifest.csv
+initiative	true	false	false	false	synapse_storage_manifest_methylationarraytemplate	syn26241781	/Users/buzgalbraith/.synapseCache/874/164367874/synapse_storage_manifest_methylationarraytemplate.csv
+paper_RPPA.cluster	true	false	false	false	in	syn26347297	/Users/buzgalbraith/.synapseCache/241/124578241/clinical.xlsx
+eTag	false	false	false	false	synapse_storage_manifest	syn26957643	/Users/buzgalbraith/.synapseCache/60/96397060/synapse_storage_manifest.csv
+field4	false	false	false	false	bci_bci_ratner_pdx	syn52740594	/Users/buzgalbraith/.synapseCache/404/54745404/BCI_BCI_Ratner_PDX.csv
+sample_title	false	false	false	false	srr31653886.runinfo_ftp	syn68634225	/Users/buzgalbraith/.synapseCache/903/160235903/SRR31653886.runinfo_ftp.tsv
+field2	true	true	true	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/489/94800489/NF2-_AC-CRISPR-A17 drug treatment.xlsx
+condition	false	false	false	false	synodos_kinome_baseline_itraq_data	syn2343195	/Users/buzgalbraith/.synapseCache/910/12862910/Synodos_kinome_baseline_iTRAQ_data.tsv
+Description	false	false	false	false	69239-0209702975_ms_onbait_annovar_dictionary_2013_06_13	syn4939874	/Users/buzgalbraith/.synapseCache/561/8916561/69239-0209702975_MS_OnBait_ANNOVAR_DICTIONARY_2013_06_13.csv
+ColTarget	true	true	true	true	ipnf05.5_10x10_ctg_48h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/590/7418590/iPNF05.5_10x10_CTG_48h_metadata.csv
+gene_name	true	true	true	true	salmon.merged.gene_counts_scaled	syn4984604	/Users/buzgalbraith/.synapseCache/820/147383820/salmon.merged.gene_counts_scaled.tsv
+Memo	false	false	false	false	all-data	syn5610418	/Users/buzgalbraith/.synapseCache/622/42391622/Weimer_Walkway Data_7-1-19_FIN.xlsx
+field12	false	false	false	false	sheet1	syn7217928	/Users/buzgalbraith/.synapseCache/657/127374657/7-22-16DrugPPP-2D_1500cellsRawdata.xlsx
+ChEMBL ID	false	false	false	false	chembl_matches	syn7239560	/Users/buzgalbraith/.synapseCache/528/13335528/chembl_matches.csv
+field2	false	false	false	false	al002-006	syn8012530	/Users/buzgalbraith/.synapseCache/35/161799035/AL002-006.xlsx
+field2	true	true	true	true	summary	syn8016650	/Users/buzgalbraith/.synapseCache/132/82353132/Fig.22_complexI.xlsx
+field14	false	false	false	false	cnf-part-1	syn11374337	/Users/buzgalbraith/.synapseCache/975/36100975/Characterisation of cNF and micro-cNF.xlsx
+Name	false	false	false	false	mutect2_filtered_28cnf_snpeff	syn11374339	/Users/buzgalbraith/.synapseCache/598/100798598/Mutect2_filtered_28cNF_snpEff.csv
+field2	true	false	false	false	documentation	syn11374341	/Users/buzgalbraith/.synapseCache/817/130614817/MS_dataset_Kallionpaa_et_al.xlsx
+field1	false	false	false	false	peripherin	syn11374345	/Users/buzgalbraith/.synapseCache/738/41258738/Raw qPCRwith calculations.xlsx
+gene_id	false	false	false	false	salmon.merged.gene_counts_scaled	syn11374349	/Users/buzgalbraith/.synapseCache/808/124496808/salmon.merged.gene_counts_scaled.tsv
+firstRep	false	false	false	false	flow_correlations	syn11374354	/Users/buzgalbraith/.synapseCache/740/125769740/flow_Correlations.csv
+resourceType	false	false	false	false	synapse_storage_manifest	syn11374357	/Users/buzgalbraith/.synapseCache/795/86251795/synapse_storage_manifest.csv
+Kd_nM	true	false	false	false	compound_target_associations_v4	syn11672851	/Users/buzgalbraith/.synapseCache/444/74409444/compound_target_associations_v4.csv
+modelSystemName	true	true	true	true	synapse_storage_manifest	syn11681835	/Users/buzgalbraith/.synapseCache/476/102697476/synapse_storage_manifest.csv
+1. Complete the plate key worksheet with experimental data	true	false	false	false	instructions	syn11817821	/Users/buzgalbraith/.synapseCache/520/27770520/Analysis template_p2_v1.0.xlsx
+Measure (Average)	true	false	false	false	sheet1	syn18904024	/Users/buzgalbraith/.synapseCache/430/39718430/Reward_Conditioning.xlsx
+fileFormat	false	false	false	false	synapse_storage_manifest	syn21650484	/Users/buzgalbraith/.synapseCache/390/90371390/synapse_storage_manifest.csv
+fileFormat	false	false	false	false	synapse_storage_manifest	syn21650493	/Users/buzgalbraith/.synapseCache/978/90433978/synapse_storage_manifest.csv
+REF	false	false	false	false	jh-2-004-j1_normal_segments	syn21984813	/Users/buzgalbraith/.synapseCache/838/145477838/JH-2-004-J1_Normal_segments.tsv
+field3	false	false	false	false	summary	syn22267284	/Users/buzgalbraith/.synapseCache/445/69099445/055_cell_O_Glycan.xlsx
+studyId	false	false	false	false	synapse_storage_manifest_imagingassaytemplate	syn22267330	/Users/buzgalbraith/.synapseCache/651/150193651/synapse_storage_manifest_imagingassaytemplate.csv
+Component	false	false	false	false	synapse_storage_manifest_proteomicsassaytemplate	syn22268689	/Users/buzgalbraith/.synapseCache/240/148744240/synapse_storage_manifest_proteomicsassaytemplate.csv
+parentSpecimenID	true	false	false	false	synapse_storage_manifest_wgstemplate	syn22392179	/Users/buzgalbraith/.synapseCache/35/124990035/synapse_storage_manifest_wgstemplate.csv
+field2	false	false	false	false	ap_nf1-his_elisa	syn23662493	/Users/buzgalbraith/.synapseCache/871/69946871/AP_NF1-His_ELISA.csv
+DATASTORE provider	true	false	false	false	rnaseq-samplesheet-vasudevan	syn26241781	/Users/buzgalbraith/.synapseCache/579/133541579/rnaseq-samplesheet-vasudevan.csv
+field1	false	false	false	false	in	syn26347297	/Users/buzgalbraith/.synapseCache/240/124578240/counts.xlsx
+field1	false	false	false	false	spreadsheet-notes	syn26957643	/Users/buzgalbraith/.synapseCache/857/96312857/HFUS Longitudinal Data for Synapse_Digital Calipers_1Mar22.xlsx
+field27	false	false	false	false	bci_selumetinib_pdx_ratner	syn52740594	/Users/buzgalbraith/.synapseCache/412/54745412/BCI_Selumetinib_PDX_Ratner.csv
+library_strategy	true	true	true	true	srr31653887.runinfo_ftp	syn68634225	/Users/buzgalbraith/.synapseCache/632/160231632/SRR31653887.runinfo_ftp.tsv
+field1	true	true	true	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/491/94800491/NF2-_AC-CRISPR-A19 drug treatment.xlsx
+Evidence IDs	false	false	false	false	proteingroups	syn2343195	/Users/buzgalbraith/.synapseCache/559/5308559/150914-Vestibular Schwannoma LFQ.xlsx
+Column Name	false	false	false	false	69240-0209702974_ms_onbait_annovar_dictionary_2013_06_13	syn4939874	/Users/buzgalbraith/.synapseCache/564/8916564/69240-0209702974_MS_OnBait_ANNOVAR_DICTIONARY_2013_06_13.csv
+RowSid	false	false	false	false	ipnf05.5_mixed_10x10_ccg_16h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/596/7418596/iPNF05.5_mixed_10x10_CCG_16h_metadata.csv
+gene_name	true	true	true	true	salmon.merged.gene_tpm	syn4984604	/Users/buzgalbraith/.synapseCache/826/147383826/salmon.merged.gene_tpm.tsv
+field20	true	false	false	false	sheet1	syn7217928	/Users/buzgalbraith/.synapseCache/615/127374615/7-22-16DrugPPP-3D_4000cellsRawdata.xlsx
+Direction	true	false	false	false	chembl_permeability_data	syn7239560	/Users/buzgalbraith/.synapseCache/538/14125538/chembl_permeability_data.csv
+Baseline	true	true	true	true	al002-008	syn8012530	/Users/buzgalbraith/.synapseCache/965/161798965/AL002-008.xlsx
+field19	false	false	false	false	foglio1	syn8016650	/Users/buzgalbraith/.synapseCache/204/82353204/Fig10_analysis Glutamine-deprived.xlsx
+Localization of cNF	false	false	false	true	sheet1	syn11374337	/Users/buzgalbraith/.synapseCache/884/79771884/Table_S1.xlsx
+Name	false	false	false	false	mutect2_unfiltered_28cnf_snpeff	syn11374339	/Users/buzgalbraith/.synapseCache/606/100798606/Mutect2_unfiltered_28cNF_snpEff.csv
+isMultiIndividual	true	false	false	false	synapse_storage_manifest_genomicsassaytemplate	syn11374345	/Users/buzgalbraith/.synapseCache/405/122561405/synapse_storage_manifest_genomicsassaytemplate.csv
+gene_id	false	false	false	false	salmon.merged.gene_tpm	syn11374349	/Users/buzgalbraith/.synapseCache/822/124496822/salmon.merged.gene_tpm.tsv
+core_enrichment	false	false	false	false	gsego_cd34	syn11374354	/Users/buzgalbraith/.synapseCache/489/71456489/gsego_CD34.tsv
+fundingAgency	false	false	false	false	synapse_storage_manifest	syn11374357	/Users/buzgalbraith/.synapseCache/825/95622825/synapse_storage_manifest.csv
+pref_name	false	false	false	true	distinct_compound_names_v4	syn11672851	/Users/buzgalbraith/.synapseCache/447/74409447/distinct_compound_names_v4.csv
+Well_ID	false	false	false	false	matrix-to-column_p2	syn11817821	/Users/buzgalbraith/.synapseCache/517/27770517/Matrix To Column_p2.xls
+dLight Peaks (z-score)	false	false	false	false	sheet1	syn18904024	/Users/buzgalbraith/.synapseCache/431/39718431/Social_Interaction.xlsx
+fileFormat	true	false	false	false	synapse_storage_manifest	syn21650484	/Users/buzgalbraith/.synapseCache/411/90424411/synapse_storage_manifest.csv
+entityId	false	false	false	false	synapse_storage_manifest_genomicsassaytemplate	syn21650493	/Users/buzgalbraith/.synapseCache/691/148181691/synapse_storage_manifest_genomicsassaytemplate.csv
+REF	false	false	false	false	jh-2-006-j1_normal_segments	syn21984813	/Users/buzgalbraith/.synapseCache/840/145477840/JH-2-006-J1_Normal_segments.tsv
+studyName	true	false	false	false	synapse_storage_manifest_proteomicsassaytemplate	syn22267284	/Users/buzgalbraith/.synapseCache/436/150757436/synapse_storage_manifest_proteomicsassaytemplate.csv
+species	true	true	true	true	synapse_storage_manifest_imagingassaytemplate	syn22267330	/Users/buzgalbraith/.synapseCache/731/150193731/synapse_storage_manifest_imagingassaytemplate.csv
+field2	true	true	true	true	sheet1	syn22268689	/Users/buzgalbraith/.synapseCache/9/148228009/in vitro viability assay.xlsx
+dataType	true	true	true	true	synapse_storage_manifest	syn23662493	/Users/buzgalbraith/.synapseCache/235/91687235/synapse_storage_manifest.csv
+Location of tumor (category)	true	true	true	true	sheet1	syn26347297	/Users/buzgalbraith/.synapseCache/653/143878653/Human PNST_FACS data.xlsx
+organ	true	true	true	true	synapse_storage_manifest	syn26957643	/Users/buzgalbraith/.synapseCache/775/96313775/synapse_storage_manifest.csv
+field5	false	false	false	false	bci_selumetinib_combo_pdx_ratner	syn52740594	/Users/buzgalbraith/.synapseCache/408/54745408/BCI_Selumetinib_combo_PDX_Ratner.csv
+experiment_accession	false	false	false	false	srr31653888.runinfo_ftp	syn68634225	/Users/buzgalbraith/.synapseCache/640/160231640/SRR31653888.runinfo_ftp.tsv
+field1	false	false	false	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/497/94800497/NF2-_Ben-Men-1 drug treatment.xlsx
+Identification type Syn4_SF	false	false	false	false	raw	syn2343195	/Users/buzgalbraith/.synapseCache/309/9784309/Baseline_meningioma_SUMMARY.xlsx
+ANNOVAR Data Source	true	false	false	false	69241-0209702973_ms_onbait_annovar_dictionary_2013_06_13	syn4939874	/Users/buzgalbraith/.synapseCache/568/8916568/69241-0209702973_MS_OnBait_ANNOVAR_DICTIONARY_2013_06_13.csv
+ColConcUnit	true	false	false	false	ipnf05.5_mixed_10x10_ctg_48h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/602/7418602/iPNF05.5_mixed_10x10_CTG_48h_metadata.csv
+gene_id	true	true	true	true	salmon.merged.transcript_counts	syn4984604	/Users/buzgalbraith/.synapseCache/836/147383836/salmon.merged.transcript_counts.tsv
+field2	false	false	false	false	plate-1-sheet1	syn7217928	/Users/buzgalbraith/.synapseCache/943/127374943/7-7-16AZD_2Da.xlsx
+ChEMBL ID	false	false	false	false	chembl_protein_level_data	syn7239560	/Users/buzgalbraith/.synapseCache/361/13335361/chembl_protein_level_data.csv
+Visit 12 (Post Cycle 33-36; Extension Phase; End of Treatment)	true	true	true	true	al002-013	syn8012530	/Users/buzgalbraith/.synapseCache/973/161798973/AL002-013.xlsx
+field61	false	true	false	false	figure-44-b-1	syn8016650	/Users/buzgalbraith/.synapseCache/393/82350393/Figure 44 B.xlsx
+Completed	false	false	false	false	sheet1	syn11374337	/Users/buzgalbraith/.synapseCache/739/62929739/Topilko_cNF_summaryofdeliverablesv2.xlsx
+Name	false	false	false	false	strelka_28cnf_genome_snpeff	syn11374339	/Users/buzgalbraith/.synapseCache/625/100798625/Strelka_28cNF_genome_snpEff.csv
+studyId	false	false	false	false	synapse_storage_manifest_imagingassaytemplate	syn11374345	/Users/buzgalbraith/.synapseCache/34/122607034/synapse_storage_manifest_imagingassaytemplate.csv
+gene_id	false	false	false	false	salmon.merged.transcript_counts	syn11374349	/Users/buzgalbraith/.synapseCache/834/124496834/salmon.merged.transcript_counts.tsv
+ID	true	false	false	false	gsego_cd56	syn11374354	/Users/buzgalbraith/.synapseCache/493/71456493/gsego_CD56.tsv
+field1	false	false	false	false	sheet1	syn11374357	/Users/buzgalbraith/.synapseCache/338/85446338/14Feb20 ST88-14 measurements.xlsx
+synonym	false	false	false	true	distinct_compound_synonyms_v4	syn11672851	/Users/buzgalbraith/.synapseCache/449/74409449/distinct_compound_synonyms_v4.csv
+Measure	false	false	false	false	sheet1	syn18904024	/Users/buzgalbraith/.synapseCache/432/39718432/Sucrose_Consumption.xlsx
+dataSubtype	false	false	false	false	synapse_storage_manifest	syn21650484	/Users/buzgalbraith/.synapseCache/111/90425111/synapse_storage_manifest.csv
+dataType	false	false	false	false	synapse_storage_manifest	syn21650493	/Users/buzgalbraith/.synapseCache/525/90224525/synapse_storage_manifest.csv
+ID	false	false	false	false	jh-2-009-j1_normal_segments	syn21984813	/Users/buzgalbraith/.synapseCache/842/145477842/JH-2-009-J1_Normal_segments.tsv
+species	true	true	true	true	synapse_storage_manifest_proteomicsassaytemplate	syn22267284	/Users/buzgalbraith/.synapseCache/10/150758010/synapse_storage_manifest_proteomicsassaytemplate.csv
+resourceType	false	false	false	false	synapse_storage_manifest_imagingassaytemplate	syn22267330	/Users/buzgalbraith/.synapseCache/520/150194520/synapse_storage_manifest_imagingassaytemplate.csv
+dataSubtype	false	false	false	false	synapse_storage_manifest_clinicalassaytemplate	syn22268689	/Users/buzgalbraith/.synapseCache/277/148744277/synapse_storage_manifest_clinicalassaytemplate.csv
+field2	true	true	true	true	sheet1	syn23662493	/Users/buzgalbraith/.synapseCache/491/87840491/IHC protocol for iNF-07E on Leica Bond instrument.xlsx
+field5	true	true	true	true	ihc	syn26347297	/Users/buzgalbraith/.synapseCache/655/143878655/Human PNST_IHC data.xlsx
+specimenID	true	true	true	true	synapse_storage_manifest_clinicalassaytemplate	syn26957643	/Users/buzgalbraith/.synapseCache/842/128522842/synapse_storage_manifest_clinicalassaytemplate.csv
+field1	false	false	false	false	bci_survival	syn52740594	/Users/buzgalbraith/.synapseCache/420/54745420/BCI_survival.csv
+run_accession	false	false	false	false	srr31653889.runinfo_ftp	syn68634225	/Users/buzgalbraith/.synapseCache/633/160231633/SRR31653889.runinfo_ftp.tsv
+field2	true	true	true	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/499/94800499/NF2-_MN597 drug treatment.xlsx
+Accession	false	false	false	false	raw	syn2343195	/Users/buzgalbraith/.synapseCache/319/9784319/HS11_HS01_triplicate_baseline_kinome.xlsx
+Link	false	false	false	false	69242-0209702972_ms_onbait_annovar_dictionary_2013_06_13	syn4939874	/Users/buzgalbraith/.synapseCache/572/8916572/69242-0209702972_MS_OnBait_ANNOVAR_DICTIONARY_2013_06_13.csv
+RowTarget	true	false	false	true	ipnf95.6_10x10_ccg_16h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/608/7418608/iPNF95.6_10x10_CCG_16h_metadata.csv
+tx	false	false	false	false	salmon.merged.transcript_tpm	syn4984604	/Users/buzgalbraith/.synapseCache/840/147383840/salmon.merged.transcript_tpm.tsv
+field1	true	false	false	false	plate-1-sheet1	syn7217928	/Users/buzgalbraith/.synapseCache/450/127374450/7-7-16AZD_2Db.xlsx
+Supplier Molname	false	true	false	true	compound_identifier_mapping	syn7239560	/Users/buzgalbraith/.synapseCache/93/14542093/compound_identifier_mapping.csv
+field8	false	false	false	false	al002-014	syn8012530	/Users/buzgalbraith/.synapseCache/974/161798974/AL002-014.xlsx
+field1	false	true	false	false	u87-stim	syn8016650	/Users/buzgalbraith/.synapseCache/493/79691493/fig13rowdataOCR.xlsx
+Name	false	false	false	false	strelka_28cnf_variants_snpeff	syn11374339	/Users/buzgalbraith/.synapseCache/615/100798615/Strelka_28cNF_variants_snpEff.csv
+studyId	false	false	false	false	synapse_storage_manifest_updatemilestonereport	syn11374345	/Users/buzgalbraith/.synapseCache/840/122562840/synapse_storage_manifest_updatemilestonereport.csv
+tx	false	false	false	false	salmon.merged.transcript_tpm	syn11374349	/Users/buzgalbraith/.synapseCache/844/124496844/salmon.merged.transcript_tpm.tsv
+Description	false	false	false	false	gsego_pan-cytokeratin	syn11374354	/Users/buzgalbraith/.synapseCache/495/71456495/gsego_Pan-Cytokeratin.tsv
+eTag	false	false	false	false	synapse_storage_manifest	syn11374357	/Users/buzgalbraith/.synapseCache/683/95629683/synapse_storage_manifest.csv
+external_id	false	false	false	false	external_ids_v4	syn11672851	/Users/buzgalbraith/.synapseCache/4/74412004/external_ids_v4.csv
+field2	false	false	false	false	instructions	syn11817821	/Users/buzgalbraith/.synapseCache/526/27770526/User008_analysis_template_V3.2.xlsx
+field7	true	false	false	false	histology	syn18904024	/Users/buzgalbraith/.synapseCache/132/42890132/Supplementary_Statistical_Analysis.xlsx
+dataType	false	false	false	false	synapse_storage_manifest	syn21650484	/Users/buzgalbraith/.synapseCache/446/90425446/synapse_storage_manifest.csv
+species	true	true	true	true	synapse_storage_manifest	syn21650493	/Users/buzgalbraith/.synapseCache/974/90225974/synapse_storage_manifest.csv
+ID	false	false	false	false	jh-2-010-j1_normal_segments	syn21984813	/Users/buzgalbraith/.synapseCache/844/145477844/JH-2-010-J1_Normal_segments.tsv
+Component	false	false	false	false	syn23573389_synapse_storage_manifest	syn22267284	/Users/buzgalbraith/.synapseCache/500/150086500/syn23573389_synapse_storage_manifest.csv
+Filename	true	true	true	true	synapse_storage_manifest_imagingassaytemplate	syn22267330	/Users/buzgalbraith/.synapseCache/782/150193782/synapse_storage_manifest_imagingassaytemplate.csv
+Filename	true	false	false	false	synapse_storage_manifest	syn23662493	/Users/buzgalbraith/.synapseCache/255/88951255/synapse_storage_manifest.csv
+field1	false	false	false	false	spreadsheet-notes	syn26957643	/Users/buzgalbraith/.synapseCache/840/96312840/HFUS Longitudinal Data for Synapse_5D Pruritis_1Mar22.xlsx
+field1	true	false	false	false	bci_survival_analysis	syn52740594	/Users/buzgalbraith/.synapseCache/416/54745416/BCI_survival_analysis.csv
+submission_accession	false	false	false	false	srr31653890.runinfo_ftp	syn68634225	/Users/buzgalbraith/.synapseCache/642/160231642/SRR31653890.runinfo_ftp.tsv
+field2	true	true	true	true	sheet1	syn27761862	/Users/buzgalbraith/.synapseCache/513/94800513/NF2-_MN619 drug treatment.xlsx
+Description	false	true	false	true	raw	syn2343195	/Users/buzgalbraith/.synapseCache/317/9784317/Syn1_Syn5_triplicate_baseline_kinome.xlsx
+Description	false	false	false	false	69243-0209702971_ms_onbait_annovar_dictionary_2013_06_13	syn4939874	/Users/buzgalbraith/.synapseCache/576/8916576/69243-0209702971_MS_OnBait_ANNOVAR_DICTIONARY_2013_06_13.csv
+ColSid	false	false	false	false	ipnf95.6_10x10_ctg_48h_metadata	syn4939906	/Users/buzgalbraith/.synapseCache/614/7418614/iPNF95.6_10x10_CTG_48h_metadata.csv
+rna0	false	false	false	false	salmon_tx2gene	syn4984604	/Users/buzgalbraith/.synapseCache/841/147383841/salmon_tx2gene.tsv
