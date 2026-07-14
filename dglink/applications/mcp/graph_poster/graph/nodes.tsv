@@ -1,0 +1,16 @@
+curie:ID	name	:LABEL	source
+S1	Synodos NF2	Study	Metadata
+S2	NF2 Drug Screen	Study	Metadata
+S3	NF2 Genomics Study	Study	Metadata
+D1	Neurofibromatosis Type 2	Disease	Metadata
+I1	Johns Hopkins Medicine	Institution	Metadata
+I2	Children's Tumor Foundation	Institution	Metadata
+DR1	Axitinib	Drug	Tabular
+DR2	AR42	Drug	Tabular
+DR3	AZD2014	Drug	Tabular
+DR4	Bortezomib	Drug	Tabular
+DR5	CUDC907	Drug	Tabular
+CL1	Syn1	CellLine	Tabular
+V1	rs6054257	Variant	VCF
+V2	rs6040355	Variant	VCF
+G1	NF2	Gene	Metadata

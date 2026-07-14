@@ -2,13 +2,10 @@ import os
 
 # import pandas
 import polars as pl
-from dglink.core.constants import EDGE_ATTRIBUTES
 
 
 class Edge:
-    def __init__(
-        self, attribute_names: list = EDGE_ATTRIBUTES, attributes: dict = None
-    ):
+    def __init__(self, attribute_names: list, attributes: dict = None):
         if attribute_names is not None:
             self.attribute_names = attribute_names
             self.attributes = {attribute: "" for attribute in self.attribute_names}
@@ -50,9 +47,9 @@ class Edge:
 class EdgeSet:
     def __init__(
         self,
+        attributes: list = [],
         edge_set_name: str = "",
         edge_type: str = "",
-        attributes: list = EDGE_ATTRIBUTES,
     ):
         self.edge_set_name = edge_set_name
         self.path = ""
@@ -131,18 +128,33 @@ class EdgeSet:
 
                     self.edges[edge_id][attribute] = val
 
-    def write_edge_set(self, path):
+    def write_edge_set(self, path, pascalify:bool = False):
+        if pascalify:
+            self.pascalify_edges()
         with open(path, "w") as f:
             f.write("\t".join(self.attributes) + "\n")
-            for edge_id in self.edges:
-                write_str = f""
+            for curie in self.edges:
+                write_str = ""
                 for col in self.attributes:
-                    val = self.edges[edge_id][col]
+                    val = self.edges[curie][col]
                     if type(val) == set:
                         if len(val) > 20:
-                            val = list(val)[:20]  ## limit max number of elements to 20
-                        val = f'"{";".join(val)}"'
-                    ## take out any weird line breaks
-                    val = val if type(val) == str else str(val)
-                    write_str += val.replace("\n", "") + "\t"
-                f.write(write_str[:-1] + "\n")
+                            val = list(val)[:20] ## take max of 20 ## 
+                        joined = ";".join(v for v in val if v)  
+                        val = f'"{joined}"' if joined else ""
+                    elif val is None or val == 'None':
+                        val = ''
+                    write_str += f"{val}".replace("\n", "") + "\t"
+                write_str = write_str.replace('""', '')
+                f.write(write_str[:-1] + "\n")   
+
+    def pascalify_edges(self):
+        pascalify = lambda x: "".join(w.capitalize() for w in x.replace("biolink:", "").split("_"))
+        edges = {}
+        for edge_id in self.edges:
+            edge_rep = self.edges[edge_id]
+            raw_label = edge_rep[':TYPE']
+            edge_rep[':TYPE'] = pascalify(raw_label)
+            edge_rep['raw_type'] = raw_label
+            edges[edge_id] = edge_rep
+        self.edges = edges

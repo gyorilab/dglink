@@ -6,12 +6,16 @@ to extract biomedical entities through text grounding and construct a knowledge 
 Uses Gilda for entity recognition and INDRA for ontology typing.
 """
 
-from .constants import RESOURCE_PATH, REPORT_PATH, TABULAR_FILE_TYPES, syn
-from .utils import get_project_files, write_graph
+from .constants import (
+    REPORT_PATH,
+)
+from .utils import write_graph
 from .nodes import NodeSet
 from .edges import EdgeSet
 import os
 from frictionless import Schema, Resource, formats, Package
+from .column_selectors import HeuristicSelector, LLMSelector
+from .tabular_dataset import TabularDataset
 import pandas
 from pathlib import Path
 from functools import lru_cache
@@ -20,51 +24,13 @@ from bioregistry import normalize_curie, get_bioregistry_iri
 import tqdm
 import gilda
 import logging
+from typing import Iterator
+import json
+import numpy as np
+from openai import BadRequestError
 
 
 logger = logging.getLogger(__name__)
-
-
-def filter_df(df, base_cols, nan_percentage=0.1, max_types=5):
-    """Filter grounded entity DataFrame to remove low-quality or overly heterogeneous columns.
-
-    Applies two quality filters:
-    1. Removes columns where fewer than nan_percentage of rows were successfully grounded
-    2. Removes columns containing more than max_types distinct entity types (too heterogeneous)
-
-    Args:
-        df: DataFrame with grounded entity columns (entity, type, name, raw_text, column_name, iri)
-        base_cols: List of original column names before grounding suffixes were added
-        nan_percentage: Minimum proportion of non-null values required to keep column (default: 0.1)
-        max_types: Maximum number of distinct entity types allowed per column (default: 5)
-
-    Returns:
-        Tuple of (filtered DataFrame, filtered list of base column names)
-
-    Example:
-        >>> # Keep only columns with ≥10% grounded and ≤5 entity types
-        >>> filtered_df, filtered_cols = filter_df(entity_df, ['gene', 'disease'], 0.1, 5)
-    """
-    ## filter out cols with less than 10% rows successfully grounded
-    res = df.loc[:, df.count() / len(df) >= nan_percentage]
-    base_cols = [x for x in base_cols if f"{x}_type" in res.columns]
-    ## filter out columns with more than some set number of max entity types
-    cols_to_drop = []
-    for base in base_cols:
-        if res[f"{base}_type"].nunique() > max_types:
-            cols_to_drop.extend(
-                [
-                    f"{base}_type",
-                    f"{base}_entity",
-                    f"{base}_name",
-                    f"{base}_raw_text",
-                    f"{base}_column_name",
-                    f"{base}_iri",
-                ]
-            )
-    final = res.drop(columns=cols_to_drop)
-    base_cols = [x for x in base_cols if f"{x}_type" in final.columns]
-    return final, base_cols
 
 
 def get_frictionless_package(pth):
@@ -109,6 +75,10 @@ def get_frictionless_package(pth):
                     col_names = load_workbook(pth, read_only=True)
                 else:
                     col_names = pandas.ExcelFile(pth).sheet_names
+                ## This check makes it type safe. I do not think should have any effect remove if does ##
+                if not isinstance(col_names, list):
+                    raise ValueError(f"col_names of type {type(col_names)} unexpected")
+
                 for sheet in col_names:
                     pac.add_resource(
                         Resource(pth, control=formats.ExcelControl(sheet=sheet))
@@ -120,6 +90,21 @@ def get_frictionless_package(pth):
             except:
                 pac.add_resource(Resource(pth, format="tsv"))
                 format = ".tsv"
+    elif pth.suffix == ".txt":
+        # Check first line
+        with open(pth) as tmp:
+            first_line = tmp.readline()
+        # Check tab-separated first (more specific)
+        if len(first_line.split("\t")) > 1:
+            pac.add_resource(Resource(pth, format="tsv"))
+            format = ".tsv"
+        # Then check comma-separated
+        elif len(first_line.split(",")) > 1:
+            pac.add_resource(Resource(pth, format="csv"))
+            format = ".csv"
+        # Fallback: let Frictionless auto-detect
+        else:
+            pac.add_resource(Resource(pth))
     else:
         pac.add_resource(Resource(pth))
     for res in pac.resources:
@@ -131,14 +116,14 @@ def get_frictionless_package(pth):
     return pac
 
 
-def frictionless_file_reader(obj, max_size_bytes=100 * 1024 * 1024):
+def frictionless_file_reader(pth: str, max_size_bytes=100 * 1024 * 1024):
     """Read tabular files from Synapse file objects using Frictionless framework.
 
     Downloads and parses various tabular formats (CSV, TSV, Excel) into a dictionary
     of pandas DataFrames, with one DataFrame per sheet for multi-sheet files.
 
     Args:
-        obj: Synapse file object with path attribute
+        pth: path to tabular file to read.
         max_size_bytes: Maximum file size to process in bytes (default: 100MB)
 
     Returns:
@@ -152,96 +137,34 @@ def frictionless_file_reader(obj, max_size_bytes=100 * 1024 * 1024):
         Excel files. All sheets from multi-sheet files are returned separately.
     """
     ## issues with pull
-    if obj is None:
-        return {"all": "locked"}
-    if obj.path is None:
-        return {"all": "locked"}
-    ## check file size
-    pth = Path(obj.path)
-    file_size = os.path.getsize(pth)
+    fp = Path(pth)
+    file_size = os.path.getsize(fp)
     if file_size > max_size_bytes:
         logger.info("file to large to read")
         return {"all": "to_large"}
     ## load file contents into frictionless package
-    pack = get_frictionless_package(pth=pth)
+
+    pack = get_frictionless_package(pth=fp)
     ## load frictionless package into dictionary of pandas data frames
     df_dict = {}
+    from frictionless.resources import TableResource
+
     for res in pack.resources:
+        ## type check to make things type safe remove is this cause issue
+        if not isinstance(res, TableResource):
+            # import ipdb; ipdb.set_trace()
+            # raise ValueError(f"this should be a table not {type(res)}")  
+            continue
         try:
-            df_dict[res.name] = pandas.DataFrame(
-                res.read_rows()
-            )  # stream rows directly
+            df_dict[res.name] = pandas.DataFrame(res.read_rows())
         except:
             return {"all": "unable_to_read"}
     return df_dict
 
 
-@lru_cache(maxsize=None)
-def cached_annotate(val, col):
-    """Ground a cell value to biomedical ontology terms using Gilda (cached).
-
-    Uses Gilda to identify biomedical entities in text and normalizes them to
-    standard ontology terms. Results are cached to avoid redundant API calls.
-
-    Args:
-        val: Cell value to ground (will be converted to string)
-        col: Column name for tracking provenance
-
-    Returns:
-        Tuple of (curie, entity_type, name, raw_text, column_name, iri)
-        Returns tuple of pandas.NA values if grounding fails or value is null
-
-    Note:
-        Uses INDRA bio_ontology for entity typing and bioregistry for IRI generation.
-        Only the top-ranked Gilda match is used.
-    """
-    if pandas.notna(val):
-        ans = gilda.annotate(str(val))
-        if ans:
-            nsid = ans[0].matches[0].term
-
-            return (
-                normalize_curie(f"{nsid.db}:{nsid.id}"),
-                bio_ontology.get_type(nsid.db, nsid.id),
-                nsid.entry_name,
-                val,
-                col,
-                get_bioregistry_iri(nsid.db, nsid.id),
-            )
-    return pandas.NA, pandas.NA, pandas.NA, pandas.NA, pandas.NA, pandas.NA
-
-
-def apply_ground(row):
-    """Apply entity grounding to all columns in a DataFrame row.
-
-    Transforms a row of raw text values into grounded entity information by calling
-    cached_annotate on each cell. Creates new columns with suffixes: _entity, _type,
-    _name, _raw_text, _column_name, _iri.
-
-    Args:
-        row: pandas Series representing one row of the DataFrame
-
-    Returns:
-        pandas Series with grounded entity information for all columns
-
-    Note:
-        This function is designed to be used with DataFrame.apply(axis=1)
-    """
-    result = {}
-    for col in row.index:
-        (
-            result[f"{col}_entity"],
-            result[f"{col}_type"],
-            result[f"{col}_name"],
-            result[f"{col}_raw_text"],
-            result[f"{col}_column_name"],
-            result[f"{col}_iri"],
-        ) = cached_annotate(row[col], col)
-    return pandas.Series(result)
-
 
 def extract_df_graph(
-    df, cols, project_id, file_id, node_set: NodeSet, edge_set: EdgeSet
+    table:TabularDataset, group_identifier, file_id, node_set: NodeSet, edge_set: EdgeSet, pascalify_types:bool = False,
 ) -> tuple[NodeSet, EdgeSet]:
     """Extract nodes and edges from grounded entity DataFrame into knowledge graph.
 
@@ -252,7 +175,7 @@ def extract_df_graph(
     Args:
         df: DataFrame with grounded entity columns (entity, type, name, raw_text, etc.)
         cols: List of base column names to extract entities from
-        project_id: Synapse project ID for edge creation
+        group_identifier: group ID for edge creation
         file_id: Synapse file ID for provenance tracking
         node_set: Existing set of nodes to update
         edge_set: Existing set of edges to update
@@ -264,9 +187,10 @@ def extract_df_graph(
         Tracks provenance by storing raw text, column names, and file IDs in node attributes.
         Edge types are dynamically created based on entity type (e.g., "has_protein").
     """
+    pascalify = lambda x: "".join(w.capitalize() for w in x.strip("biolink:").split("_"))
     source = set(["tabular_data", "experimental_data"])
-    for _, row in df.iterrows():
-        for col in cols:
+    for _, row in table.table.iterrows():
+        for col in table.entity_columns:
             entity = row[f"{col}_entity"]
             entity_type = row[f"{col}_type"]
             if (not pandas.isna(entity)) & (not pandas.isna(entity_type)):
@@ -291,7 +215,7 @@ def extract_df_graph(
                 node_set.update_nodes(new_node=attributes)
                 edge_set.update_edges(
                     {
-                        ":START_ID": project_id,
+                        ":START_ID": group_identifier,
                         ":END_ID": entity,
                         ":TYPE": f"has_{entity_type}",
                         "source:string[]": source,
@@ -299,6 +223,20 @@ def extract_df_graph(
                 )
 
     return node_set, edge_set
+
+
+def get_dtype_counts(df: pandas.DataFrame) -> pandas.DataFrame:
+    """get the count of data types in each col of a data frame"""
+    records = {}
+    for col in df.columns:
+        string_count = df[col].apply(lambda x: isinstance(x, str)).sum()
+        missing_count = df[col].isna().sum()
+        records[col] = {
+            "string": string_count,
+            "missing": missing_count,
+            "other": len(df) - string_count - missing_count,
+        }
+    return pandas.DataFrame(records).T
 
 
 def check_df_readable(df, max_unnamed=2):
@@ -330,20 +268,27 @@ def check_df_readable(df, max_unnamed=2):
     if unnamed_count > max_unnamed:
         df = None
     else:
-        df = df.select_dtypes(include=["object", "string"])
+        type_counts = get_dtype_counts(df)
+        ## remove columns that have more columns that are neither string nor missing then columns that are string valued
+        good_cols = type_counts[
+            (type_counts["string"] > type_counts["other"])
+        ].index.tolist()
+        df = df[good_cols]
+        # Older method returns string column and any mixed data type column, was to permissive #
+        # df = df.select_dtypes(include=["object", "string"])
         can_read = True
     return "good" if can_read else "look_into", df
 
 
-def load_file(syn_file_id, project_id):
-    """Load a tabular file from Synapse and validate readability of all sheets.
+def load_file(group_identifier: str, fp: str):
+    """Load a tabular file and validate readability of all sheets.
 
-    Downloads file from Synapse, parses with frictionless framework, and validates
+    Parses with frictionless framework, and validates
     each sheet (for multi-sheet files like Excel) for entity grounding.
 
     Args:
-        syn_file_id: Synapse file ID (e.g., 'syn12345678')
-        project_id: Synapse project ID for tracking
+        group_identifier: identifier for group of files (project_id in NF data portal and case_id in gdc)
+        fp: local path to the file
 
     Returns:
         Tuple of (list of DataFrames, list of read status dicts)
@@ -354,30 +299,7 @@ def load_file(syn_file_id, project_id):
         Handles locked files and parsing failures gracefully by returning empty lists
         and status dicts indicating the failure reason.
     """
-    try:
-        obj = syn.get(syn_file_id)
-    except:
-        return [None], [
-            {
-                "project_id": project_id,
-                "file_id": "_",
-                "file_path": str(syn_file_id),
-                "can_read": False,
-                "reason": "Locked",
-                "sheet": "all",
-            }
-        ]
-    df_dict = frictionless_file_reader(obj)
-    # if len(df_dict) < 1:
-    #     return [], {
-    #         "project_id": project_id,
-    #         "file_id": "_",
-    #         "file_path": syn_file_id,
-    #         "can_read": False,
-    #         "reason": "Locked",
-    #         "sheet": "all",
-    #     }
-
+    df_dict = frictionless_file_reader(fp)
     dfs = []
     read_states = []
     for sheet in df_dict:
@@ -387,9 +309,8 @@ def load_file(syn_file_id, project_id):
         ## adding to a list of what files can actually be read
         read_states.append(
             {
-                "project_id": project_id,
-                "file_id": obj.id,
-                "file_path": str(obj.path),
+                "group_identifier": group_identifier,
+                "fp": fp,
                 "can_read": reason == "good",
                 "reason": reason,
                 "sheet": sheet,
@@ -399,165 +320,80 @@ def load_file(syn_file_id, project_id):
     return dfs, read_states
 
 
-def process_project(
-    project_files,
-    project_id,
-    node_set: NodeSet,
-    edge_set: EdgeSet,
-    cols_read: list = [],
-    files_read: list = [],
-) -> tuple[NodeSet, EdgeSet, list, list]:
-    """Process all tabular files in a project and extract entities into knowledge graph.
-
-    Main processing loop for a single project that:
-    1. Loads each file and validates sheets
-    2. Grounds text in all string columns to biomedical entities
-    3. Filters columns by grounding quality
-    4. Extracts entities and relationships into the knowledge graph
-    5. Tracks processing status for reporting
-
-    Args:
-        project_files: List of Synapse file IDs to process
-        project_id: Synapse project ID
-        node_set: Existing set of nodes to update
-        edge_set: Existing set of edges to update
-        cols_read: Running list of successfully processed column metadata (modified in place)
-        files_read: Running list of file processing status (modified in place)
-
-    Returns:
-        Tuple of (updated node_set, updated edge_set, files_read, cols_read)
-
-    Note:
-        Uses Gilda for entity grounding with caching to improve performance.
-        Processing status is tracked at both file and column granularity for debugging.
-    """
-    for syn_file_id in tqdm.tqdm(project_files):
-        dfs, read_states = load_file(syn_file_id=syn_file_id, project_id=project_id)
-        # if len(dfs) < 1:
-        #     files_read.append(read_states)
-        # else:
-        for df, read_state in zip(dfs, read_states):
-            files_read.append(read_state)
-            if df is not None:
-                base_cols = df.columns
-                ## ground data frame
-                entity_df = df.apply(apply_ground, axis=1)
-                entity_df, base_cols = filter_df(entity_df, base_cols)
-                node_set, edge_set = extract_df_graph(
-                    entity_df,
-                    base_cols,
-                    project_id,
-                    read_state["file_id"],
-                    node_set=node_set,
-                    edge_set=edge_set,
-                )
-                for col in base_cols:
-                    cols_read.append(
-                        {
-                            "project_id": project_id,
-                            "file_id": read_state["file_id"],
-                            "file_path": read_state["file_path"],
-                            "sheet": read_state["sheet"],
-                            "col": col,
-                        }
-                    )
-    return node_set, edge_set, files_read, cols_read
+def quality_check_groundings(
+    qc_method: str,
+    table: TabularDataset,
+    **kwargs
+) -> None:
+    if qc_method == "heuristic":
+        selector = HeuristicSelector(**kwargs)
+        selector.execute(table, verbose=True)
+    elif qc_method == "llm_schema_match":
+        selector = LLMSelector(
+            **kwargs
+        )
+        selector.execute(table, verbose=True)
 
 
 def get_tabular_data(
-    project_ids: list,
+    group_identifiers: list,
     node_set: NodeSet,
     edge_set: EdgeSet,
-    write_set: bool = False,
+    tabular_iterator: Iterator,
     write_reports: bool = True,
-    write_intermediate: bool = True,
-) -> tuple[NodeSet, EdgeSet, list[pandas.DataFrame]]:
-    """Process tabular data files from multiple Synapse projects and build knowledge graph.
+    quality_check_method: str = "heuristic",
+    **kwargs
+) -> list[pandas.DataFrame]:
+    """Process tabular data files from multiple groups and build knowledge graph.
 
     Main orchestration function that discovers tabular files (CSV, TSV, Excel) in specified
     projects, extracts biomedical entities through text grounding with Gilda, and constructs
     a knowledge graph. Supports multi-sheet Excel files and various CSV/TSV dialects.
-
-    Args:
-        project_ids: List of Synapse project IDs to process
-        node_set: Existing set of nodes to update
-        edge_set: Existing set of edges to update
-        write_set: If True, write final knowledge graph to disk
-        write_reports: If True, generate TSV reports of file and column processing status
-        write_intermediate: If True, write graph after each project
-
-    Returns:
-        Tuple of (updated node_set, updated edge_set, list of report DataFrames)
-        Report DataFrames: [files_df (processing status), cols_df (grounded columns)]
-
-    Note:
-        Uses Gilda for entity grounding and INDRA for ontology typing. Applies quality
-        filters to remove columns with low grounding rates or excessive entity type diversity.
-        Intermediate graphs and reports are written to RESOURCE_PATH/artifacts and REPORT_PATH.
-
-    Processing pipeline per file:
-        1. Load file with frictionless (handles multiple formats/sheets)
-        2. Validate sheet readability
-        3. Ground all string columns to biomedical entities
-        4. Filter columns by grounding quality (≥10% success, ≤5 entity types)
-        5. Extract entities and project relationships into graph
-
-    Examples:
-        >>> # Process tabular files from multiple projects
-        >>> nodes, edges, reports = get_tabular_data(
-        ...     project_ids=['syn12345', 'syn67890'],
-        ...     node_set=NodeSet(),
-        ...     edge_set=EdgeSet(),
-        ...     write_intermediate=True
-        ... )
-        >>> files_report, cols_report = reports
     """
-    logger.info(f"Adding tabular experimental data for {len(project_ids)} projects")
+    logger.info(f"Adding tabular experimental data for {len(group_identifiers)} groups")
     files_read = []
     cols_read = []
-    i = 1
-    for project_id in tqdm.tqdm(project_ids):
-        project_files = get_project_files(
-            project_syn_id=project_id, file_types=TABULAR_FILE_TYPES, as_list=True
-        )
-        project_files.append("syn12516465")  ## TODO Remove
-        logger.info(
-            f"adding experimental data project {project_id}\n\
-                    This is project {i} out of {len(project_ids)+1} \n\
-                    There are {len(project_files)} total files to parse."
-        )
-        i = i + 1
-        node_set, edge_set, files_read, cols_read = process_project(
-            project_files=project_files,
-            project_id=project_id,
-            node_set=node_set,
-            edge_set=edge_set,
-            files_read=files_read,
-            cols_read=cols_read,
-        )
-
-        if write_intermediate:
-            write_graph(
-                node_set=node_set,
-                edge_set=edge_set,
-                source_filter=True,
-                strict=True,
-                source_name=["tabular_data", "experimental_data"],
-                resource_path=os.path.join(RESOURCE_PATH, "artifacts"),
-            )
+    for group_identifier, file_paths, file_ids in tqdm.tqdm(
+        tabular_iterator, total=len(group_identifiers)
+    ):
+        for fp, file_id in zip(file_paths, file_ids):
+            dfs, read_states = load_file(group_identifier=group_identifier, fp=fp)
+            for df, read_state in zip(dfs, read_states):
+                files_read.append(read_state)
+                if df is not None:
+                    tabular_dataset = TabularDataset(
+                        dataset_path=Path(fp),
+                        sheet_name=read_state.get("sheet"),
+                        table=df,
+                    )
+                    ## try to ground everything in the dataframe
+                    tabular_dataset.ground_table(biolink_entity_types=True)
+                    ## quality check groundings and only select those that pass ##
+                    quality_check_groundings(
+                        qc_method=quality_check_method,
+                        table=tabular_dataset,
+                        **kwargs
+                    )
+                    node_set, edge_set = extract_df_graph(
+                        tabular_dataset,
+                        group_identifier,
+                        file_id,
+                        node_set=node_set,
+                        edge_set=edge_set,
+                    )
+                    for col in tabular_dataset.entity_columns:
+                        cols_read.append(
+                            {
+                                "group_identifier": group_identifier,
+                                "file_id": file_id,
+                                "file_path": fp,
+                                "sheet": read_state["sheet"],
+                                "col": col,
+                            }
+                        )
+        write_graph(node_set=node_set, edge_set=edge_set)
     files_df = pandas.DataFrame(data=files_read)
     cols_df = pandas.DataFrame(data=cols_read)
-    ## write a sub-graph with just experimental data
-    if write_set:
-        write_graph(
-            node_set=node_set,
-            edge_set=edge_set,
-            source_filter=True,
-            strict=True,
-            source_name=["tabular_data", "experimental_data"],
-            resource_path=os.path.join(RESOURCE_PATH, "artifacts"),
-        )
-
     if write_reports:
         os.makedirs(REPORT_PATH, exist_ok=True)
         files_df.to_csv(
@@ -567,4 +403,4 @@ def get_tabular_data(
             os.path.join(REPORT_PATH, "col_report.tsv"), sep="\t", index=False
         )
 
-    return node_set, edge_set, [files_df, cols_df]
+    return [files_df, cols_df]

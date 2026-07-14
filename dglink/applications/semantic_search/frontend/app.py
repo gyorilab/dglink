@@ -1,12 +1,19 @@
 from flask import Flask, render_template, request, jsonify
 import requests
 import ast
-
+import os
 app = Flask(__name__)
 
-# BACKEND_URL = "http://backend:8001/"
-BACKEND_URL = "http://semantic_search_backend:8001/"
+# BACKEND_URL = "http://semantic_search_backend:8001/"
+SEMANTIC_SEARCH_BACKEND_URL = os.getenv('SEMANTIC_SEARCH_BACKEND_URL', 'http://semantic_search_backend:8001/')
 
+# Shared DGLink navigation (see mcp/frontend/app.py). Defaults to the
+# docker-compose localhost ports; override via env for other deployments.
+NAV = {
+    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
+    'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
+    'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
+}
 def process_results(raw_results):
     processed = []
     for row in raw_results:
@@ -60,7 +67,7 @@ def index():
         other_agent = request.form.get("OtherAgent")
         query_type = request.form.get("QueryType")
         response = requests.get(
-            f"{BACKEND_URL}/query",
+            f"{SEMANTIC_SEARCH_BACKEND_URL}/query",
             params={
                 "agent": agent,
                 "relation": relation,
@@ -72,7 +79,9 @@ def index():
         raw_result = data["message"]
         result = process_results(raw_results=raw_result)
 
-    return render_template("index.html", result=result, form_data=form_data)
+    return render_template(
+        "index.html", result=result, form_data=form_data, nav=NAV, active="query"
+    )
 
 
 @app.route("/autocomplete")
@@ -80,7 +89,7 @@ def autocomplete():
     query = request.args.get("query", "")
     completion_type = request.args.get("inputId", "").lower()
     response = requests.get(
-        f"{BACKEND_URL}/autoComplete",
+        f"{SEMANTIC_SEARCH_BACKEND_URL}/autoComplete",
         params={
             "query": query,
             "completion_type": completion_type,

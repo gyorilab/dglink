@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DGLink · Query Builder</title>
+  <link rel="stylesheet" href="/static/dglink.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ nav.chat }}">
+      <svg class="brand-logo" width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
+        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
+        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
+      </svg>
+      <span class="brand-name">DGLink</span>
+    </a>
+    <nav class="site-nav">
+      <a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>
+      <a href="{{ nav.sequence }}" class="{{ 'active' if active == 'sequence' else '' }}">Sequence Search</a>
+      <a href="{{ nav.query }}" class="{{ 'active' if active == 'query' else '' }}">Query Builder</a>
+    </nav>
+  </header>
+  <div class="accent-stripe"></div>
+
+  <div class="container">
+    <div class="card">
+      <div class="eyebrow">${PORTAL_NAME}</div>
+      <h1 class="page-title">Knowledge graph semantic search</h1>
+      <p class="subtitle">Query subject / relation / object triples across the ${PORTAL_NAME} knowledge graph</p>
+
+      <form method="POST" style="margin-top: 1.75rem;">
+        <div class="form-field">
+          <label class="label" for="Agent">Agent</label>
+          <input type="text" id="Agent" name="Agent" class="field mono"
+                 value="{{ form_data.Agent }}" autocomplete="off">
+        </div>
+
+        <div class="form-field">
+          <label class="label" for="Relation">Relation</label>
+          <input type="text" id="Relation" name="Relation" class="field mono"
+                 value="{{ form_data.Relation }}" autocomplete="off">
+        </div>
+
+        <div class="form-field">
+          <label class="label" for="OtherAgent">Other agent</label>
+          <input type="text" id="OtherAgent" name="OtherAgent" class="field mono"
+                 value="{{ form_data.OtherAgent }}" autocomplete="off">
+        </div>
+
+        <label class="label">Agent role</label>
+        <div class="role-grid">
+          {% set roles = [
+            ('Subject/Object', 'Subject / Object', 'subject_object.png'),
+            ('Subject', 'Subject', 'subject.png'),
+            ('Object', 'Object', 'object.png')
+          ] %}
+          {% for value, text, img in roles %}
+          <label class="role-card">
+            <img src="{{ url_for('static', filename=img) }}" alt="{{ text }}">
+            <span class="role-option">
+              <input type="radio" name="QueryType" value="{{ value }}"
+                     {% if form_data.QueryType == value %}checked{% endif %}>
+              {{ text }}
+            </span>
+          </label>
+          {% endfor %}
+        </div>
+
+        <div style="text-align:center; margin-top: 1.75rem;">
+          <button type="submit" class="btn btn-primary" style="padding: .7rem 2.5rem;">Search</button>
+        </div>
+      </form>
+    </div>
+
+    {% if result %}
+    <div class="results-panel">
+      <div class="eyebrow">{{ result|length }} match{{ 'es' if result|length != 1 else '' }}</div>
+      <h1 class="page-title" style="margin-bottom: 1rem;">Results</h1>
+
+      {% for row in result %}
+      <div class="card" style="margin-bottom: 1rem;">
+        {% for entry in row %}
+          {% if entry.url %}
+            {% set label = entry.field %}
+            <div class="def-row">
+              <div class="def-label">{{ label }}</div>
+              <div class="def-value"><a class="link" href="{{ entry.url }}" target="_blank" rel="noopener">Link</a></div>
+            </div>
+          {% else %}
+            {% set parts = entry.text.split(': ', 1) %}
+            {% set label = parts[0] if parts|length > 1 else '' %}
+            {% set value = parts[1] if parts|length > 1 else entry.text %}
+            {% set l = label|lower %}
+            <div class="def-row">
+              <div class="def-label">{{ label }}</div>
+              <div class="def-value">
+                {% if 'object' in l and 'identifier' in l %}
+                  <span class="chip chip-obj">{{ value }}</span>
+                {% elif 'identifier' in l %}
+                  <span class="chip chip-id">{{ value }}</span>
+                {% elif l == 'relation' %}
+                  <span class="chip chip-id">{{ value }}</span>
+                {% else %}
+                  {{ value }}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    function setupAutocomplete(inputId, endpoint = "/autocomplete") {
+      const input = document.getElementById(inputId);
+      const suggestionBox = document.createElement('ul');
+      suggestionBox.className = 'autocomplete';
+      suggestionBox.style.display = 'none';
+      input.parentNode.appendChild(suggestionBox);
+
+      let debounceTimeout;
+      input.addEventListener('input', function () {
+        clearTimeout(debounceTimeout);
+        const query = input.value.trim();
+        if (!query) { suggestionBox.style.display = 'none'; return; }
+
+        debounceTimeout = setTimeout(() => {
+          fetch(`${endpoint}?inputId=${encodeURIComponent(inputId)}&query=${encodeURIComponent(query)}`)
+            .then(r => r.json())
+            .then(data => {
+              suggestionBox.innerHTML = '';
+              (data.suggestions || []).forEach(s => {
+                const li = document.createElement('li');
+                li.textContent = s;
+                li.addEventListener('click', () => {
+                  input.value = s;
+                  suggestionBox.style.display = 'none';
+                });
+                suggestionBox.appendChild(li);
+              });
+              suggestionBox.style.display = suggestionBox.children.length ? 'block' : 'none';
+            })
+            .catch(err => console.error('Error fetching autocomplete:', err));
+        }, 300);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !suggestionBox.contains(e.target)) {
+          suggestionBox.style.display = 'none';
+        }
+      });
+    }
+
+    setupAutocomplete('Agent');
+    setupAutocomplete('Relation');
+    setupAutocomplete('OtherAgent');
+  });
+  </script>
+</body>
+</html>

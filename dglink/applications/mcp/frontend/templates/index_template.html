@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DGLink · Chat Assistant</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="/static/dglink.css">
+  <style>:root { --chat-font: ${FONT_SIZE}rem; }</style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ nav.chat }}">
+      <svg class="brand-logo" width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
+        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
+        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
+      </svg>
+      <span class="brand-name">DGLink</span>
+    </a>
+    <nav class="site-nav">
+      <a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>
+      <a href="{{ nav.sequence }}" class="{{ 'active' if active == 'sequence' else '' }}">Sequence Search</a>
+      <a href="{{ nav.query }}" class="{{ 'active' if active == 'query' else '' }}">Query Builder</a>
+    </nav>
+  </header>
+  <div class="accent-stripe"></div>
+
+  <div class="chat">
+    <div class="chat-toolbar">
+      <label for="providerSelect">Model</label>
+      <select id="providerSelect" class="provider-select">
+        <option value="anthropic">Anthropic (Claude)</option>
+        <option value="openai">OpenAI (GPT)</option>
+      </select>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="composer">
+      <textarea id="messageInput" placeholder="Ask a question about the knowledge graph…" rows="1"></textarea>
+      <button id="sendButton" class="btn btn-primary">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const messagesDiv = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const providerSelect = document.getElementById('providerSelect');
+
+    let conversationHistory = [];
+
+    const AVATAR = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
+        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
+        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
+      </svg>`;
+
+    messageInput.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+    });
+
+    messageInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    sendButton.addEventListener('click', sendMessage);
+
+    function addMessage(content, role) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+
+      if (role === 'assistant') {
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.innerHTML = AVATAR;
+        messageDiv.appendChild(avatar);
+      }
+
+      const body = document.createElement('div');
+      body.className = 'msg-body';
+      if (role === 'user') {
+        body.textContent = content;
+      } else {
+        body.innerHTML = content ? marked.parse(content) : '';
+      }
+
+      messageDiv.appendChild(body);
+      messagesDiv.appendChild(messageDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      return body;
+    }
+
+    async function sendMessage() {
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      messageInput.disabled = true;
+      sendButton.disabled = true;
+
+      addMessage(message, 'user');
+      messageInput.value = '';
+      messageInput.style.height = 'auto';
+
+      const responseBody = addMessage('', 'assistant');
+      responseBody.innerHTML = '<span class="loading-dot"></span> Thinking…';
+
+      try {
+        const response = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: message,
+            provider: providerSelect.value,
+            history: conversationHistory
+          })
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = '';
+        responseBody.innerHTML = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          fullResponse += decoder.decode(value, { stream: true });
+          responseBody.innerHTML = marked.parse(fullResponse);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        conversationHistory.push({ role: 'user', content: message });
+        conversationHistory.push({ role: 'assistant', content: fullResponse });
+      } catch (error) {
+        responseBody.textContent = 'Error: ' + error.message;
+        responseBody.classList.add('error');
+      }
+
+      messageInput.disabled = false;
+      sendButton.disabled = false;
+      messageInput.focus();
+    }
+  </script>
+</body>
+</html>

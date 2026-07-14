@@ -6,10 +6,12 @@ from Synapse projects to extract medical imaging metadata and extract biomedical
 entities from unstructured text fields into a knowledge graph structure.
 """
 
-from .constants import syn, RESOURCE_PATH, REPORT_PATH, UNSTRUCTURED_DICOM_FIELDS
+from .constants import RESOURCE_PATH, REPORT_PATH, UNSTRUCTURED_DICOM_FIELDS
+from dglink.portals.nf_data_portal import syn
 from .nodes import NodeSet
 from .edges import EdgeSet
-from .utils import get_project_files, write_graph
+from .utils import write_graph
+from dglink.portals.nf_data_portal.utils import get_project_files 
 import pydicom
 import os
 from bioregistry import normalize_curie
@@ -60,17 +62,17 @@ def process_dicom(
     if not project_granularity:
         ## annotations do not have series identifier so using all this info as a proxy ##
         assay = annotations.get("assay", ["assay_missing"])[0]
-        specimenID = annotations.get("specimenID", ["specimenID_missing"])[0]
-        individualID = annotations.get("individualID", ["individualID_missing"])[0]
-        experimentalTimepoint = annotations.get(
+        specimen_id = annotations.get("specimenID", ["specimenID_missing"])[0]
+        individual_id = annotations.get("individualID", ["individualID_missing"])[0]
+        experimental_timepoint = annotations.get(
             "experimentalTimepoint", ["experimentalTimepoint_missing"]
         )[0]
         series_identifier = (
             project_id,
             assay,
-            specimenID,
-            individualID,
-            experimentalTimepoint,
+            specimen_id,
+            individual_id,
+            experimental_timepoint,
         )
     ## try to process one series per study
     else:

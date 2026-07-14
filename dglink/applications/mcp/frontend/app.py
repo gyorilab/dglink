@@ -6,12 +6,21 @@ import os
 app = Flask(__name__)
 
 # Backend API configuration - use environment variable for Docker, fallback to localhost
-BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:8000')
+MCP_BACKEND_URL = os.getenv('MCP_BACKEND_URL', 'http://localhost:8000')
+
+# Shared DGLink navigation. Each tool runs as its own service; the nav links
+# across them. Override via env if the tools are hosted somewhere other than
+# the default docker-compose localhost ports.
+NAV = {
+    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
+    'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
+    'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
+}
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', nav=NAV, active='chat')
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
@@ -22,7 +31,7 @@ def chat():
         
         # Forward request to your backend
         response = requests.post(
-            f'{BACKEND_URL}/chat',
+            f'{MCP_BACKEND_URL}/chat',
             json={
                 'message': user_message,
                 'provider': model_provider
