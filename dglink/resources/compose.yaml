@@ -1,7 +1,7 @@
 services:
-  neo-4j:
+  neo-4j-working-graph:
     build: .
-    container_name: neo4j
+    container_name: neo-4j-working-graph
     image: "dglink:0.1"
     ports:
       - "7687:7687"
