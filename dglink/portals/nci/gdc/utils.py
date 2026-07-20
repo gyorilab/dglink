@@ -1,4 +1,13 @@
-from .constants import CASES_ENDPNT, FILE_FIELDS, DATA_ENDPNT, GDC_CACHE_DIR
+from .constants import (
+    CASES_ENDPNT,
+    FILE_FIELDS,
+    DATA_ENDPNT,
+    GDC_CACHE_DIR,
+    GDC_LABEL_TO_BIOLINK,
+    GDC_DEFAULT_BIOLINK_CATEGORY,
+    GDC_RELATION,
+    GDC_CURIE_PREFIX,
+)
 from dglink import NodeSet, EdgeSet, write_graph
 from dglink.core.constants import REPORT_PATH
 
@@ -9,8 +18,7 @@ import polars as pl
 import os
 import re
 from subprocess import run
-from typing import Tuple, Iterator
-import pandas as pd
+from typing import Iterator
 
 
 def connect_cases_to_files(
@@ -42,16 +50,25 @@ def connect_cases_to_files(
     return file_to_cases.vstack(cases_df).unique()
 
 
+def gdc_curie(uuid: str) -> str:
+    """Prefix a raw GDC UUID as a `gdc:` CURIE (Biolink requires CURIE node ids)."""
+    return f"{GDC_CURIE_PREFIX}:{uuid}"
+
+
 def get_sample_metadata(hits: list, node_set: NodeSet):
     """
     Manually pulls all metadata field for a sample from the cases end point. Could be better done with existing GDC graph.
+    Samples are typed as biolink:MaterialSample with the GDC-native type in raw_label
+    and the human-readable submitter barcode kept as an alias.
     """
     for hit in hits:
-        for sample in hit.get("samples", [dict()]):
+        for sample in hit.get("samples", []):
             node_set.update_nodes(
                 {
-                    "curie:ID": sample.get("sample_id", "sample_id_missing"),
-                    ":LABEL": "sample",
+                    "curie:ID": gdc_curie(sample.get("sample_id", "sample_id_missing")),
+                    ":LABEL": GDC_LABEL_TO_BIOLINK["sample"],
+                    "raw_label": "sample",
+                    "submitter_id:string[]": sample.get("submitter_id", ""),
                     "tumor_descriptor": sample.get(
                         "tumor_descriptor", "tumor_descriptor_missing"
                     ),
@@ -69,42 +86,74 @@ def get_sample_metadata(hits: list, node_set: NodeSet):
 
 # TODO: Expand logic
 def process_case_hierarchy(hits, node_set, edge_set):
-    """extracts hierarchy from case and adds to graph"""
+    """Extract the case hierarchy and add it to the graph as a Biolink-conformant subgraph.
+
+    Every node carries a valid Biolink category in :LABEL (with the GDC-native type kept
+    in raw_label) and a `gdc:`-prefixed CURIE id. Edges use Biolink predicates (with the
+    GDC-native relation kept in raw_type). The `submitter_*` barcode fields are alternate
+    identifiers, not entities, so they never become nodes; the authoritative barcodes are
+    attached as the submitter_id alias from the case scalar and the nested samples object
+    (the top-level submitter_<type>_ids arrays are not positionally aligned with the UUIDs,
+    so specimen barcodes below the sample level are not reattached).
+    """
     for hit in hits:
-        case_id = hit.get("id", "case_id_missing")
+        case_uuid = hit.get("id", "case_id_missing")
+        case_id = gdc_curie(case_uuid)
         node_set.update_nodes(
             {
                 "curie:ID": case_id,
-                ":LABEL": "case",
+                ":LABEL": GDC_LABEL_TO_BIOLINK["case"],
+                "raw_label": "case",
+                "submitter_id:string[]": hit.get("submitter_id", ""),
             }
         )
-        ## all connected nodes seem to be prefix with id
         for key in hit.keys():
-            ## fields where each case only connected to one node (ex: uploader id)
-            if key.endswith("_id"):
-                vals = [hit.get(key, f"{key}_missing")]
-                label = key.removesuffix("_id")
-            ## fields where each case only connected to one node (ex: sample)
-            elif key.endswith("_ids"):
-                vals = hit.get(key, f"{key}_missing")
-                label = key.removesuffix("_ids")
-            ## ignore other cases
+            ## the case itself is handled above; submitter_* fields are aliases, not nodes
+            if key in ("id", "case_id"):
+                continue
+            if key.endswith("_ids"):
+                native_type = key.removesuffix("_ids")
+                vals = hit.get(key, [])
+            elif key.endswith("_id"):
+                native_type = key.removesuffix("_id")
+                vals = [hit.get(key, "")]
             else:
-                vals = []
-                label = ""
-            ## add identified nodes & edges to graph
+                continue
+            if native_type.startswith("submitter"):
+                continue
+            ## only emit structural entities we have a Biolink mapping for
+            if native_type not in GDC_RELATION:
+                continue
+            predicate, direction = GDC_RELATION[native_type]
+            category = GDC_LABEL_TO_BIOLINK.get(
+                native_type, GDC_DEFAULT_BIOLINK_CATEGORY
+            )
+            ## Note: the parallel submitter_<type>_ids arrays are NOT positionally
+            ## aligned with the UUID arrays, so we do not attach barcodes here.
+            ## Authoritative submitter barcodes come from the case scalar (above)
+            ## and the nested samples object (get_sample_metadata).
             for val in vals:
+                if not val:
+                    continue
+                node_id = gdc_curie(val)
                 node_set.update_nodes(
                     {
-                        "curie:ID": val,
-                        ":LABEL": label,
+                        "curie:ID": node_id,
+                        ":LABEL": category,
+                        "raw_label": native_type,
                     }
+                )
+                start_id, end_id = (
+                    (node_id, case_id)
+                    if direction == "child_to_case"
+                    else (case_id, node_id)
                 )
                 edge_set.update_edges(
                     {
-                        ":START_ID": case_id,
-                        ":END_ID": val,
-                        ":TYPE": f"has_{label}",
+                        ":START_ID": start_id,
+                        ":END_ID": end_id,
+                        ":TYPE": predicate,
+                        "raw_type": f"has_{native_type}",
                     }
                 )
 
@@ -243,8 +292,13 @@ def get_tabular_iterator(case_list: list) -> Iterator:
         )
     )
 
-    ## group by case
-    case_files = project_files.group_by("case_id", maintain_order=True).agg(
-        [pl.col("file_paths"), pl.col("file_id")]
+    ## group by case; yield the gdc: CURIE (not the raw uuid) as the group id so
+    case_files = (
+        project_files.group_by("case_id", maintain_order=True)
+        .agg([pl.col("file_paths"), pl.col("file_id")])
+        .with_columns(
+            case_curie=pl.format("{}:{}", pl.lit(GDC_CURIE_PREFIX), pl.col("case_id"))
+        )
+        .select(["case_curie", "file_paths", "file_id"])
     )
     return case_files.iter_rows()

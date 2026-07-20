@@ -1,5 +1,5 @@
 """
-Assembles a knowledge graph by parsing the NCI General Data Commons (GDC) Portal https://general.datacommons.cancer.gov/#/
+Assembles a knowledge graph by parsing the NCI genomics Data Commons (GDC) Portal https://portal.gdc.cancer.gov/
 """
 
 from dglink import NodeSet, EdgeSet, write_graph
@@ -12,11 +12,9 @@ from dglink.portals.nci.gdc import (
 from dglink.portals.nci.gdc.utils import get_tabular_iterator
 from dglink.core.tabular_data import get_tabular_data
 
-num_cases = 5  ## number of cases to process at max
 batch_size = 500  ## number of cases to process at one
-target_case_id = "9b2c325c-1f03-43c7-ad5c-b49c6d205635"  ## uuid of target case
 case_ids = [
-    target_case_id,
+    "9b2c325c-1f03-43c7-ad5c-b49c6d205635",
     "0e9262d1-5aa8-4528-9aee-2815afcd23cd",
     "0ee53efd-b992-4aeb-a091-8dd1bd32da6e",
 ]
