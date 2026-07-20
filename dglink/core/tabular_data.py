@@ -8,6 +8,7 @@ Uses Gilda for entity recognition and INDRA for ontology typing.
 
 from .constants import (
     REPORT_PATH,
+    GROUP_ENTITY_BIOLINK_PREDICATE,
 )
 from .utils import write_graph
 from .nodes import NodeSet
@@ -28,7 +29,6 @@ from typing import Iterator
 import json
 import numpy as np
 from openai import BadRequestError
-
 
 logger = logging.getLogger(__name__)
 
@@ -152,8 +152,6 @@ def frictionless_file_reader(pth: str, max_size_bytes=100 * 1024 * 1024):
     for res in pack.resources:
         ## type check to make things type safe remove is this cause issue
         if not isinstance(res, TableResource):
-            # import ipdb; ipdb.set_trace()
-            # raise ValueError(f"this should be a table not {type(res)}")  
             continue
         try:
             df_dict[res.name] = pandas.DataFrame(res.read_rows())
@@ -162,9 +160,13 @@ def frictionless_file_reader(pth: str, max_size_bytes=100 * 1024 * 1024):
     return df_dict
 
 
-
 def extract_df_graph(
-    table:TabularDataset, group_identifier, file_id, node_set: NodeSet, edge_set: EdgeSet, pascalify_types:bool = False,
+    table: TabularDataset,
+    group_identifier,
+    file_id,
+    node_set: NodeSet,
+    edge_set: EdgeSet,
+    pascalify_types: bool = False,
 ) -> tuple[NodeSet, EdgeSet]:
     """Extract nodes and edges from grounded entity DataFrame into knowledge graph.
 
@@ -187,7 +189,12 @@ def extract_df_graph(
         Tracks provenance by storing raw text, column names, and file IDs in node attributes.
         Edge types are dynamically created based on entity type (e.g., "has_protein").
     """
-    pascalify = lambda x: "".join(w.capitalize() for w in x.strip("biolink:").split("_"))
+    pascalify = lambda x: "".join(
+        w.capitalize() for w in x.strip("biolink:").split("_")
+    )
+    generate_edge_type = lambda x: (
+        f"has_{x}" if not table.biolink_entity_types else GROUP_ENTITY_BIOLINK_PREDICATE
+    )
     source = set(["tabular_data", "experimental_data"])
     for _, row in table.table.iterrows():
         for col in table.entity_columns:
@@ -217,11 +224,10 @@ def extract_df_graph(
                     {
                         ":START_ID": group_identifier,
                         ":END_ID": entity,
-                        ":TYPE": f"has_{entity_type}",
+                        ":TYPE": generate_edge_type(entity_type),
                         "source:string[]": source,
                     }
                 )
-
     return node_set, edge_set
 
 
@@ -320,18 +326,12 @@ def load_file(group_identifier: str, fp: str):
     return dfs, read_states
 
 
-def quality_check_groundings(
-    qc_method: str,
-    table: TabularDataset,
-    **kwargs
-) -> None:
+def quality_check_groundings(qc_method: str, table: TabularDataset, **kwargs) -> None:
     if qc_method == "heuristic":
         selector = HeuristicSelector(**kwargs)
         selector.execute(table, verbose=True)
     elif qc_method == "llm_schema_match":
-        selector = LLMSelector(
-            **kwargs
-        )
+        selector = LLMSelector(**kwargs)
         selector.execute(table, verbose=True)
 
 
@@ -342,7 +342,7 @@ def get_tabular_data(
     tabular_iterator: Iterator,
     write_reports: bool = True,
     quality_check_method: str = "heuristic",
-    **kwargs
+    **kwargs,
 ) -> list[pandas.DataFrame]:
     """Process tabular data files from multiple groups and build knowledge graph.
 
@@ -370,9 +370,7 @@ def get_tabular_data(
                     tabular_dataset.ground_table(biolink_entity_types=True)
                     ## quality check groundings and only select those that pass ##
                     quality_check_groundings(
-                        qc_method=quality_check_method,
-                        table=tabular_dataset,
-                        **kwargs
+                        qc_method=quality_check_method, table=tabular_dataset, **kwargs
                     )
                     node_set, edge_set = extract_df_graph(
                         tabular_dataset,

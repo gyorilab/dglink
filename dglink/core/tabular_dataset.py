@@ -1,7 +1,8 @@
 """
 Class for holding a tabular dataset and meta information during processing
 """
-from dglink.core.constants import INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP
+
+from dglink.core.constants import map_biolink_category
 from pathlib import Path
 import pandas
 from numpy.random import default_rng
@@ -9,17 +10,27 @@ from typing import Any
 from functools import lru_cache
 from indra.ontology.bio import bio_ontology
 from bioregistry import normalize_curie, get_bioregistry_iri
-import gilda 
-import logging 
+import gilda
+import logging
 
 logger = logging.getLogger(__name__)
 
 TERM_EXCLUSION_LIST = ["yes", "na", "large", "std", "dead"]
 COLUMN_EXCLUSION_LIST = ["Vendor"]
 
-class TabularDataset():
-    entity_columns:list[str] = NotImplemented
-    def __init__(self, dataset_path:Path, sheet_name:str, table:pandas.DataFrame, terms_to_exclude:list[str]=TERM_EXCLUSION_LIST, columns_to_exclude:list[str] = COLUMN_EXCLUSION_LIST, seed:int = 101, ) -> None:
+
+class TabularDataset:
+    entity_columns: list[str] = NotImplemented
+
+    def __init__(
+        self,
+        dataset_path: Path,
+        sheet_name: str,
+        table: pandas.DataFrame,
+        terms_to_exclude: list[str] = TERM_EXCLUSION_LIST,
+        columns_to_exclude: list[str] = COLUMN_EXCLUSION_LIST,
+        seed: int = 101,
+    ) -> None:
         self.dataset_path = dataset_path
         self.sheet_name = sheet_name
         self.table = table
@@ -27,11 +38,13 @@ class TabularDataset():
         self.columns_to_exclude = [x.lower() for x in columns_to_exclude]
         self.original_columns, self.dropped_columns = self._check_column_names()
         self.seed = seed
-        self.biolink_entity_types = False ## initialized as false, but set as true if table grounded with this 
+        self.biolink_entity_types = (
+            False  ## initialized as false, but set as true if table grounded with this
+        )
         self._rng = default_rng(seed=self.seed)
-        self._priority_weights : dict[Any, float] | None = None
-        self._table_frequencies : dict[Any, float] | None = None
-        self._precomputed_sample : list[tuple[Any, float]] | None = None
+        self._priority_weights: dict[Any, float] | None = None
+        self._table_frequencies: dict[Any, float] | None = None
+        self._precomputed_sample: list[tuple[Any, float]] | None = None
 
     def _check_column_names(self):
         """checks a tables column values and drops any in the self.columns_to_exclude stores the rest in a list"""
@@ -42,15 +55,21 @@ class TabularDataset():
             else:
                 original_cols.append(col)
         if len(dropped_columns) > 0:
-            logger.warning(f"Removing {dropped_columns} as they are in columns_to_exclude = {self.columns_to_exclude}")
+            logger.warning(
+                f"Removing {dropped_columns} as they are in columns_to_exclude = {self.columns_to_exclude}"
+            )
             self.table.drop(columns=dropped_columns, inplace=True)
         return original_cols, dropped_columns
+
     def _build_table_frequencies(self):
         """Pre-compute frequency of each value across entire table - upfront"""
         self._table_frequencies = {}
         for col in self.table.columns:
             for val, count in self.table[col].value_counts().items():
-                self._table_frequencies[val] = self._table_frequencies.get(val, 0) + count
+                self._table_frequencies[val] = (
+                    self._table_frequencies.get(val, 0) + count
+                )
+
     def _build_priority_weights(self):
         """Assign random weights to each unique value"""
         if self._table_frequencies is None:
@@ -60,12 +79,14 @@ class TabularDataset():
         self._precomputed_sample = []
         for val in self._table_frequencies.keys():
             self._priority_weights[val] = self._rng.uniform()
-            table_freq = self._table_frequencies.get(val, 1) ## assign frequency of one for missing values
+            table_freq = self._table_frequencies.get(
+                val, 1
+            )  ## assign frequency of one for missing values
             score = table_freq / self._priority_weights[val]
             self._precomputed_sample.append((val, score))
         self._precomputed_sample.sort(key=lambda x: x[1], reverse=True)
 
-    def get_priority_sample(self, col: str, target_size: int)->list[Any]:
+    def get_priority_sample(self, col: str, target_size: int) -> list[Any]:
         """Returns a priority sample of a columns records weighted by frequency across the table.
         Adapted form Magneto by Liu et al https://arxiv.org/pdf/2412.08194
         Pre-computes sample across entire table for efficiency
@@ -77,31 +98,37 @@ class TabularDataset():
             column name in the table
         target_size: int
             goal size of sample, Note: Will return the minimum of the target size and the number of unique column entries.
-        
+
         Returns
         --------
         col_sample: list
-            List of entity names to use for sample rows. 
+            List of entity names to use for sample rows.
         """
         if self._precomputed_sample is None:
             self._build_priority_weights()
-        assert isinstance(self._precomputed_sample, list)   
-        col_sample:list = []
+        assert isinstance(self._precomputed_sample, list)
+        col_sample: list = []
         unique_entries = set(self.table[f"{col}_raw_text"].unique())
         sample_size = min(target_size, len(unique_entries))
-        for key, _ in self._precomputed_sample: 
+        for key, _ in self._precomputed_sample:
             if key in unique_entries:
                 col_sample.append(key)
                 if len(col_sample) >= sample_size:
-                    break  
+                    break
         return col_sample
-    def ground_table(self, biolink_entity_types:bool = False):
+
+    def ground_table(self, biolink_entity_types: bool = False):
         """Ground the table using gilda"""
         self.table = self.table.apply(self._apply_ground, axis=1)
+        ## map back to biolink if desired
         if biolink_entity_types:
             self.biolink_entity_types = True
-            type_cols = [f'{x}_type' for x in self.original_columns]
-            self.table[type_cols] = self.table[type_cols].map(lambda x: INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP.get(x, x))
+            for col in self.original_columns:
+                type_col, entity_col = f"{col}_type", f"{col}_entity"
+                self.table[type_col] = [
+                    map_biolink_category(t, e)
+                    for t, e in zip(self.table[type_col], self.table[entity_col])
+                ]
 
     def _apply_ground(self, row):
         """Apply entity grounding to all columns in a DataFrame row.
