@@ -18,7 +18,7 @@ class NciGeneralCommonsClient:
         self.gql_client = GqlClient(NCI_GQL_ENDPOINT)
         self.gen3_client = Gen3Client(NCI_GEN3_ENDPOINT, gen3_credential_file)
 
-    def get_all_studies(self, only_open:bool = False) -> list[dict]:
+    def get_all_studies(self, only_open: bool = False) -> list[dict]:
         """Get a list of all studies from the NCI GC, and their metadata"""
         base_call = gql("""
                         query GetStudies($first: Int, $offset: Int) {
@@ -35,7 +35,9 @@ class NciGeneralCommonsClient:
                             }
                         }
                     """)
-        all_studies = self.gql_client.batch_execute(query=base_call, variable_values={}, key='studies')
+        all_studies = self.gql_client.batch_execute(
+            query=base_call, variable_values={}, key="studies"
+        )
         if only_open:
             open_studies = []
             for study in all_studies:
@@ -82,7 +84,9 @@ class NciGeneralCommonsClient:
                             }
                         }
                     """)
-        all_study_files = self.gql_client.batch_execute(base_call, {'phs_accession' : phs_accession}, page_size=page_size, key='files')
+        all_study_files = self.gql_client.batch_execute(
+            base_call, {"phs": phs_accession}, page_size=page_size, key="files"
+        )
         df_rep = pl.from_dicts(all_study_files).with_columns(path=pl.lit(None))
         if os.path.exists(files_df_path):
             study_files_df.vstack(df_rep).unique().write_csv(
@@ -114,7 +118,9 @@ class NciGeneralCommonsClient:
             save_directory=save_directory,
             show_progress=show_progress,
         )
-        self._update_study_file_paths(download_resp=download_resp, save_dir=save_directory)
+        self._update_study_file_paths(
+            download_resp=download_resp, save_dir=save_directory
+        )
         return download_resp
 
     def _update_study_file_paths(self, download_resp, save_dir):
@@ -135,7 +141,9 @@ class NciGeneralCommonsClient:
         )
         study_files_df.write_csv(files_df_path, separator="\t")
 
-    def get_all_programs(self,) -> list[dict]:
+    def get_all_programs(
+        self,
+    ) -> list[dict]:
         base_call = gql("""
                         query GetPrograms{
                             programs {
@@ -151,6 +159,7 @@ class NciGeneralCommonsClient:
                         }
                     """)
         return self.gql_client.execute(base_call, {}).get("programs", [])
+
     def get_program_details(self) -> list[dict]:
         list_call = gql("""
             query GetProgramList {
@@ -197,7 +206,9 @@ class NciGeneralCommonsClient:
         """)
 
         return [
-            self.gql_client.execute(detail_call, {"program_name": p["name"]}).get("programDetail", {})
+            self.gql_client.execute(detail_call, {"program_name": p["name"]}).get(
+                "programDetail", {}
+            )
             for p in programs
         ]
 
@@ -227,14 +238,17 @@ class NciGeneralCommonsClient:
             phs = study.get("phs_accession")
             if not phs:
                 continue
-            all_publications.extend(self.gql_client.batch_execute(
-                detail_call,
-                {"phs_accession": phs}, 
-                page_size=page_size,
-                key = 'publications'
-            ))
+            all_publications.extend(
+                self.gql_client.batch_execute(
+                    detail_call,
+                    {"phs_accession": phs},
+                    page_size=page_size,
+                    key="publications",
+                )
+            )
 
         return all_publications
+
     def get_investigators(self, page_size: int = 100) -> list[dict]:
         studies = self.get_all_studies()
         query = gql("""
@@ -268,15 +282,16 @@ class NciGeneralCommonsClient:
             res.extend(
                 self.gql_client.batch_execute(
                     query,
-                    {'phs_accession' : phs},
+                    {"phs_accession": phs},
                     page_size=page_size,
-                    key = 'investigators'
+                    key="investigators",
                 )
             )
         return res
 
-
-    def get_diagnoses(self, page_size: int = 1000, only_open:bool = False) -> list[dict]:
+    def get_diagnoses(
+        self, page_size: int = 1000, only_open: bool = False
+    ) -> list[dict]:
         ## for now
         studies = self.get_all_studies(only_open=only_open)
         query = gql("""
@@ -321,10 +336,7 @@ class NciGeneralCommonsClient:
                 continue
             all_diagnoses.extend(
                 self.gql_client.batch_execute(
-                    query,
-                    {'phs_accession' : phs},
-                    page_size=page_size,
-                    key = 'diagnoses'
+                    query, {"phs_accession": phs}, page_size=page_size, key="diagnoses"
                 )
             )
         return all_diagnoses

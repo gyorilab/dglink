@@ -60,7 +60,7 @@ GDC_CACHE_DIR = os.path.join(
 )
 
 ## Prefix GDC UUIDs with gdc to conform to biolink curies
-GDC_CURIE_PREFIX = "gdc"
+GDC_CURIE_PREFIX = "ncigdc"
 
 ## GDC-native entity type -> concrete Biolink category (verified against Biolink
 ## 4.2.2). The specimen subdivisions have no dedicated Biolink class, so they all

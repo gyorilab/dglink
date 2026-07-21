@@ -1,6 +1,6 @@
 import os
 
-## module store info ## 
+## module store info ##
 home_dir: str = os.getenv("HOME") or "/"
 NCI_GC_CACHE_DIR = os.path.join(
     home_dir,
@@ -9,16 +9,10 @@ NCI_GC_CACHE_DIR = os.path.join(
 )
 ## API endpoints
 NCI_GQL_ENDPOINT = "https://general.datacommons.cancer.gov/v1/graphql/"
-NCI_GEN3_ENDPOINT = 'https://nci-crdc.datacommons.io'
+NCI_GEN3_ENDPOINT = "https://nci-crdc.datacommons.io"
 
-## portal specific tabular file detentions ##  
-NCI_TABULAR_FILE_TYPES = [
-    'CSV',
-    'XLS',
-    'XLSX',
-    'ODS',
-    'TXT'
-]
+## portal specific tabular file detentions ##
+NCI_TABULAR_FILE_TYPES = ["CSV", "XLS", "XLSX", "ODS", "TXT"]
 
 
 NODE_ATTRIBUTES = [
@@ -28,22 +22,22 @@ NODE_ATTRIBUTES = [
     "name",
     "iri",
     "source:string[]",
-    "raw_label", ## holds original label in case we use pascalify to make node labels look nice ##
-    ## Program fields 
-    "program_description", 
+    "raw_label",  ## holds original label in case we use pascalify to make node labels look nice ##
+    ## Program fields
+    "program_description",
     "num_participants",
-    "num_files", 
+    "num_files",
     "num_disease_sites",
     "num_samples",
     "program_url",
-    ## study fields 
+    ## study fields
     "study_access",
     "study_version",
     "study_data_types",
     "short_description",
     ## StudyParticipantGroup
     "subject_count",
-    ## publication fields ## 
+    ## publication fields ##
     "publication_type",
     "publication_status",
     "doi",
@@ -51,7 +45,7 @@ NODE_ATTRIBUTES = [
     "email",
     "role_or_affiliation",
     "title",
-    ## diagnosis fields ## 
+    ## diagnosis fields ##
     "disease_type",
     "primary_site",
     "tissue_or_organ_of_origin",
@@ -80,3 +74,34 @@ EDGE_ATTRIBUTES = [
     "source:string[]",
     "raw_type",
 ]
+
+## --- Biolink mapping ------------------------------------------------------
+## NCI GC ids (program names, phs accessions, DOIs, investigator/diagnosis ids)
+## are not uniform CURIEs; Biolink requires CURIE node ids, so we mint a single
+## `ncigc:` prefix and apply it to every node id and edge endpoint consistently.
+NCI_GC_CURIE_PREFIX = "ncigc"
+GC_LABEL_TO_BIOLINK = {
+    "Program": "biolink:Study",
+    "Study": "biolink:Study",
+    "StudyParticipantGroup": "biolink:StudyPopulation",
+    "Publication": "biolink:Publication",
+    "Investigator": "biolink:Agent",
+    "Diagnosis": "biolink:Disease",
+}
+GC_DEFAULT_BIOLINK_CATEGORY = "biolink:NamedThing"
+
+## GC-native edge type -> Biolink predicate. The native relation is kept in
+## `raw_type`. Note: "Published" is emitted as publication -> study (a publication
+## mentions the study), which reverses the GC-native start/end.
+GC_EDGE_TO_BIOLINK = {
+    "Has_Study": "biolink:has_part",
+    "Has_Participant_Group": "biolink:has_part",
+    "Leads_Study": "biolink:contributes_to",
+    "Study_Has_Diagnosis": "biolink:associated_with",
+    "Published": "biolink:mentions",
+}
+
+
+def gc_curie(value: str) -> str:
+    """Prefix a raw NCI GC id as an `ncigc:` CURIE (Biolink requires CURIE ids)."""
+    return f"{NCI_GC_CURIE_PREFIX}:{value}"
