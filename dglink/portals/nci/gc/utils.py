@@ -228,12 +228,51 @@ def get_diagnoses(
                 "last_known_disease_status": lazzy_get(
                     diagnosis, "last_known_disease_status"
                 ),
+                "days_to_recurrence": lazzy_get(diagnosis, "days_to_recurrence"),
+                "days_to_last_followup": lazzy_get(diagnosis, "days_to_last_followup"),
+                "days_to_last_known_disease_status": lazzy_get(
+                    diagnosis, "days_to_last_known_disease_status"
+                ),
+                "study_diagnosis_id": lazzy_get(diagnosis, "study_diagnosis_id"),
                 "crdc_id": lazzy_get(diagnosis, "crdc_id"),
                 "source:string[]": "clinical",
             }
         )
+        ## Prefer attaching the diagnosis to its participant (a biolink:Case) so GC has
+        ## case-level granularity like GDC/PDC; also link the study to the participant.
+        ## Fall back to a study -> diagnosis edge when no participant id is present.
+        participant_id = diagnosis.get("participant_id")
         phs = diagnosis.get("phs_accession")
-        if phs:
+        if participant_id:
+            participant_curie = gc_curie(participant_id)
+            node_set.update_nodes(
+                {
+                    "curie:ID": participant_curie,
+                    ":LABEL": GC_LABEL_TO_BIOLINK["Participant"],
+                    "raw_label": "Participant",
+                    "source:string[]": "structural_information",
+                }
+            )
+            edge_set.update_edges(
+                {
+                    ":START_ID": participant_curie,
+                    ":END_ID": diag_curie,
+                    ":TYPE": GC_EDGE_TO_BIOLINK["Participant_Has_Diagnosis"],
+                    "raw_type": "Participant_Has_Diagnosis",
+                    "source:string[]": "clinical",
+                }
+            )
+            if phs:
+                edge_set.update_edges(
+                    {
+                        ":START_ID": gc_curie(phs),
+                        ":END_ID": participant_curie,
+                        ":TYPE": GC_EDGE_TO_BIOLINK["Study_Has_Participant"],
+                        "raw_type": "Study_Has_Participant",
+                        "source:string[]": "structural_information",
+                    }
+                )
+        elif phs:
             edge_set.update_edges(
                 {
                     ":START_ID": gc_curie(phs),

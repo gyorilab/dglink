@@ -60,6 +60,10 @@ NODE_ATTRIBUTES = [
     "incidence_type",
     "progression_or_recurrence",
     "last_known_disease_status",
+    "days_to_recurrence",
+    "days_to_last_followup",
+    "days_to_last_known_disease_status",
+    "study_diagnosis_id",
     "crdc_id",
     ## tabular data fields ##
     "raw_texts:string[]",
@@ -87,6 +91,7 @@ GC_LABEL_TO_BIOLINK = {
     "Publication": "biolink:Publication",
     "Investigator": "biolink:Agent",
     "Diagnosis": "biolink:Disease",
+    "Participant": "biolink:Case",
 }
 GC_DEFAULT_BIOLINK_CATEGORY = "biolink:NamedThing"
 
@@ -98,6 +103,8 @@ GC_EDGE_TO_BIOLINK = {
     "Has_Participant_Group": "biolink:has_part",
     "Leads_Study": "biolink:contributes_to",
     "Study_Has_Diagnosis": "biolink:associated_with",
+    "Study_Has_Participant": "biolink:has_part",
+    "Participant_Has_Diagnosis": "biolink:associated_with",
     "Published": "biolink:mentions",
 }
 
