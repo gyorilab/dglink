@@ -55,6 +55,14 @@ def gdc_curie(uuid: str) -> str:
     return f"{GDC_CURIE_PREFIX}:{uuid}"
 
 
+def _flatten(value) -> str:
+    """Flatten a GDC value that may be a list (e.g. project.disease_type) or scalar
+    into a single '; '-joined string, so it fits a scalar node attribute."""
+    if isinstance(value, (list, tuple, set)):
+        return "; ".join(str(v) for v in value if v)
+    return "" if value is None else str(value)
+
+
 def get_sample_metadata(hits: list, node_set: NodeSet):
     """
     Manually pulls all metadata field for a sample from the cases end point. Could be better done with existing GDC graph.
@@ -68,6 +76,7 @@ def get_sample_metadata(hits: list, node_set: NodeSet):
                     "curie:ID": gdc_curie(sample.get("sample_id", "sample_id_missing")),
                     ":LABEL": GDC_LABEL_TO_BIOLINK["sample"],
                     "raw_label": "sample",
+                    "source:string[]": "structural_information",
                     "submitter_id:string[]": sample.get("submitter_id", ""),
                     "tumor_descriptor": sample.get(
                         "tumor_descriptor", "tumor_descriptor_missing"
@@ -80,6 +89,52 @@ def get_sample_metadata(hits: list, node_set: NodeSet):
                     "preservation_method": sample.get(
                         "preservation_method", "preservation_method_missing"
                     ),
+                }
+            )
+
+
+def get_diagnosis_metadata(hits: list, node_set: NodeSet):
+    """Enrich the biolink:Disease nodes with the expanded GDC diagnosis fields.
+
+    The case hierarchy loop already mints a bare Disease node (from the case's
+    diagnosis_ids) and the case --associated_with--> diagnosis edge; here we attach
+    the clinical attributes from the expanded `diagnoses` object, keyed on the same
+    `diagnosis_id` CURIE so the two updates merge. Field names mirror the GC diagnosis
+    parser so the same properties line up across portals.
+    """
+    for hit in hits:
+        for diagnosis in hit.get("diagnoses", []):
+            diagnosis_id = diagnosis.get("diagnosis_id")
+            if not diagnosis_id:
+                continue
+            node_set.update_nodes(
+                {
+                    "curie:ID": gdc_curie(diagnosis_id),
+                    ":LABEL": GDC_LABEL_TO_BIOLINK["diagnosis"],
+                    "raw_label": "diagnosis",
+                    "name": diagnosis.get("primary_diagnosis", ""),
+                    "primary_diagnosis": diagnosis.get("primary_diagnosis", ""),
+                    "morphology": diagnosis.get("morphology", ""),
+                    "tissue_or_organ_of_origin": diagnosis.get(
+                        "tissue_or_organ_of_origin", ""
+                    ),
+                    "site_of_resection_or_biopsy": diagnosis.get(
+                        "site_of_resection_or_biopsy", ""
+                    ),
+                    "tumor_grade": diagnosis.get("tumor_grade", ""),
+                    "ajcc_pathologic_stage": diagnosis.get("ajcc_pathologic_stage", ""),
+                    "classification_of_tumor": diagnosis.get(
+                        "classification_of_tumor", ""
+                    ),
+                    "prior_malignancy": diagnosis.get("prior_malignancy", ""),
+                    "age_at_diagnosis": diagnosis.get("age_at_diagnosis", ""),
+                    "progression_or_recurrence": diagnosis.get(
+                        "progression_or_recurrence", ""
+                    ),
+                    "last_known_disease_status": diagnosis.get(
+                        "last_known_disease_status", ""
+                    ),
+                    "source:string[]": "clinical",
                 }
             )
 
@@ -99,14 +154,51 @@ def process_case_hierarchy(hits, node_set, edge_set):
     for hit in hits:
         case_uuid = hit.get("id", "case_id_missing")
         case_id = gdc_curie(case_uuid)
+        ## case-level demographic (expanded object) is attached as case properties
+        demographic = hit.get("demographic") or {}
         node_set.update_nodes(
             {
                 "curie:ID": case_id,
                 ":LABEL": GDC_LABEL_TO_BIOLINK["case"],
                 "raw_label": "case",
+                "source:string[]": "structural_information",
                 "submitter_id:string[]": hit.get("submitter_id", ""),
+                "gender": demographic.get("gender", ""),
+                "race": demographic.get("race", ""),
+                "ethnicity": demographic.get("ethnicity", ""),
+                "vital_status": demographic.get("vital_status", ""),
+                "age_at_index": demographic.get("age_at_index", ""),
+                "days_to_death": demographic.get("days_to_death", ""),
+                "days_to_birth": demographic.get("days_to_birth", ""),
             }
         )
+        ## the owning project maps to a biolink:Study (parity with GC/PDC studies);
+        ## disease_type / primary_site are GDC arrays, flattened to a scalar string
+        project = hit.get("project") or {}
+        project_id = project.get("project_id")
+        if project_id:
+            project_curie = gdc_curie(project_id)
+            node_set.update_nodes(
+                {
+                    "curie:ID": project_curie,
+                    ":LABEL": "biolink:Study",
+                    "raw_label": "project",
+                    "name": project.get("name", project_id),
+                    "disease_type": _flatten(project.get("disease_type")),
+                    "primary_site": _flatten(project.get("primary_site")),
+                    "program": (project.get("program") or {}).get("name", ""),
+                    "source:string[]": "structural_information",
+                }
+            )
+            edge_set.update_edges(
+                {
+                    ":START_ID": project_curie,
+                    ":END_ID": case_id,
+                    ":TYPE": "biolink:has_part",
+                    "raw_type": "has_case",
+                    "source:string[]": "structural_information",
+                }
+            )
         for key in hit.keys():
             ## the case itself is handled above; submitter_* fields are aliases, not nodes
             if key in ("id", "case_id"):
@@ -128,6 +220,11 @@ def process_case_hierarchy(hits, node_set, edge_set):
             category = GDC_LABEL_TO_BIOLINK.get(
                 native_type, GDC_DEFAULT_BIOLINK_CATEGORY
             )
+            ## diagnoses are clinical facts about the case; everything else in the
+            ## case hierarchy is structural specimen provenance
+            provenance = (
+                "clinical" if native_type == "diagnosis" else "structural_information"
+            )
             ## Note: the parallel submitter_<type>_ids arrays are NOT positionally
             ## aligned with the UUID arrays, so we do not attach barcodes here.
             ## Authoritative submitter barcodes come from the case scalar (above)
@@ -141,6 +238,7 @@ def process_case_hierarchy(hits, node_set, edge_set):
                         "curie:ID": node_id,
                         ":LABEL": category,
                         "raw_label": native_type,
+                        "source:string[]": provenance,
                     }
                 )
                 start_id, end_id = (
@@ -154,6 +252,7 @@ def process_case_hierarchy(hits, node_set, edge_set):
                         ":END_ID": end_id,
                         ":TYPE": predicate,
                         "raw_type": f"has_{native_type}",
+                        "source:string[]": provenance,
                     }
                 )
 
@@ -189,7 +288,9 @@ def get_case_hierarchy(
     params: dict[str, str | int] = {
         "filters": json.dumps(filters),
         "format": "JSON",
-        "expand": "files,samples",  ## get associated files and expand samples
+        ## expand nested objects we enrich: files, specimen samples, clinical
+        ## diagnoses, case-level demographic, and the owning project
+        "expand": "files,samples,diagnoses,demographic,project",
     }
     cases_to_files_path = os.path.join(GDC_CACHE_DIR, "cases_to_files.tsv")
     ## load from cache if already exists
@@ -206,6 +307,7 @@ def get_case_hierarchy(
         hits = data.get("hits", [dict()])
         case_to_files = connect_cases_to_files(hits=hits, file_to_cases=case_to_files)
         get_sample_metadata(hits, node_set=node_set)
+        get_diagnosis_metadata(hits, node_set=node_set)
         process_case_hierarchy(hits=hits, node_set=node_set, edge_set=edge_set)
         if x % (batch_length * 10) == 0:
             write_graph(node_set, edge_set)
@@ -284,7 +386,7 @@ def get_tabular_iterator(case_list: list) -> Iterator:
         & pl.col("file_data_format").eq("TSV")
         & pl.col("case_id").is_in(case_list)
     ).with_columns(
-        file_paths=pl.format(  # Better than string concat
+        file_paths=pl.format(
             "{}/files/{}/{}",
             pl.lit(GDC_CACHE_DIR),
             pl.col("file_id"),

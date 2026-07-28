@@ -18,11 +18,36 @@ NODE_ATTRIBUTES = [
     "columns:string[]",
     "file_id:string[]",
     "submitter_id:string[]",  ## human-readable GDC submitter barcode(s); an alias, not a node
+    ## sample (specimen) fields
     "tumor_descriptor",
     "specimen_type",
     "sample_type",
     "tissue_type",
     "preservation_method",
+    ## case demographic fields (expanded `demographic` object)
+    "gender",
+    "race",
+    "ethnicity",
+    "vital_status",
+    "age_at_index",
+    "days_to_death",
+    "days_to_birth",
+    ## project -> biolink:Study fields (expanded `project` object)
+    "program",
+    "disease_type",
+    "primary_site",
+    ## diagnosis (biolink:Disease) fields (expanded `diagnoses` object)
+    "primary_diagnosis",
+    "morphology",
+    "tissue_or_organ_of_origin",
+    "site_of_resection_or_biopsy",
+    "tumor_grade",
+    "ajcc_pathologic_stage",
+    "classification_of_tumor",
+    "prior_malignancy",
+    "age_at_diagnosis",
+    "progression_or_recurrence",
+    "last_known_disease_status",
 ]
 EDGE_ATTRIBUTES = [
     ## core fields - all edges should have ths other fields are optional

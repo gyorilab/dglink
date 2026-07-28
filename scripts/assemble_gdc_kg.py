@@ -18,6 +18,8 @@ case_ids = [
     "0e9262d1-5aa8-4528-9aee-2815afcd23cd",
     "0ee53efd-b992-4aeb-a091-8dd1bd32da6e",
 ]
+RESOURCE_PATH = "nci_gdc_graph"  ## where the assembled GC graph is written
+
 if __name__ == "__main__":
     ## set up a new node and edge set
     node_set = NodeSet(attributes=NODE_ATTRIBUTES)
@@ -35,6 +37,6 @@ if __name__ == "__main__":
         node_set=node_set,
         edge_set=edge_set,
         tabular_iterator=case_to_files,
-        quality_check_method='heuristic'
+        quality_check_method="heuristic",
     )
-    write_graph(node_set=node_set, edge_set=edge_set)
+    write_graph(node_set=node_set, edge_set=edge_set, resource_path=RESOURCE_PATH)
