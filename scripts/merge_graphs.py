@@ -138,6 +138,6 @@ def merge_graphs(inputs: dict, output_path: str = "merged_graph", write: bool = 
 
 if __name__ == "__main__":
     merge_graphs(
-        inputs={"nci_gc_graph": "gc", "nci_gdc_graph": "gdc"},
+        inputs={"nci_gc_graph": "gc", "nci_gdc_graph": "gdc", "nci_pdc_graph": "pdc"},
         output_path="merged_graph",
     )
