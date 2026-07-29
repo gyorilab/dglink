@@ -10,10 +10,14 @@ SEMANTIC_SEARCH_BACKEND_URL = os.getenv('SEMANTIC_SEARCH_BACKEND_URL', 'http://s
 # Shared DGLink navigation (see mcp/frontend/app.py). Defaults to the
 # docker-compose localhost ports; override via env for other deployments.
 NAV = {
+    'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/'),
     'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
     'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
 }
+
+# When false, the Sequence Search tab is hidden in the nav everywhere.
+SHOW_SEQUENCE_SEARCH = os.getenv('SHOW_SEQUENCE_SEARCH', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
 def process_results(raw_results):
     processed = []
     for row in raw_results:
@@ -80,7 +84,8 @@ def index():
         result = process_results(raw_results=raw_result)
 
     return render_template(
-        "index.html", result=result, form_data=form_data, nav=NAV, active="query"
+        "index.html", result=result, form_data=form_data, nav=NAV, active="query",
+        show_sequence=SHOW_SEQUENCE_SEARCH,
     )
 
 

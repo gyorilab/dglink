@@ -13,15 +13,19 @@ BACKEND_URL = os.getenv('GENOMIC_INDEX_QUERY_BACKEND_URL', 'http://localhost:800
 # Shared DGLink navigation (see mcp/frontend/app.py). Defaults to the
 # docker-compose localhost ports; override via env for other deployments.
 NAV = {
+    'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/'),
     'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
     'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
 }
 
+# When false, the Sequence Search tab is hidden in the nav everywhere.
+SHOW_SEQUENCE_SEARCH = os.getenv('SHOW_SEQUENCE_SEARCH', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
 
 @app.route('/')
 def index():
-    return render_template('index.html', nav=NAV, active='sequence')
+    return render_template('index.html', nav=NAV, active='sequence', show_sequence=SHOW_SEQUENCE_SEARCH)
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():

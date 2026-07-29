@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DGLink · Overview</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="/static/dglink.css">
+  <style>
+    :root { --chat-font: ${FONT_SIZE}rem; }
+
+    /* Full-bleed layout: use the whole width of the page. */
+    .container { max-width: none; width: 100%; margin: 0; padding: 1.5rem 2.5rem 3rem; }
+    .section { margin: 2rem 0; }
+    .section-head { margin-bottom: 1rem; }
+    .lead { font-size: 1.08rem; color: var(--body); margin: .6rem 0; }
+    .lead strong { color: var(--ink); }
+
+    /* Hero */
+    .hero { padding: 2rem 1.9rem; }
+    .hero .page-title { font-size: 2.3rem; }
+
+    /* Stat tiles */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .stat-tile {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.2rem 1.3rem;
+      box-shadow: var(--shadow);
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: .35rem;
+    }
+
+    /* Breakdown tables (entities / relationships by type) */
+    .breakdown { margin-top: 1.2rem; }
+    .breakdown h3 {
+      font-size: .82rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); font-weight: 700; margin-bottom: .7rem;
+    }
+    /* A neutral-track share bar used inside table rows. */
+    .mini-bar { flex: 1; min-width: 60px; height: 8px; background: var(--bg); border-radius: 999px; overflow: hidden; }
+    .mini-bar > span { display: block; height: 100%; min-width: 4px; background: var(--teal); border-radius: 999px; }
+    .mini-bar.gold > span { background: var(--gold); }
+    /* Per-type table cells */
+    .prov-table td.z { color: var(--muted); }                    /* an empty (zero) count */
+    .prov-table th.xp, .prov-table td.xp { color: var(--teal-dark); }   /* cross-portal overlap */
+    .prov-table td.xp { font-weight: 700; }
+    .prov-table td.tot { font-weight: 700; color: var(--ink); }
+
+    .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .portal-card { border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.2rem; background: var(--card); box-shadow: var(--shadow); }
+    .portal-card .p-key { font-family: var(--mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--teal-dark); }
+    .portal-card .p-name { font-weight: 700; color: var(--ink); margin: .1rem 0 .6rem; }
+    .portal-card .p-nums { font-size: .88rem; color: var(--body); }
+    .portal-card .p-nums strong { color: var(--ink); }
+
+    /* Processing-coverage cards */
+    .cov-badge {
+      display: inline-block; font-family: var(--mono); font-size: .62rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em; padding: .18rem .5rem; border-radius: 6px;
+    }
+    .cov-badge.full { background: var(--teal-tint); color: var(--teal-dark); }
+    .cov-badge.poc { background: var(--gold-tint); color: var(--gold-text); }
+    .cov-note { color: var(--body); font-size: .9rem; margin: .6rem 0 .9rem; }
+    .cov-metrics { display: flex; flex-wrap: wrap; gap: 1.1rem 1.6rem; }
+    .cov-metric .m-val { font-size: 1.5rem; font-weight: 800; color: var(--teal-dark); line-height: 1; letter-spacing: -.02em; }
+    .cov-metric .m-lab { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .25rem; max-width: 130px; }
+
+    .feature-list { list-style: none; margin: .5rem 0 0; }
+    .feature-list li { padding: .35rem 0 .35rem 1.6rem; position: relative; color: var(--body); }
+    .feature-list li::before {
+      content: ""; position: absolute; left: 0; top: .78rem;
+      width: 8px; height: 8px; border-radius: 2px; background: var(--teal);
+    }
+
+    /* Example queries */
+    .examples { display: flex; flex-direction: column; gap: .6rem; }
+    .example-btn {
+      text-align: left;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 10px;
+      padding: .8rem 1rem;
+      font-family: var(--sans);
+      font-size: .95rem;
+      color: var(--body);
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .example-btn:hover { background: var(--teal-tint); border-left-color: var(--teal-dark); }
+
+    /* Query box (reuses chat primitives, but sits in the page flow) */
+    .query-panel { padding: 1.6rem 1.9rem; }
+    .query-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: .5rem; margin-bottom: .8rem; }
+    .query-toolbar label { font-size: .85rem; color: var(--muted); }
+    .query-messages { display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 1rem; max-height: 520px; overflow-y: auto; }
+    .query-messages:empty { display: none; }
+    .hint { color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+
+    /* Provenance breakdown table (extracted vs metadata by portal membership) */
+    .prov-table { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .9rem; }
+    .prov-table th, .prov-table td { padding: .55rem .7rem; border-bottom: 1px solid var(--border); text-align: left; }
+    .prov-table th { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; }
+    .prov-table th.num, .prov-table td.num { text-align: right; font-family: var(--mono); }
+    .prov-table td.pm { font-weight: 600; color: var(--ink); }
+    .prov-table tr.overlap td.pm { color: var(--teal-dark); }
+    .prov-table tr.total-row td { border-top: 2px solid var(--border); border-bottom: none; font-weight: 700; }
+    .prov-table .badge {
+      font-family: var(--mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .06em;
+      background: var(--teal-tint); color: var(--teal-dark); padding: .1rem .4rem; border-radius: 6px;
+      margin-left: .45rem; vertical-align: middle;
+    }
+    .split { display: flex; align-items: center; gap: .55rem; min-width: 130px; }
+    .split-bar { flex: 1; min-width: 70px; height: 8px; background: var(--gold); border-radius: 999px; overflow: hidden; }
+    .split-extracted { display: block; height: 100%; background: var(--teal); border-radius: 999px; }
+    .split-pct { font-family: var(--mono); font-size: .78rem; color: var(--muted); width: 46px; text-align: right; }
+    .legend { display: flex; gap: 1.2rem; margin-top: .7rem; font-size: .82rem; color: var(--muted); }
+    .legend .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: .35rem; vertical-align: middle; }
+    .legend .swatch.teal { background: var(--teal); }
+    .legend .swatch.gold { background: var(--gold); }
+
+    /* Headline callout (three-way genes) */
+    .callout {
+      border-left: 4px solid var(--gold);
+      background: var(--teal-tint);
+      border-radius: 0 12px 12px 0;
+      padding: 1.1rem 1.3rem;
+      margin-top: 1.1rem;
+    }
+    .callout .big { font-size: 2.1rem; font-weight: 800; color: var(--teal-dark); line-height: 1; letter-spacing: -.02em; }
+    .callout .cap { color: var(--body); margin-top: .35rem; }
+
+    /* Neo4j browser card */
+    .browser-row { display: flex; flex-wrap: wrap; gap: 1.4rem; align-items: flex-start; }
+    .browser-row > div { flex: 1 1 280px; }
+    .btn-browser {
+      display: inline-block; text-decoration: none;
+      background: var(--teal); color: #fff; font-weight: 700;
+      padding: .7rem 1.2rem; border-radius: 10px; margin-top: .5rem;
+      transition: background .15s;
+    }
+    .btn-browser:hover { background: var(--teal-dark); }
+    .cypher {
+      font-family: var(--mono); font-size: .82rem;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: .9rem 1rem; white-space: pre; overflow-x: auto; color: var(--ink); margin: 0;
+    }
+    .copy-btn {
+      font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em;
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: .35rem .7rem; cursor: pointer; margin-top: .5rem; color: var(--muted);
+    }
+    .copy-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ nav.overview }}">
+      <svg class="brand-logo" width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
+        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
+        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
+      </svg>
+      <span class="brand-name">DGLink</span>
+    </a>
+    <nav class="site-nav">
+      <a href="{{ nav.overview }}" class="{{ 'active' if active == 'overview' else '' }}">Overview</a>
+      <a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>
+      <a href="{{ nav.query }}" class="{{ 'active' if active == 'query' else '' }}">Query Builder</a>
+      {% if show_sequence %}<a href="{{ nav.sequence }}" class="{{ 'active' if active == 'sequence' else '' }}">Sequence Search</a>{% endif %}
+      <a href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Graph Browser ↗</a>
+    </nav>
+  </header>
+  <div class="accent-stripe"></div>
+
+  <div class="container">
+
+    <!-- ============ 1. About DGLink ============ -->
+    <section class="section">
+      <div class="card hero">
+        <!-- <div class="eyebrow">DGLink</div> -->
+        <h1 class="page-title">DGLink: Semantic interoperability for biomedical data portals</h1>
+        <p class="lead">
+          DGLink brings <strong>semantic interoperability</strong> to data portals through
+          automated metadata extraction and knowledge-graph construction. It links data
+          <strong>within</strong> a portal and maps it to <strong>external knowledge</strong>,
+          enabling knowledge-driven data interpretation and cross-portal discovery.
+        </p>
+        <p class="lead">
+          This page is the hub for the DGLink tool suite. Explore the graph statistics below,
+          then jump into the <a class="link" href="{{ nav.chat }}">Chat Assistant</a>{% if show_sequence %},
+          <a class="link" href="{{ nav.query }}">Query Builder</a>, or
+          <a class="link" href="{{ nav.sequence }}">Sequence Search</a>{% else %} or
+          <a class="link" href="{{ nav.query }}">Query Builder</a>{% endif %} — or run a natural-language
+          query right here.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ 2. Graph summary stats ============ -->
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Knowledge graph</div>
+        <h2 class="page-title" style="font-size:1.6rem;">{{ graph_name }}</h2>
+      </div>
+
+      {% if stats %}
+      <div class="stat-grid">
+        <div class="stat-tile">
+          <div class="stat-value">{{ '{:,}'.format(stats.node_total) }}</div>
+          <div class="stat-label">Nodes</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ '{:,}'.format(stats.edge_total) }}</div>
+          <div class="stat-label">Edges</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ stats.label_count }}</div>
+          <div class="stat-label">Entity types</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ stats.edge_type_count }}</div>
+          <div class="stat-label">Relation types</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ '{:,}'.format(stats.multi_portal_nodes) }}</div>
+          <div class="stat-label">Cross-portal nodes</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem;">
+        <div class="breakdown">
+          <h3>Entities by type &middot; {{ stats.label_count }} types</h3>
+          <table class="prov-table">
+            <thead>
+              <tr>
+                <th>Entity type</th>
+                {% for k in stats.portal_keys %}<th class="num">{{ stats.portal_col_labels[k] }}</th>{% endfor %}
+                <th class="num">Total</th>
+                <th class="num xp">Cross-portal</th>
+                <th>Share of all nodes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in stats.node_type_rows %}
+              <tr>
+                <td class="pm">{{ r.name }}</td>
+                {% for k in stats.portal_keys %}
+                <td class="num {{ 'z' if not r.by_portal[k] }}">{{ '{:,}'.format(r.by_portal[k]) if r.by_portal[k] else '–' }}</td>
+                {% endfor %}
+                <td class="num tot">{{ '{:,}'.format(r.total) }}</td>
+                <td class="num xp {{ 'z' if not r.shared }}">{{ '{:,}'.format(r.shared) if r.shared else '–' }}</td>
+                <td>
+                  <div class="split">
+                    <span class="mini-bar"><span style="width: {{ r.pct }}%"></span></span>
+                    <span class="split-pct">{{ r.pct }}%</span>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <p class="hint" style="margin-top:.6rem;">
+            Portal columns count a node once for <em>each</em> portal it belongs to, so cross-portal
+            entities add to more than one — <strong>Cross-portal</strong> is how many nodes of that type
+            are shared across two or more portals.
+          </p>
+        </div>
+
+        <div class="breakdown">
+          <h3>Relationships by type &middot; {{ stats.edge_type_count }} types</h3>
+          <table class="prov-table">
+            <thead>
+              <tr>
+                <th>Relationship type</th>
+                {% for k in stats.portal_keys %}<th class="num">{{ stats.portal_col_labels[k] }}</th>{% endfor %}
+                <th class="num">Total</th>
+                <th>Share of all edges</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in stats.edge_type_rows %}
+              <tr>
+                <td class="pm">{{ r.name }}</td>
+                {% for k in stats.portal_keys %}
+                <td class="num {{ 'z' if not r.by_portal[k] }}">{{ '{:,}'.format(r.by_portal[k]) if r.by_portal[k] else '–' }}</td>
+                {% endfor %}
+                <td class="num tot">{{ '{:,}'.format(r.total) }}</td>
+                <td>
+                  <div class="split">
+                    <span class="mini-bar gold"><span style="width: {{ r.pct }}%"></span></span>
+                    <span class="split-pct">{{ r.pct }}%</span>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {% if stats.portals %}
+      <div class="breakdown" style="margin-top:1.4rem;">
+        <h3>Coverage by portal</h3>
+        <div class="portal-grid">
+          {% for p in stats.portals %}
+          <div class="portal-card">
+            <div class="p-key">{{ p.key }}</div>
+            <div class="p-name">{{ p.label }}</div>
+            <div class="p-nums"><strong>{{ '{:,}'.format(p.nodes) }}</strong> nodes · <strong>{{ '{:,}'.format(p.edges) }}</strong> edges</div>
+          </div>
+          {% endfor %}
+        </div>
+        <p class="hint" style="margin-top:.8rem;">
+          Nodes are counted once per portal they appear in, so cross-portal entities
+          (e.g. a shared gene) contribute to more than one column — that overlap is
+          exactly what merging the portals produces.
+        </p>
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="error-banner">
+        Graph statistics are unavailable — the graph files were not found at the mount point.
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- ============ 2a. What was processed (coverage) ============ -->
+    {% if stats and stats.processing_coverage %}
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Coverage</div>
+        <h2 class="page-title" style="font-size:1.6rem;">What was processed</h2>
+        <p class="lead">
+          DGLink extracts from the data files a portal makes downloadable, so how much of each portal
+          was processed differs. The General Commons was covered in full at the open-access level; the
+          Genomic and Proteomic Data Commons were processed as proofs of concept.
+        </p>
+      </div>
+      <div class="portal-grid">
+        {% for c in stats.processing_coverage %}
+        <div class="portal-card">
+          <div class="p-key">{{ c.key }}</div>
+          <div class="p-name">{{ c.label }}</div>
+          <span class="cov-badge {{ c.variant }}">{{ c.scope }}</span>
+          <p class="cov-note">{{ c.note }}</p>
+          <div class="cov-metrics">
+            {% for m in c.metrics %}
+            <div class="cov-metric">
+              <div class="m-val">{{ '{:,}'.format(m.value) }}</div>
+              <div class="m-lab">{{ m.label }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ============ 2b. Inside the merge (cross-portal story) ============ -->
+    {% if stats %}
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Interoperability</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Inside the merge</h2>
+        <p class="lead">
+          Every node and edge records the portal(s) it came from. When DGLink recognizes that an
+          entity seen in different portals is the <strong>same real-world thing</strong>, it collapses
+          them into one node whose portal list keeps every origin. Those shared nodes are the bridges
+          that make cross-portal questions answerable.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="callout">
+          <div class="big">{{ '{:,}'.format(stats.three_way_genes) }}</div>
+          <div class="cap">
+            genes observed across <strong>all three</strong> CRDC portals (GC · GDC · PDC) — the same
+            gene independently surfacing in genomic, general and proteomic commons. That triangulation
+            across data modalities is something no single portal can produce.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem;">
+        <div class="breakdown">
+          <h3>Extracted vs. exposed metadata, by portal membership</h3>
+          <p class="hint" style="margin-top:-.3rem;">
+            Each row is a set of portals a node belongs to; rows spanning more than one portal are the
+            cross-portal <strong>bridges</strong>. <em>Extracted</em> = content DGLink pulled from the data
+            files; <em>metadata</em> = what the portals already expose.
+          </p>
+          <table class="prov-table">
+            <thead>
+              <tr>
+                <th>Portal membership</th>
+                <th class="num">Extracted</th>
+                <th class="num">Metadata</th>
+                <th class="num">Total</th>
+                <th>Split (% extracted)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in stats.provenance_breakdown.rows %}
+              <tr class="{{ 'overlap' if r.portals_count > 1 else '' }}">
+                <td class="pm">{{ r.combo }}{% if r.portals_count > 1 %}<span class="badge">bridge</span>{% endif %}</td>
+                <td class="num">{{ '{:,}'.format(r.extracted) }}</td>
+                <td class="num">{{ '{:,}'.format(r.metadata) }}</td>
+                <td class="num">{{ '{:,}'.format(r.total) }}</td>
+                <td>
+                  <div class="split">
+                    <span class="split-bar"><span class="split-extracted" style="width: {{ r.pct_extracted }}%"></span></span>
+                    <span class="split-pct">{{ r.pct_extracted }}%</span>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+              <tr class="total-row">
+                <td class="pm">All portals</td>
+                <td class="num">{{ '{:,}'.format(stats.provenance_breakdown.total.extracted) }}</td>
+                <td class="num">{{ '{:,}'.format(stats.provenance_breakdown.total.metadata) }}</td>
+                <td class="num">{{ '{:,}'.format(stats.provenance_breakdown.total.total) }}</td>
+                <td>
+                  <div class="split">
+                    <span class="split-bar"><span class="split-extracted" style="width: {{ stats.provenance_breakdown.total.pct_extracted }}%"></span></span>
+                    <span class="split-pct">{{ stats.provenance_breakdown.total.pct_extracted }}%</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="legend">
+            <span><span class="swatch teal"></span>Extracted from files</span>
+            <span><span class="swatch gold"></span>Exposed metadata</span>
+          </div>
+          <p class="hint" style="margin-top:.7rem;">
+            The bridge rows are almost entirely <strong>extracted</strong> content — cross-portal links come
+            from what DGLink mined out of the data files, not from portal-exposed metadata.
+          </p>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ============ 2c. Explore the graph directly ============ -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Explore</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Open the graph in Neo4j Browser</h2>
+        <div class="browser-row">
+          <div>
+            <p class="lead">
+              Prefer to write Cypher and see rendered subgraphs? The full knowledge graph is served by
+              Neo4j Browser. Authentication is disabled for this deployment, so
+              <strong>no login is required</strong> — just click <em>Connect</em>.
+            </p>
+            <a class="btn-browser" href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Open Neo4j Browser ↗</a>
+          </div>
+          <div>
+            <p class="hint" style="margin-bottom:.4rem;">Paste this to render the cross-portal gene set:</p>
+            <pre class="cypher" id="sampleCypher">{{ browser_sample_cypher }}</pre>
+            <button type="button" class="copy-btn" id="copyCypher">Copy Cypher</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. About the MCP application ============ -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Application</div>
+        <h2 class="page-title" style="font-size:1.6rem;">MCP Chat Assistant</h2>
+        <p class="lead">
+          The Chat Assistant connects a large language model directly to the graph database
+          using the <strong>Model Context Protocol (MCP)</strong>. Ask a question in plain
+          English; the model uses MCP tools to write and run Cypher against Neo4j, then
+          answers from the results — with responses streaming in as they are generated.
+        </p>
+        <ul class="feature-list">
+          <li><strong>MCP integration:</strong> direct, tool-based access to Neo4j via the <code>mcp-neo4j-cypher</code> server.</li>
+          <li><strong>Dual model support:</strong> switch between Anthropic (Claude) and OpenAI (GPT).</li>
+          <li><strong>Real-time streaming</strong> with full markdown and table rendering.</li>
+          <li><strong>Cross-portal reasoning:</strong> a single question can span GDC, GC, and PDC data.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 4 & 5. Example queries + live query box ============ -->
+    <section class="section">
+      <div class="card query-panel">
+        <div class="eyebrow">Try it</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Run an MCP query</h2>
+        <p class="hint">Click an example to load it, or type your own question. Answers run against the live MCP backend.</p>
+
+        <div class="examples">
+          {% for q in examples %}
+          <button type="button" class="example-btn" data-q="{{ q }}">{{ q }}</button>
+          {% endfor %}
+        </div>
+
+        <div class="query-toolbar" style="margin-top:1.4rem;">
+          <label for="providerSelect">Model</label>
+          <select id="providerSelect" class="provider-select">
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="openai">OpenAI (GPT)</option>
+          </select>
+        </div>
+
+        <div class="query-messages" id="messages"></div>
+
+        <div class="composer">
+          <textarea id="messageInput" placeholder="Ask a question about the knowledge graph…" rows="1"></textarea>
+          <button id="sendButton" class="btn btn-primary">Run</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const messagesDiv = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const providerSelect = document.getElementById('providerSelect');
+
+    const AVATAR = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
+        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
+        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
+        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
+      </svg>`;
+
+    // Example buttons load the question into the box and run it.
+    document.querySelectorAll('.example-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        messageInput.value = btn.dataset.q;
+        messageInput.style.height = 'auto';
+        messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+        sendMessage();
+      });
+    });
+
+    // Copy the sample Cypher for Neo4j Browser.
+    const copyBtn = document.getElementById('copyCypher');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        const text = document.getElementById('sampleCypher').textContent;
+        navigator.clipboard.writeText(text).then(function () {
+          const original = copyBtn.textContent;
+          copyBtn.textContent = 'Copied ✓';
+          setTimeout(function () { copyBtn.textContent = original; }, 1500);
+        });
+      });
+    }
+
+    messageInput.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+    });
+
+    messageInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    sendButton.addEventListener('click', sendMessage);
+
+    function addMessage(content, role) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+
+      if (role === 'assistant') {
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.innerHTML = AVATAR;
+        messageDiv.appendChild(avatar);
+      }
+
+      const body = document.createElement('div');
+      body.className = 'msg-body';
+      if (role === 'user') {
+        body.textContent = content;
+      } else {
+        body.innerHTML = content ? marked.parse(content) : '';
+      }
+
+      messageDiv.appendChild(body);
+      messagesDiv.appendChild(messageDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      return body;
+    }
+
+    async function sendMessage() {
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      messageInput.disabled = true;
+      sendButton.disabled = true;
+
+      addMessage(message, 'user');
+      messageInput.value = '';
+      messageInput.style.height = 'auto';
+
+      const responseBody = addMessage('', 'assistant');
+      responseBody.innerHTML = '<span class="loading-dot"></span> Thinking…';
+
+      try {
+        const response = await fetch('/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: message,
+            provider: providerSelect.value
+          })
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = '';
+        responseBody.innerHTML = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          fullResponse += decoder.decode(value, { stream: true });
+          responseBody.innerHTML = marked.parse(fullResponse);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      } catch (error) {
+        responseBody.textContent = 'Error: ' + error.message;
+        responseBody.classList.add('error');
+      }
+
+      messageInput.disabled = false;
+      sendButton.disabled = false;
+      messageInput.focus();
+    }
+  </script>
+</body>
+</html>

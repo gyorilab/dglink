@@ -12,15 +12,19 @@ MCP_BACKEND_URL = os.getenv('MCP_BACKEND_URL', 'http://localhost:8000')
 # across them. Override via env if the tools are hosted somewhere other than
 # the default docker-compose localhost ports.
 NAV = {
+    'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/'),
     'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
     'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
 }
 
+# When false, the Sequence Search tab is hidden in the nav everywhere.
+SHOW_SEQUENCE_SEARCH = os.getenv('SHOW_SEQUENCE_SEARCH', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
 
 @app.route('/')
 def index():
-    return render_template('index.html', nav=NAV, active='chat')
+    return render_template('index.html', nav=NAV, active='chat', show_sequence=SHOW_SEQUENCE_SEARCH)
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():

@@ -4,6 +4,8 @@ DGLink introduces semantic interoperability within data portals through automate
 
 ## Applications
 
+1. Overview: A landing page for the DGLink tool suite with a description of DGLink, summary statistics for the active knowledge graph (by default the merged CRDC graph), an overview of the MCP application, example MCP queries, and a box to run natural-language MCP queries live. Served at http://localhost:5003.
+
 1. MCP: A chat interface that connects to a Neo4j database using the Model Context Protocol (MCP). It supports both OpenAI (GPT) and Anthropic (Claude) models with real-time streaming responses and markdown rendering.
 
 1. Semantic search: Run semantic queries on the knowledge graph via a simple to use web-UI.

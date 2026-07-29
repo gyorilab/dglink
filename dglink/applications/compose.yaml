@@ -42,6 +42,21 @@ services:
     env_file:
     - path: ./.env
       required: true
+  overview_frontend:
+    build:
+      context: ./overview/frontend
+      args:
+        - FONT_SIZE=${FONT_SIZE}
+    container_name: overview_flask_frontend
+    ports:
+      - "5003:5003"
+    volumes:
+      - ${NEO4J_TARGET}/graph:/app/resources
+    depends_on:
+      - mcp_backend
+    env_file:
+    - path: ./.env
+      required: true
   semantic_search_backend:
     volumes:
       - ${NEO4J_TARGET}/graph:/app/resources
