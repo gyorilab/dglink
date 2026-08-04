@@ -209,23 +209,27 @@ def extract_df_graph(
                     str(row[f"{col}_column_name"]).replace('"', "").replace("'", "")
                 )
                 iri = str(row[f"{col}_iri"]).replace('"', "").replace("'", "")
-                attributes = {
+                node_attributes = {
                     "curie:ID": entity,
                     ":LABEL": entity_type,
                     "name": entity_name,
-                    "raw_texts:string[]": raw_text,
-                    "columns:string[]": column_name,
                     "iri": iri,
-                    "file_id:string[]": file_id,
                     "source:string[]": source,
                 }
-                node_set.update_nodes(new_node=attributes)
+                node_set.update_nodes(new_node=node_attributes)
+                ## where/how an entity was found (file, raw text, column) is per-occurrence
+                ## provenance, so it lives on the group -> entity edge rather than the entity
+                ## node. Edges are single-portal, so after merging portals the file -> portal
+                ## mapping stays unambiguous (a shared node would conflate them).
                 edge_set.update_edges(
                     {
                         ":START_ID": group_identifier,
                         ":END_ID": entity,
                         ":TYPE": generate_edge_type(entity_type),
                         "source:string[]": source,
+                        "raw_texts:string[]": raw_text,
+                        "columns:string[]": column_name,
+                        "file_id:string[]": file_id,
                     }
                 )
     return node_set, edge_set
