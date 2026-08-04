@@ -8,10 +8,12 @@ from dglink.portals.nci.gc.constants import (
     NCI_TABULAR_FILE_TYPES,
 )
 from dglink import NodeSet, EdgeSet
+from dglink.core.grounding import ground_term, slugify
+
+import polars as pl
 
 import os
 from typing import Iterator
-import polars as pl
 
 lazzy_get = lambda d, x: f"{d.get(x, f'{x}_missing')}"
 
@@ -114,7 +116,9 @@ def get_publications(
         doi = lazzy_get(publication, "DOI_or_Pub_ID")
         if not doi:
             continue
-        doi_curie = gc_curie(doi)
+        # doi_curie = gc_curie(doi)
+        ## do not need to prefix this with protal name since is not portal specific ##
+        doi_curie = doi
         node_set.update_nodes(
             {
                 "curie:ID": doi_curie,
@@ -185,59 +189,84 @@ def get_investigators(
     return node_set, edge_set
 
 
+def _fallback_disease_curie(name: str) -> str:
+    """Mint a name-based `ncigc:disease_<slug>` id for a diagnosis that did not ground.
+
+    Keying by NAME (not the per-diagnosis id) collapses duplicate ungrounded diagnoses
+    that share a name — e.g. every "Not Reported" becomes a single node instead of one per
+    diagnosis. The `disease_` prefix also puts these ids in their own namespace so they
+    cannot collide with participant ids (which are `gc_curie(participant_id)`).
+    """
+    return gc_curie(f"disease_{slugify(name)}")
+
+
 def get_diagnoses(
     client: NciGeneralCommonsClient, node_set: NodeSet, edge_set: EdgeSet
 ):
-    """Add diagnoses (biolink:Disease) and study -> diagnosis edges (associated_with)."""
+    """Add diagnoses as grounded biolink:Disease *concept* nodes, with the clinical detail
+    split by what it actually describes:
+
+      * the Disease node holds only concept identity (grounded name / curie / iri) so it
+        merges cleanly across patients and portals;
+      * the diagnosis-*event* qualifiers (stage, morphology, site, age, ...) live on the
+        participant -> disease edge, so per-patient values never collide on the shared node;
+      * patient-*course* facts (vital status, last known status) live on the participant
+        (biolink:Case), mirroring how GDC attaches demographics to the case.
+    """
     for diagnosis in client.get_diagnoses(only_open=True):
         diag_id = diagnosis.get("diagnosis_id")
         if not diag_id:
             continue
-        diag_curie = gc_curie(diag_id)
+        raw_name = diagnosis.get("primary_diagnosis")
+        diag_name, diag_curie, diag_iri = ground_term(raw_name)
+        grounded = diag_curie is not None
+        if not diag_curie:
+            ## grounding failed -> key by NAME so same-name diagnoses ("Not Reported", ...)
+            ## collapse into one node, in a `disease_` namespace distinct from participants
+            diag_name = raw_name or "Not Reported"
+            diag_curie = _fallback_disease_curie(diag_name)
+
+        ## disease CONCEPT node: identity only. `grounded` flags whether `name` is a real
+        ## ontology label (true) or unresolved raw text (false).
         node_set.update_nodes(
             {
                 "curie:ID": diag_curie,
                 ":LABEL": GC_LABEL_TO_BIOLINK["Diagnosis"],
                 "raw_label": "Diagnosis",
-                "name": lazzy_get(diagnosis, "primary_diagnosis"),
-                "disease_type": lazzy_get(diagnosis, "disease_type"),
-                "primary_site": lazzy_get(diagnosis, "primary_site"),
-                "tissue_or_organ_of_origin": lazzy_get(
-                    diagnosis, "tissue_or_organ_of_origin"
-                ),
-                "site_of_resection_or_biopsy": lazzy_get(
-                    diagnosis, "site_of_resection_or_biopsy"
-                ),
-                "tumor_grade": lazzy_get(diagnosis, "tumor_grade"),
-                "tumor_stage_clinical_m": lazzy_get(
-                    diagnosis, "tumor_stage_clinical_m"
-                ),
-                "tumor_stage_clinical_n": lazzy_get(
-                    diagnosis, "tumor_stage_clinical_n"
-                ),
-                "tumor_stage_clinical_t": lazzy_get(
-                    diagnosis, "tumor_stage_clinical_t"
-                ),
-                "morphology": lazzy_get(diagnosis, "morphology"),
-                "vital_status": lazzy_get(diagnosis, "vital_status"),
-                "age_at_diagnosis": lazzy_get(diagnosis, "age_at_diagnosis"),
-                "incidence_type": lazzy_get(diagnosis, "incidence_type"),
-                "progression_or_recurrence": lazzy_get(
-                    diagnosis, "progression_or_recurrence"
-                ),
-                "last_known_disease_status": lazzy_get(
-                    diagnosis, "last_known_disease_status"
-                ),
-                "days_to_recurrence": lazzy_get(diagnosis, "days_to_recurrence"),
-                "days_to_last_followup": lazzy_get(diagnosis, "days_to_last_followup"),
-                "days_to_last_known_disease_status": lazzy_get(
-                    diagnosis, "days_to_last_known_disease_status"
-                ),
-                "study_diagnosis_id": lazzy_get(diagnosis, "study_diagnosis_id"),
-                "crdc_id": lazzy_get(diagnosis, "crdc_id"),
+                "name": diag_name,
+                "iri": diag_iri,
+                "grounded:boolean": "true" if grounded else "false",
                 "source:string[]": "clinical",
             }
         )
+
+        ## diagnosis-EVENT qualifiers: belong to this patient's diagnosis, so they ride on
+        ## the association edge (per-patient edge id -> no collision on the shared concept)
+        diagnosis_qualifiers = {
+            "diagnosis_id": diag_id,
+            "disease_type": lazzy_get(diagnosis, "disease_type"),
+            "primary_site": lazzy_get(diagnosis, "primary_site"),
+            "tissue_or_organ_of_origin": lazzy_get(
+                diagnosis, "tissue_or_organ_of_origin"
+            ),
+            "site_of_resection_or_biopsy": lazzy_get(
+                diagnosis, "site_of_resection_or_biopsy"
+            ),
+            "tumor_grade": lazzy_get(diagnosis, "tumor_grade"),
+            "tumor_stage_clinical_m": lazzy_get(diagnosis, "tumor_stage_clinical_m"),
+            "tumor_stage_clinical_n": lazzy_get(diagnosis, "tumor_stage_clinical_n"),
+            "tumor_stage_clinical_t": lazzy_get(diagnosis, "tumor_stage_clinical_t"),
+            "morphology": lazzy_get(diagnosis, "morphology"),
+            "age_at_diagnosis": lazzy_get(diagnosis, "age_at_diagnosis"),
+            "incidence_type": lazzy_get(diagnosis, "incidence_type"),
+            "progression_or_recurrence": lazzy_get(
+                diagnosis, "progression_or_recurrence"
+            ),
+            "days_to_recurrence": lazzy_get(diagnosis, "days_to_recurrence"),
+            "study_diagnosis_id": lazzy_get(diagnosis, "study_diagnosis_id"),
+            "crdc_id": lazzy_get(diagnosis, "crdc_id"),
+        }
+
         ## Prefer attaching the diagnosis to its participant (a biolink:Case) so GC has
         ## case-level granularity like GDC/PDC; also link the study to the participant.
         ## Fall back to a study -> diagnosis edge when no participant id is present.
@@ -245,11 +274,22 @@ def get_diagnoses(
         phs = diagnosis.get("phs_accession")
         if participant_id:
             participant_curie = gc_curie(participant_id)
+            ## participant (biolink:Case) carries patient-COURSE facts
             node_set.update_nodes(
                 {
                     "curie:ID": participant_curie,
                     ":LABEL": GC_LABEL_TO_BIOLINK["Participant"],
                     "raw_label": "Participant",
+                    "vital_status": lazzy_get(diagnosis, "vital_status"),
+                    "last_known_disease_status": lazzy_get(
+                        diagnosis, "last_known_disease_status"
+                    ),
+                    "days_to_last_followup": lazzy_get(
+                        diagnosis, "days_to_last_followup"
+                    ),
+                    "days_to_last_known_disease_status": lazzy_get(
+                        diagnosis, "days_to_last_known_disease_status"
+                    ),
                     "source:string[]": "structural_information",
                 }
             )
@@ -260,6 +300,7 @@ def get_diagnoses(
                     ":TYPE": GC_EDGE_TO_BIOLINK["Participant_Has_Diagnosis"],
                     "raw_type": "Participant_Has_Diagnosis",
                     "source:string[]": "clinical",
+                    **diagnosis_qualifiers,
                 }
             )
             if phs:
@@ -280,6 +321,7 @@ def get_diagnoses(
                     ":TYPE": GC_EDGE_TO_BIOLINK["Study_Has_Diagnosis"],
                     "raw_type": "Study_Has_Diagnosis",
                     "source:string[]": "clinical",
+                    **diagnosis_qualifiers,
                 }
             )
     return node_set, edge_set
