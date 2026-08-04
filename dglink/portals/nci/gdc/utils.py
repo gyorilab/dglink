@@ -2,14 +2,15 @@ from .constants import (
     CASES_ENDPNT,
     FILE_FIELDS,
     DATA_ENDPNT,
-    GDC_CACHE_DIR,
     GDC_LABEL_TO_BIOLINK,
     GDC_DEFAULT_BIOLINK_CATEGORY,
     GDC_RELATION,
     GDC_CURIE_PREFIX,
+    NCI_GDC_CACHE_DIR,
 )
 from dglink import NodeSet, EdgeSet, write_graph
 from dglink.core.constants import REPORT_PATH
+from dglink.core.grounding import ground_term, slugify
 
 import json
 import tqdm
@@ -19,6 +20,11 @@ import os
 import re
 from subprocess import run
 from typing import Iterator
+import logging
+
+logger = logging.getLogger(__name__)
+
+MANIFEST_PATH = NCI_GDC_CACHE_DIR.joinpath("case_to_files.tsv")
 
 
 def connect_cases_to_files(
@@ -93,26 +99,53 @@ def get_sample_metadata(hits: list, node_set: NodeSet):
             )
 
 
-def get_diagnosis_metadata(hits: list, node_set: NodeSet):
-    """Enrich the biolink:Disease nodes with the expanded GDC diagnosis fields.
+def get_diagnosis_metadata(hits: list, node_set: NodeSet, edge_set: EdgeSet):
+    """Add diagnoses as grounded biolink:Disease *concept* nodes + case -> disease edges.
 
-    The case hierarchy loop already mints a bare Disease node (from the case's
-    diagnosis_ids) and the case --associated_with--> diagnosis edge; here we attach
-    the clinical attributes from the expanded `diagnoses` object, keyed on the same
-    `diagnosis_id` CURIE so the two updates merge. Field names mirror the GC diagnosis
-    parser so the same properties line up across portals.
+    The primary_diagnosis is grounded to an ontology curie (shared with GC/PDC so the same
+    disease merges across portals); the Disease node holds only concept identity
+    (name / curie / iri). The per-patient diagnosis-event fields (stage, morphology, site,
+    age, ...) ride on the case --associated_with--> disease edge, so they never collide on
+    the shared concept node. (Patient demographics incl. vital_status live on the Case,
+    attached in process_case_hierarchy.) Because this owns the diagnosis fully, the generic
+    case-hierarchy loop skips native_type == "diagnosis".
     """
     for hit in hits:
+        case_id = gdc_curie(hit.get("id", "case_id_missing"))
         for diagnosis in hit.get("diagnoses", []):
             diagnosis_id = diagnosis.get("diagnosis_id")
             if not diagnosis_id:
                 continue
+            raw_name = diagnosis.get("primary_diagnosis")
+            diag_name, diag_curie, diag_iri = ground_term(raw_name)
+            grounded = diag_curie is not None
+            if not diag_curie:
+                ## grounding failed -> key by NAME so same-name diagnoses ("Not Reported",
+                ## ...) collapse into one node, in a `disease_` namespace of their own
+                diag_name = raw_name or "Not Reported"
+                diag_curie = gdc_curie(f"disease_{slugify(diag_name)}")
+            ## disease CONCEPT node: identity only. `grounded` flags whether `name` is a
+            ## real ontology label (true) or unresolved raw text (false).
             node_set.update_nodes(
                 {
-                    "curie:ID": gdc_curie(diagnosis_id),
+                    "curie:ID": diag_curie,
                     ":LABEL": GDC_LABEL_TO_BIOLINK["diagnosis"],
                     "raw_label": "diagnosis",
-                    "name": diagnosis.get("primary_diagnosis", ""),
+                    "name": diag_name,
+                    "iri": diag_iri,
+                    "grounded:boolean": "true" if grounded else "false",
+                    "source:string[]": "clinical",
+                }
+            )
+            ## diagnosis-event qualifiers on the case -> disease edge (per-patient)
+            edge_set.update_edges(
+                {
+                    ":START_ID": case_id,
+                    ":END_ID": diag_curie,
+                    ":TYPE": "biolink:associated_with",
+                    "raw_type": "has_diagnosis",
+                    "source:string[]": "clinical",
+                    "diagnosis_id": diagnosis_id,
                     "primary_diagnosis": diagnosis.get("primary_diagnosis", ""),
                     "morphology": diagnosis.get("morphology", ""),
                     "tissue_or_organ_of_origin": diagnosis.get(
@@ -134,14 +167,18 @@ def get_diagnosis_metadata(hits: list, node_set: NodeSet):
                     "last_known_disease_status": diagnosis.get(
                         "last_known_disease_status", ""
                     ),
-                    "source:string[]": "clinical",
                 }
             )
 
 
-# TODO: Expand logic
-def process_case_hierarchy(hits, node_set, edge_set):
+def process_case_hierarchy(hits, node_set, edge_set, include_biospecimen: bool = True):
     """Extract the case hierarchy and add it to the graph as a Biolink-conformant subgraph.
+
+    When `include_biospecimen` is False the specimen scaffolding (sample / aliquot /
+    analyte / portion / slide -> biolink:MaterialSample) is skipped, so only the case,
+    its owning project/study and its (grounded) diagnoses are emitted. Nothing is
+    extracted from these specimen nodes, so dropping them shrinks the graph
+    dramatically without touching the content or cross-portal integration story.
 
     Every node carries a valid Biolink category in :LABEL (with the GDC-native type kept
     in raw_label) and a `gdc:`-prefixed CURIE id. Edges use Biolink predicates (with the
@@ -216,10 +253,17 @@ def process_case_hierarchy(hits, node_set, edge_set):
             ## only emit structural entities we have a Biolink mapping for
             if native_type not in GDC_RELATION:
                 continue
+            ## diagnoses are owned by get_diagnosis_metadata (grounded concept node +
+            ## qualifier-bearing edge); skip here so we don't mint a bare, ungrounded one
+            if native_type == "diagnosis":
+                continue
             predicate, direction = GDC_RELATION[native_type]
             category = GDC_LABEL_TO_BIOLINK.get(
                 native_type, GDC_DEFAULT_BIOLINK_CATEGORY
             )
+            ## specimen scaffolding carries no extracted content; gate it behind the flag
+            if not include_biospecimen and category == "biolink:MaterialSample":
+                continue
             ## diagnoses are clinical facts about the case; everything else in the
             ## case hierarchy is structural specimen provenance
             provenance = (
@@ -270,8 +314,14 @@ def get_case_hierarchy(
     case_list: list | None = None,
     number_cases_arg: int | None = None,
     batch_length: int = 500,
+    include_biospecimen: bool = True,
 ):
-    """connect cases to all down stream objects. Saves files as a tsv in `dglink/resources/reports/cases_to_files.tsv` , and connects all meta objects (samples, studies, projects, etc.) to case in the graph."""
+    """connect cases to all down stream objects. Saves files as a tsv in `dglink/resources/reports/cases_to_files.tsv` , and connects all meta objects (samples, studies, projects, etc.) to case in the graph.
+
+    Set `include_biospecimen=False` to omit the sample/aliquot/analyte/portion/slide
+    (biolink:MaterialSample) scaffolding, keeping only cases, projects/studies and
+    diagnoses. No content is extracted from specimen nodes, so this is a lossless prune
+    for the extraction / cross-portal-integration story."""
     ## Filter for a specific list of cases
     if case_list is not None:
         number_cases: int = len(case_list)
@@ -292,10 +342,9 @@ def get_case_hierarchy(
         ## diagnoses, case-level demographic, and the owning project
         "expand": "files,samples,diagnoses,demographic,project",
     }
-    cases_to_files_path = os.path.join(GDC_CACHE_DIR, "cases_to_files.tsv")
     ## load from cache if already exists
-    if os.path.exists(cases_to_files_path):
-        case_to_files = pl.read_csv(cases_to_files_path, separator="\t")
+    if os.path.exists(MANIFEST_PATH):
+        case_to_files = pl.read_csv(MANIFEST_PATH, separator="\t")
     else:
         case_to_files = None
     for x in tqdm.tqdm(range(0, number_cases, batch_length)):
@@ -306,23 +355,27 @@ def get_case_hierarchy(
         data = json_resp.get("data", dict())
         hits = data.get("hits", [dict()])
         case_to_files = connect_cases_to_files(hits=hits, file_to_cases=case_to_files)
-        get_sample_metadata(hits, node_set=node_set)
-        get_diagnosis_metadata(hits, node_set=node_set)
-        process_case_hierarchy(hits=hits, node_set=node_set, edge_set=edge_set)
+        if include_biospecimen:
+            get_sample_metadata(hits, node_set=node_set)
+        get_diagnosis_metadata(hits, node_set=node_set, edge_set=edge_set)
+        process_case_hierarchy(
+            hits=hits,
+            node_set=node_set,
+            edge_set=edge_set,
+            include_biospecimen=include_biospecimen,
+        )
         if x % (batch_length * 10) == 0:
             write_graph(node_set, edge_set)
     write_graph(node_set, edge_set)
-    os.makedirs(GDC_CACHE_DIR, exist_ok=True)
+    os.makedirs(NCI_GDC_CACHE_DIR, exist_ok=True)
     if isinstance(case_to_files, pl.DataFrame):
-        case_to_files.write_csv(cases_to_files_path, separator="\t")
+        case_to_files.write_csv(MANIFEST_PATH, separator="\t")
 
 
-def download_tabular_files(case_list: list):
+def download_tabular_files(case_list: list, verbose: bool = False):
     """download tabular files associated with a case list and save in `~/.data/gdc/files`"""
-    files_df = pl.read_csv(
-        os.path.join(GDC_CACHE_DIR, "cases_to_files.tsv"), separator="\t"
-    )
-    files_dir = os.path.join(GDC_CACHE_DIR, "files")
+    files_df = pl.read_csv(MANIFEST_PATH, separator="\t")
+    files_dir = NCI_GDC_CACHE_DIR.joinpath("files")
     ## filter for available files and also those that are tsv
     to_load = (
         files_df.filter(
@@ -336,13 +389,14 @@ def download_tabular_files(case_list: list):
     )
     ## only download files that are not already in the cache
     undownloaded_files = filter(
-        lambda x: not os.path.exists(os.path.join(files_dir, x)), to_load
+        lambda x: not os.path.exists(files_dir.joinpath(x)), to_load
     )
     params = {"ids": list(undownloaded_files)}
     ## if there are no files to download exit
+    if verbose:
+        logging.info(f"pulling {len(params['ids'])} files for {len(case_list)} cases")
     if len(params["ids"]) < 1:
         return
-
     response = requests.post(
         DATA_ENDPNT,
         data=json.dumps(params),
@@ -355,7 +409,7 @@ def download_tabular_files(case_list: list):
 
     os.makedirs(files_dir, exist_ok=True)
 
-    archive_path = os.path.join(files_dir, file_name)
+    archive_path = files_dir.joinpath(file_name)
 
     with open(archive_path, "wb") as output_file:
         output_file.write(response.content)
@@ -367,9 +421,13 @@ def download_tabular_files(case_list: list):
         "-C",
         files_dir,
     ]
+    if verbose:
+        logger.info("Beginning file extraction")
     run(unzip_cmd)
     ## quick and dirty stuff to make the downloads nicer to work with
-    rm_cmd = ["rm", archive_path, os.path.join(files_dir, "MANIFEST.txt")]
+    rm_cmd = ["rm", archive_path, files_dir.joinpath("MANIFEST.txt")]
+    if verbose:
+        logger.info("Extraction done cleaning up manifest.")
     run(rm_cmd)
 
 
@@ -377,9 +435,7 @@ def get_tabular_iterator(case_list: list) -> Iterator:
     """
     returns a 2d iterator of case_ids and associated file_paths
     """
-    files_df = pl.read_csv(
-        os.path.join(GDC_CACHE_DIR, "cases_to_files.tsv"), separator="\t"
-    )
+    files_df = pl.read_csv(MANIFEST_PATH, separator="\t")
     ## get only tabular files
     project_files = files_df.filter(
         pl.col("file_access").eq("open")
@@ -388,7 +444,7 @@ def get_tabular_iterator(case_list: list) -> Iterator:
     ).with_columns(
         file_paths=pl.format(
             "{}/files/{}/{}",
-            pl.lit(GDC_CACHE_DIR),
+            pl.lit(str(NCI_GDC_CACHE_DIR)),
             pl.col("file_id"),
             pl.col("file_file_name"),
         )
