@@ -52,7 +52,7 @@ def _tag_provenance(rep: dict, portal: str) -> dict:
         file_ids = rep[FILE_ID_ATTR]
         if isinstance(file_ids, str):
             file_ids = {file_ids}
-        rep[FILE_ID_ATTR] = {f"{portal}:{fid}" for fid in file_ids if fid}
+        rep[FILE_ID_ATTR] = {f"nci{portal}:{fid}" for fid in file_ids if fid}
     return rep
 
 
