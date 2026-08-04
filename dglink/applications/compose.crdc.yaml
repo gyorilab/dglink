@@ -1,0 +1,112 @@
+# CRDC demo deployment (e.g. AWS-hosted).
+#
+# This is a trimmed variant of compose.yaml for exposing the DGLink CRDC demo
+# publicly. Relative to the full stack it intentionally does NOT bring up:
+#   * the genomic index (sequence search) backend/frontend, and
+#   * the MCP chat interface (mcp_backend + mcp_frontend) — the LLM-writes-Cypher
+#     chat is not safe to expose on a public host.
+#
+# The frontends still ship with the chat/sequence code behind feature flags, so
+# every reference to those tools is hidden here: SHOW_CHAT and
+# SHOW_SEQUENCE_SEARCH are forced to false via `environment:` (which overrides
+# ./.env), so the shared .env does not need to change for the demo.
+services:
+  neo-4j:
+    build: ${NEO4J_TARGET}
+    container_name: neo4j
+    ports:
+      - "7687:7687"
+      - "7474:7474"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    env_file:
+    - path: ./.env
+      required: true
+  # Public MCP endpoint for the merged graph, so a client can connect with just a URL
+  # (no local uvx/stdio install). This is the upstream neo4j Cypher MCP server run with
+  # HTTP transport instead of stdio.
+  #
+  # READ-ONLY: NEO4J_READ_ONLY=true drops the `write_neo4j_cypher` tool entirely, so an
+  # anonymous caller can read the graph but cannot modify it. Keep this on — the endpoint
+  # is unauthenticated.
+  mcp_http_server:
+    image: mcp/neo4j-cypher:latest
+    container_name: dglink_mcp_http
+    ports:
+      - "8000:8000"
+    depends_on:
+      neo-4j:
+        condition: service_healthy
+    environment:
+      - NEO4J_URI=bolt://neo-4j:7687
+      - NEO4J_USERNAME=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-password}
+      - NEO4J_DATABASE=neo4j
+      - NEO4J_TRANSPORT=http
+      - NEO4J_MCP_SERVER_HOST=0.0.0.0
+      - NEO4J_MCP_SERVER_PORT=8000
+      - NEO4J_MCP_SERVER_PATH=/mcp/
+      - NEO4J_READ_ONLY=true
+      # Schema-sampling size. Must be set explicitly: if a client calls
+      # get_neo4j_schema without a sample_size argument, the server interpolates a bare
+      # Python None into the Cypher (`apoc.meta.schema({sample: None})`) and the call
+      # fails with a syntax error — and schema inspection is the first thing most agents
+      # do, so the endpoint looks broken on contact.
+      - NEO4J_SCHEMA_SAMPLE_SIZE=1000
+      # DNS-rebinding protection defaults to localhost only, so a hosted deployment must
+      # list the public hostname it is served under or every request is rejected.
+      - NEO4J_MCP_SERVER_ALLOWED_HOSTS=${MCP_HTTP_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      # CORS is empty (deny) by default; only needed for browser-based MCP clients.
+      - NEO4J_MCP_SERVER_ALLOW_ORIGINS=${MCP_HTTP_ALLOW_ORIGINS:-}
+    env_file:
+    - path: ./.env
+      required: true
+  overview_frontend:
+    build:
+      context: ./overview/frontend
+      args:
+        - FONT_SIZE=${FONT_SIZE}
+    container_name: overview_flask_frontend
+    ports:
+      - "5003:5003"
+    volumes:
+      - ${NEO4J_TARGET}/graph:/app/resources
+    environment:
+      - SHOW_CHAT=false
+      - SHOW_SEQUENCE_SEARCH=false
+    env_file:
+    - path: ./.env
+      required: true
+  semantic_search_backend:
+    volumes:
+      - ${NEO4J_TARGET}/graph:/app/resources
+    build:
+      context: ./semantic_search/
+      dockerfile: ./backend/Dockerfile
+    container_name: semantic_search_fastapi_backend
+    ports:
+      - "8001:8001"
+    env_file:
+    - path: ./.env
+      required: true
+  semantic_search_frontend:
+    build:
+     context: ./semantic_search/frontend
+     args:
+        - PORTAL_NAME=${PORTAL_NAME}
+    container_name: semantic_search_flask_frontend
+    ports:
+      - "5001:5001"
+    environment:
+      - SHOW_CHAT=false
+      - SHOW_SEQUENCE_SEARCH=false
+    depends_on:
+      - semantic_search_backend
+      - neo-4j
+    env_file:
+    - path: ./.env
+      required: true
