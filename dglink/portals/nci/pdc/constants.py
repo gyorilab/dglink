@@ -1,8 +1,6 @@
 from pystow import module
-import os
 
 ## module store info ##
-home_dir: str = os.getenv("HOME") or "/"
 NCI_PDC_CACHE_DIR = module("nci_proteomic_data_commons").base
 
 ## API endpoints
@@ -20,6 +18,7 @@ NODE_ATTRIBUTES = [
     "raw_label",  ## PDC-native type (e.g. "aliquot") kept alongside the Biolink category
     "name",
     "iri",
+    "grounded:boolean",  ## true if name/curie came from ontology grounding, false if raw text
     "source:string[]",
     "submitter_id:string[]",  ## human-readable PDC submitter id(s); an alias, not a node
     ## study fields
@@ -34,10 +33,8 @@ NODE_ATTRIBUTES = [
     "taxon",
     "pool",
     "status",
-    ## tabular data fields ##
-    "raw_texts:string[]",
-    "columns:string[]",
-    "file_id:string[]",
+    ## NB: tabular provenance (raw_texts / columns / file_id) is NOT a node attribute — it
+    ## rides on the group -> entity edge (see EDGE_ATTRIBUTES) to stay per-portal after merge
 ]
 EDGE_ATTRIBUTES = [
     ## core fields - all edges should have these, the rest are optional
@@ -46,6 +43,14 @@ EDGE_ATTRIBUTES = [
     ":TYPE",
     "raw_type",  ## PDC-native relation preserved alongside the Biolink predicate
     "source:string[]",
+    ## disease qualifiers carried on the parent -> disease edge (kept off the grounded
+    ## Disease concept node so it merges across portals)
+    "disease_type",
+    "primary_site",
+    ## tabular provenance — which file / column / raw text an extracted entity was found in
+    "raw_texts:string[]",
+    "columns:string[]",
+    "file_id:string[]",
 ]
 
 ## --- Biolink mapping ------------------------------------------------------
@@ -53,7 +58,7 @@ EDGE_ATTRIBUTES = [
 ## CURIEs; Biolink requires CURIE node ids, so we mint a single `pdc:` prefix and
 ## apply it to every node id and edge endpoint consistently. Disease/site names
 ## are not UUIDs, so they are slugged and given the same prefix.
-PDC_CURIE_PREFIX = "pdc"
+PDC_CURIE_PREFIX = "ncipdc"
 
 ## PDC-native entity type -> concrete Biolink category (the native distinction is
 ## kept in `raw_label`). Program/Project/Study are all study-like groupings; the

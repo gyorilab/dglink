@@ -3,17 +3,20 @@ from .constants import (
     NCI_PDC_CACHE_DIR,
     NCI_TABULAR_FILE_TYPES,
     PDC_LABEL_TO_BIOLINK,
-    PDC_DEFAULT_BIOLINK_CATEGORY,
     PDC_EDGE_TO_BIOLINK,
     PDC_CURIE_PREFIX,
     pdc_curie,
 )
 from dglink import NodeSet, EdgeSet
+from dglink.core.grounding import ground_term
 
 import polars as pl
 
 import re
 from typing import Iterator
+import logging
+
+logger = logging.getLogger(__name__)
 
 lazzy_get = lambda d, x: f"{d.get(x, f'{x}_missing')}"
 
@@ -32,18 +35,26 @@ def _add_disease(
     primary_site: str = "",
     source: str = "structural_information",
 ):
-    """Add a biolink:Disease node for `disease_type` and link `parent` -> disease."""
+    """Add a grounded biolink:Disease *concept* node for `disease_type` and link
+    `parent` -> disease. The disease name is grounded to an ontology curie (shared with
+    GC/PDC so the concept merges across portals); the node holds only identity, while
+    disease_type / primary_site ride on the parent -> disease edge."""
     if not disease_type:
         return
-    disease_curie = _disease_curie(disease_type)
+    name, disease_curie, iri = ground_term(disease_type)
+    grounded = disease_curie is not None
+    if not disease_curie:
+        ## grounding failed -> portal-local slug id (won't merge across portals)
+        disease_curie = _disease_curie(disease_type)
+        name = disease_type
     node_set.update_nodes(
         {
             "curie:ID": disease_curie,
             ":LABEL": PDC_LABEL_TO_BIOLINK["disease"],
             "raw_label": "disease",
-            "name": disease_type,
-            "disease_type": disease_type,
-            "primary_site": primary_site,
+            "name": name,
+            "iri": iri,
+            "grounded:boolean": "true" if grounded else "false",
             "source:string[]": source,
         }
     )
@@ -54,6 +65,8 @@ def _add_disease(
             ":TYPE": PDC_EDGE_TO_BIOLINK["Associated_Disease"],
             "raw_type": "Associated_Disease",
             "source:string[]": source,
+            "disease_type": disease_type,
+            "primary_site": primary_site,
         }
     )
 
@@ -155,6 +168,7 @@ def get_biospecimen_hierarchy(
     node_set: NodeSet,
     edge_set: EdgeSet,
     study_ids: list[str],
+    include_biospecimen: bool = True,
 ):
     """Build the study -> case -> sample -> aliquot biospecimen subgraph.
 
@@ -162,6 +176,10 @@ def get_biospecimen_hierarchy(
     study via has_part), the sample (derives_from the case) and the aliquot
     (derives_from the sample). Disease/site/sample-type metadata is attached to the
     relevant nodes; the human-readable submitter ids are kept as aliases, not nodes.
+
+    When `include_biospecimen` is False the sample and aliquot (biolink:MaterialSample)
+    nodes/edges are skipped; the case nodes and their disease links are still emitted,
+    since those are the meaningful clinical metadata (and the extraction anchor).
     """
     for study_id in study_ids:
         study_curie = pdc_curie(study_id)
@@ -204,7 +222,7 @@ def get_biospecimen_hierarchy(
                     primary_site=primary_site,
                 )
 
-            if sample_id:
+            if sample_id and include_biospecimen:
                 sample_curie = pdc_curie(sample_id)
                 node_set.update_nodes(
                     {
@@ -230,7 +248,7 @@ def get_biospecimen_hierarchy(
                         }
                     )
 
-            if aliquot_id:
+            if aliquot_id and include_biospecimen:
                 aliquot_curie = pdc_curie(aliquot_id)
                 node_set.update_nodes(
                     {
@@ -255,14 +273,24 @@ def get_biospecimen_hierarchy(
 
 
 def get_metadata_graph(
-    client: NciProteomicCommonsClient, node_set: NodeSet, edge_set: EdgeSet
+    client: NciProteomicCommonsClient,
+    node_set: NodeSet,
+    edge_set: EdgeSet,
+    include_biospecimen: bool = True,
 ):
     """Build the full PDC structural/metadata subgraph (program -> project -> study
     -> case -> sample -> aliquot, plus disease nodes) into the node/edge sets.
     Analogous to GDC's get_case_hierarchy and GC's get_metadata_graph.
+
+    Set `include_biospecimen=False` to omit the sample/aliquot (biolink:MaterialSample)
+    scaffolding while keeping the program/project/study tree, the cases and all disease
+    links. No content is extracted from specimen nodes, so this is a lossless prune for
+    the extraction / cross-portal-integration story.
     """
     study_ids = get_program_hierarchy(client, node_set, edge_set)
-    get_biospecimen_hierarchy(client, node_set, edge_set, study_ids)
+    get_biospecimen_hierarchy(
+        client, node_set, edge_set, study_ids, include_biospecimen=include_biospecimen
+    )
     return node_set, edge_set
 
 
@@ -276,13 +304,20 @@ def download_tabular_files(client: NciProteomicCommonsClient, study_list: list[s
     """
     file_ids = []
     for study_id in study_list:
-        study_files = client.get_study_files(study_id, page_size=1000)
-        file_ids += [
+        study_files = client.get_study_files(study_id, page_size=50)
+        file_ids = [
             f["file_id"]
             for f in study_files
             if f.get("file_format") in NCI_TABULAR_FILE_TYPES
         ]
-    client.download_files(file_ids)
+        ## for now downloading files of each case independently want to batch this later. ##
+        client.download_files(file_ids)
+        # file_ids += [
+        #     f["file_id"]
+        #     for f in study_files
+        #     if f.get("file_format") in NCI_TABULAR_FILE_TYPES
+        # ]
+    # client.download_files(file_ids)
 
 
 def get_tabular_iterator(study_list: list[str] | None = None) -> tuple[list, Iterator]:
