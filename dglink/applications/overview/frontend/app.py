@@ -11,6 +11,7 @@ Assistant frontend uses, so answers stream back in real time.
 """
 
 import csv
+import json
 import os
 from collections import Counter, defaultdict
 
@@ -39,6 +40,12 @@ NAV = {
 # When false, the Sequence Search tab is hidden in the nav everywhere.
 SHOW_SEQUENCE_SEARCH = os.getenv('SHOW_SEQUENCE_SEARCH', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
 
+# When false, every reference to the MCP chat interface is hidden: the Chat
+# Assistant nav link, the chat write-up, and the live "Run an MCP query" box
+# (which proxies to the same MCP backend). Disabled for deployments where the
+# LLM-writes-Cypher chat interface should not be exposed.
+SHOW_CHAT = os.getenv('SHOW_CHAT', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
 # Human-readable name of the graph the stats describe.
 GRAPH_NAME = os.getenv('GRAPH_NAME', 'Merged CRDC graph (NCI GDC · GC · PDC)')
 
@@ -47,6 +54,11 @@ GRAPH_NAME = os.getenv('GRAPH_NAME', 'Merged CRDC graph (NCI GDC · GC · PDC)')
 # opens the graph with no login required — one "Connect" click. Override for
 # non-localhost deployments.
 NEO4J_BROWSER_URL = os.getenv('NEO4J_BROWSER_URL', 'http://localhost:7474')
+
+# Public MCP endpoint (the `mcp_http_server` service) that external clients connect to
+# by URL alone. Shown verbatim in the connection instructions, so it must be the address
+# as reachable from outside the container — override for a hosted deployment.
+MCP_HTTP_URL = os.getenv('MCP_HTTP_URL', 'http://localhost:8000/mcp/')
 
 # The three CRDC portals whose convergence is the point of the merge. Used to
 # compute the cross-portal overlap and the "shared across all three" headline.
@@ -116,12 +128,44 @@ BROWSER_SAMPLE_CYPHER = (
 # bounded, non-degenerate answer on the merged CRDC graph.
 EXAMPLE_QUERIES = [
     "How many genes are observed across all three CRDC portals (GDC, GC, and PDC) at once — and are landmark cancer genes like TP53, EGFR, and PTEN among them?",
-    "Trace TP53 across the three portals: which studies and cases reference it, and in what role — a mutated gene, a copy-number driver, or a proteomic antibody target?",
+    "Trace TP53 across the three portals: which studies and cases reference it, and in what role, based on the source data-file column each mention was extracted from?",
     "Which genes are called copy-number drivers in PDC proteogenomic studies and are also present in the Genomic Data Commons? Name a few, with the studies they came from.",
     "For glioblastoma, how many GDC genomic cases and PDC proteomic studies converge on the same disease concept?",
     "Which cancer genes appear in BOTH a General Commons (GC) study's data files AND a PDC proteomic study? List a few of the shared genes.",
-    "What analytical fractions (proteome, phosphoproteome, acetylome, …) does the CPTAC glioblastoma (GBM) program cover across its PDC studies?",
+    "Which genes have acetylation or glycosylation site data in PDC data files AND are also called copy-number drivers? List a few, with the columns the evidence came from.",
+    "For TP53, show the exact source data file and column that each mention was extracted from, per portal.",
 ]
+
+# Saved agent responses for the example queries above, so the page can show a real
+# answer without a live LLM call (the CRDC demo runs with SHOW_CHAT off). Produced by
+# running each question against the KG agent over the neo4j MCP server; keyed by the
+# exact question text, so a question with no saved answer simply renders no dropdown.
+EXAMPLE_ANSWERS_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'example_answers.json'
+)
+
+
+def _load_example_answers():
+    try:
+        with open(EXAMPLE_ANSWERS_PATH) as f:
+            answers = json.load(f)
+    except (OSError, ValueError) as exc:
+        print(f'No example answers loaded from {EXAMPLE_ANSWERS_PATH}: {exc}')
+        return {}
+    # The answer is markdown, emitted verbatim into a <script type="text/markdown">
+    # block and parsed client-side, so it is injected with |safe (HTML-escaping it
+    # would leak entities into the rendered markdown — script is a raw-text element).
+    # A literal </script> in the text would therefore close the block early: neutralise
+    # it here, which is the one sequence that can break out.
+    for record in answers.values():
+        answer = record.get('answer')
+        if isinstance(answer, str):
+            record['answer'] = answer.replace('</script', r'<\/script')
+    print(f'Loaded {len(answers)} saved example answers.')
+    return answers
+
+
+EXAMPLE_ANSWERS = _load_example_answers()
 
 
 def _read_tsv_header_and_rows(path):
@@ -256,7 +300,7 @@ def compute_stats(graph_dir=GRAPH_DIR):
                     extracted_files[p].update(files)
     f.close()
 
-    portal_labels = {'gc': 'General Commons', 'gdc': 'Genomic DC', 'pdc': 'Proteomic DC'}
+    portal_labels = {'gc': 'General Commons', 'gdc': 'Genomic Data Commons', 'pdc': 'Proteomic Data Commons'}
 
     # PORTAL_ORDER first (GC, GDC, PDC), then any others by descending node count.
     def _portal_sort_key(p):
@@ -402,8 +446,11 @@ def index():
         stats=STATS,
         graph_name=GRAPH_NAME,
         examples=EXAMPLE_QUERIES,
+        example_answers=EXAMPLE_ANSWERS,
         show_sequence=SHOW_SEQUENCE_SEARCH,
+        show_chat=SHOW_CHAT,
         neo4j_browser_url=NEO4J_BROWSER_URL,
+        mcp_http_url=MCP_HTTP_URL,
         browser_sample_cypher=BROWSER_SAMPLE_CYPHER,
     )
 
