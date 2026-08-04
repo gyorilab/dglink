@@ -15,4 +15,45 @@ done
 
 neo4j status
 
+# Index on all properties for improved lookup time.
+echo "Creating property indexes"
+cypher-shell -u neo4j -p "${NEO4J_PASSWORD:-password}" <<'CYPHER' || echo "WARNING: index creation failed; the graph still serves, but queries will full-scan"
+CREATE INDEX idx_case_curie IF NOT EXISTS FOR (n:`biolink:Case`) ON (n.curie);
+CREATE INDEX idx_case_name IF NOT EXISTS FOR (n:`biolink:Case`) ON (n.name);
+CREATE INDEX idx_gene_curie IF NOT EXISTS FOR (n:`biolink:Gene`) ON (n.curie);
+CREATE INDEX idx_gene_name IF NOT EXISTS FOR (n:`biolink:Gene`) ON (n.name);
+CREATE INDEX idx_rnaproduct_curie IF NOT EXISTS FOR (n:`biolink:RNAProduct`) ON (n.curie);
+CREATE INDEX idx_rnaproduct_name IF NOT EXISTS FOR (n:`biolink:RNAProduct`) ON (n.name);
+CREATE INDEX idx_smallmolecule_curie IF NOT EXISTS FOR (n:`biolink:SmallMolecule`) ON (n.curie);
+CREATE INDEX idx_smallmolecule_name IF NOT EXISTS FOR (n:`biolink:SmallMolecule`) ON (n.name);
+CREATE INDEX idx_disease_curie IF NOT EXISTS FOR (n:`biolink:Disease`) ON (n.curie);
+CREATE INDEX idx_disease_name IF NOT EXISTS FOR (n:`biolink:Disease`) ON (n.name);
+CREATE INDEX idx_study_curie IF NOT EXISTS FOR (n:`biolink:Study`) ON (n.curie);
+CREATE INDEX idx_study_name IF NOT EXISTS FOR (n:`biolink:Study`) ON (n.name);
+CREATE INDEX idx_publication_curie IF NOT EXISTS FOR (n:`biolink:Publication`) ON (n.curie);
+CREATE INDEX idx_publication_name IF NOT EXISTS FOR (n:`biolink:Publication`) ON (n.name);
+CREATE INDEX idx_namedthing_curie IF NOT EXISTS FOR (n:`biolink:NamedThing`) ON (n.curie);
+CREATE INDEX idx_namedthing_name IF NOT EXISTS FOR (n:`biolink:NamedThing`) ON (n.name);
+CREATE INDEX idx_macromolecularcomplex_curie IF NOT EXISTS FOR (n:`biolink:MacromolecularComplex`) ON (n.curie);
+CREATE INDEX idx_macromolecularcomplex_name IF NOT EXISTS FOR (n:`biolink:MacromolecularComplex`) ON (n.name);
+CREATE INDEX idx_grossanatomicalstructure_curie IF NOT EXISTS FOR (n:`biolink:GrossAnatomicalStructure`) ON (n.curie);
+CREATE INDEX idx_grossanatomicalstructure_name IF NOT EXISTS FOR (n:`biolink:GrossAnatomicalStructure`) ON (n.name);
+CREATE INDEX idx_organismtaxon_curie IF NOT EXISTS FOR (n:`biolink:OrganismTaxon`) ON (n.curie);
+CREATE INDEX idx_organismtaxon_name IF NOT EXISTS FOR (n:`biolink:OrganismTaxon`) ON (n.name);
+CREATE INDEX idx_biologicalprocess_curie IF NOT EXISTS FOR (n:`biolink:BiologicalProcess`) ON (n.curie);
+CREATE INDEX idx_biologicalprocess_name IF NOT EXISTS FOR (n:`biolink:BiologicalProcess`) ON (n.name);
+CREATE INDEX idx_studypopulation_curie IF NOT EXISTS FOR (n:`biolink:StudyPopulation`) ON (n.curie);
+CREATE INDEX idx_studypopulation_name IF NOT EXISTS FOR (n:`biolink:StudyPopulation`) ON (n.name);
+CREATE INDEX idx_agent_curie IF NOT EXISTS FOR (n:`biolink:Agent`) ON (n.curie);
+CREATE INDEX idx_agent_name IF NOT EXISTS FOR (n:`biolink:Agent`) ON (n.name);
+CREATE INDEX idx_protein_curie IF NOT EXISTS FOR (n:`biolink:Protein`) ON (n.curie);
+CREATE INDEX idx_protein_name IF NOT EXISTS FOR (n:`biolink:Protein`) ON (n.name);
+CREATE INDEX idx_cellularcomponent_curie IF NOT EXISTS FOR (n:`biolink:CellularComponent`) ON (n.curie);
+CREATE INDEX idx_cellularcomponent_name IF NOT EXISTS FOR (n:`biolink:CellularComponent`) ON (n.name);
+CYPHER
+
+# Block until the indexes are populated, so the first client query is already fast.
+cypher-shell -u neo4j -p "${NEO4J_PASSWORD:-password}" "CALL db.awaitIndexes(600);" \
+  || echo "WARNING: timed out waiting for indexes to come online"
+
 sleep 10000
