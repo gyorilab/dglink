@@ -500,3 +500,48 @@ input[type="radio"] { accent-color: var(--teal); width: 16px; height: 16px; }
   .def-row { grid-template-columns: 1fr; gap: .2rem; }
   .card { padding: 1.5rem 1.25rem; }
 }
+
+/* ==========================================================================
+   Print / PDF export
+   On screen the chat is a viewport-locked column: .chat is fixed to the window
+   height and .messages scrolls inside it, so a plain print would only capture
+   the visible scroll window. When printing (Save as PDF) we let the page grow
+   to its natural height so every message prints, wrap wide code blocks instead
+   of scrolling them off the page edge, and drop screen-only chrome.
+   ========================================================================== */
+@media print {
+  html, body { height: auto; }
+
+  /* Unlock the viewport-height column so it grows with its content. */
+  .chat {
+    height: auto;
+    max-width: none;
+    display: block;
+    padding: 0;
+  }
+
+  /* The vertical scroll region — show every message top to bottom. */
+  .messages {
+    overflow: visible;
+    max-height: none;
+    height: auto;
+    display: block;
+  }
+
+  /* Horizontally-scrollable code blocks: wrap so nothing runs off the page. */
+  .msg-body pre {
+    overflow: visible;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Avoid splitting a single message across a page boundary where possible. */
+  /* .message { break-inside: avoid; page-break-inside: avoid; } */
+  .message.user .msg-body { max-width: 100%; }
+
+  /* Screen-only chrome that shouldn't appear in the exported PDF. */
+  .site-header, .accent-stripe, .chat-toolbar, .composer { display: none; }
+
+  /* Flatten shadows for clean ink-on-white output. */
+  .message.assistant .msg-body { box-shadow: none; }
+}

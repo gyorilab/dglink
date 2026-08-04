@@ -17,6 +17,7 @@ services:
   mcp_backend:
     volumes:
       - ${NEO4J_TARGET}/graph:/app/resources
+      - ${LOCAL_DATA_PATH}:/.data/
     build:
       context: ./mcp       
       dockerfile: ./backend/Dockerfile 

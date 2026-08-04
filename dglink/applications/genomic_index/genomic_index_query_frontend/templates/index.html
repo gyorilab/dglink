@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DGLink · Sequence Search</title>
   <link rel="stylesheet" href="/static/dglink.css">
+  <style>
+    /* Full-bleed layout: use the whole width of the page (matches Overview). */
+    .container { max-width: none; width: 100%; margin: 0; padding: 1.5rem 2.5rem 3rem; }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -20,9 +24,12 @@
     </a>
     <nav class="site-nav">
       <a href="{{ nav.overview }}" class="{{ 'active' if active == 'overview' else '' }}">Overview</a>
-      <a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>
+      {% if show_chat %}<a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>{% endif %}
       <a href="{{ nav.query }}" class="{{ 'active' if active == 'query' else '' }}">Query Builder</a>
       {% if show_sequence %}<a href="{{ nav.sequence }}" class="{{ 'active' if active == 'sequence' else '' }}">Sequence Search</a>{% endif %}
+      <a href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Graph Browser ↗</a>
+      <a href="https://github.com/gyorilab/dglink" target="_blank" rel="noopener">Project Repository ↗</a>
+      <a href="https://gyorilab.github.io/papers/dglink_ismb_2026.pdf" target="_blank" rel="noopener">Project Abstract ↗</a>
     </nav>
   </header>
   <div class="accent-stripe"></div>

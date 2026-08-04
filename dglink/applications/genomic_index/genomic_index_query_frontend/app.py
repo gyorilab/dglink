@@ -22,10 +22,20 @@ NAV = {
 # When false, the Sequence Search tab is hidden in the nav everywhere.
 SHOW_SEQUENCE_SEARCH = os.getenv('SHOW_SEQUENCE_SEARCH', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
 
+# When false, the Chat Assistant tab (and every other reference to the MCP chat
+# interface) is hidden in the nav everywhere. Disabled for deployments where the
+# LLM-writes-Cypher chat interface should not be exposed.
+SHOW_CHAT = os.getenv('SHOW_CHAT', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
+# Neo4j Browser web-view, linked from the nav on every page. Authentication is
+# disabled for this deployment, so the URL opens with no login required.
+NEO4J_BROWSER_URL = os.getenv('NEO4J_BROWSER_URL', 'http://localhost:7474')
+
 
 @app.route('/')
 def index():
-    return render_template('index.html', nav=NAV, active='sequence', show_sequence=SHOW_SEQUENCE_SEARCH)
+    return render_template('index.html', nav=NAV, active='sequence', show_sequence=SHOW_SEQUENCE_SEARCH,
+                           show_chat=SHOW_CHAT, neo4j_browser_url=NEO4J_BROWSER_URL)
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
