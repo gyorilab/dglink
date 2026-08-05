@@ -66,4 +66,11 @@ CYPHER
 cypher-shell -u neo4j -p "${NEO4J_PASSWORD:-password}" "CALL db.awaitIndexes(600);" \
   || echo "WARNING: timed out waiting for indexes to come online"
 
+neo4j stop
+
+## read only neo4j 
+echo "dbms.databases.default_to_read_only=true" >> /etc/neo4j/neo4j.conf 
+
+neo4j start
+
 sleep 10000
