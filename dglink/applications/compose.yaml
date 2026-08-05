@@ -23,7 +23,7 @@ services:
       dockerfile: ./backend/Dockerfile 
     container_name: mcp_fastapi_backend
     ports:
-      - "8000:8000"
+      - "8009:8009"
     depends_on:
       neo-4j:
         condition: service_healthy
@@ -37,7 +37,7 @@ services:
         - FONT_SIZE=${FONT_SIZE}
     container_name: mcp_flask_frontend
     ports:
-      - "5000:5000"
+      - "5005:5005"
     depends_on:
       - mcp_backend
     env_file:
@@ -66,7 +66,7 @@ services:
       dockerfile: ./backend/Dockerfile 
     container_name: semantic_search_fastapi_backend
     ports:
-      - "8001:8001"
+      - "8010:8010"
     env_file:
     - path: ./.env
       required: true

@@ -9,5 +9,5 @@ COPY static/ ./static/
 ARG FONT_SIZE
 RUN apt-get update && apt-get install -y --no-install-recommends gettext-base && rm -rf /var/lib/apt/lists/*
 RUN envsubst '${FONT_SIZE}' < /app/templates/index_template.html > /app/templates/index.html
-EXPOSE 5000
+EXPOSE 5005
 CMD ["uv", "run", "python", "app.py"]

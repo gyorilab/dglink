@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 # Backend that runs the natural-language questions against Neo4j over MCP. This
 # is the same service the Chat Assistant frontend talks to.
-MCP_BACKEND_URL = os.getenv('MCP_BACKEND_URL', 'http://mcp_backend:8000')
+MCP_BACKEND_URL = os.getenv('MCP_BACKEND_URL', 'http://mcp_backend:8009')
 
 # Graph TSVs. docker-compose mounts ${NEO4J_TARGET}/graph here, so the stats
 # always reflect whichever graph the rest of the stack is serving.
@@ -32,7 +32,7 @@ GRAPH_DIR = os.getenv('GRAPH_DIR', '/app/resources')
 # docker-compose localhost ports; override via env for other deployments.
 NAV = {
     'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/'),
-    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
+    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5005/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
     'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
 }
@@ -58,7 +58,7 @@ NEO4J_BROWSER_URL = os.getenv('NEO4J_BROWSER_URL', 'http://localhost:7474')
 # Public MCP endpoint (the `mcp_http_server` service) that external clients connect to
 # by URL alone. Shown verbatim in the connection instructions, so it must be the address
 # as reachable from outside the container — override for a hosted deployment.
-MCP_HTTP_URL = os.getenv('MCP_HTTP_URL', 'http://localhost:8000/mcp/')
+MCP_HTTP_URL = os.getenv('MCP_HTTP_URL', 'http://localhost:8009/mcp/')
 
 # The three CRDC portals whose convergence is the point of the merge. Used to
 # compute the cross-portal overlap and the "shared across all three" headline.

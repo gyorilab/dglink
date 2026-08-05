@@ -30,8 +30,8 @@ DGLink introduces semantic interoperability within data portals through automate
 - cd `dglink/applications/mcp`
 - `docker compose up --build`
 ### Accessing the MCP service
-- **Frontend UI**: http://localhost:5000
-- **Backend API**: http://localhost:8000
+- **Frontend UI**: http://localhost:5005
+- **Backend API**: http://localhost:8009
 - **Neo4j Browser**: http://localhost:7474
 
 ## Semantic Search Web UI
@@ -75,5 +75,5 @@ The index can also be queried via a web-UI which can be brought up by running
 
 ### Accessing the genomic index service
 - **Frontend UI**: http://localhost:5001
-- **Backend API**: http://localhost:8001
+- **Backend API**: http://localhost:8010
 - **Neo4j Browser**: http://localhost:7474

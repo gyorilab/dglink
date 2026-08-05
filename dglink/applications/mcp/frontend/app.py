@@ -5,14 +5,14 @@ import os
 app = Flask(__name__)
 
 # Backend API configuration - use environment variable for Docker, fallback to localhost
-MCP_BACKEND_URL = os.getenv("MCP_BACKEND_URL", "http://localhost:8000")
+MCP_BACKEND_URL = os.getenv("MCP_BACKEND_URL", "http://localhost:8009")
 
 # Shared DGLink navigation. Each tool runs as its own service; the nav links
 # across them. Override via env if the tools are hosted somewhere other than
 # the default docker-compose localhost ports.
 NAV = {
     "overview": os.getenv("NAV_OVERVIEW_URL", "http://localhost:5003/"),
-    "chat": os.getenv("NAV_CHAT_URL", "http://localhost:5000/"),
+    "chat": os.getenv("NAV_CHAT_URL", "http://localhost:5005/"),
     "sequence": os.getenv("NAV_SEQUENCE_URL", "http://localhost:5002/"),
     "query": os.getenv("NAV_QUERY_URL", "http://localhost:5001/"),
 }
@@ -85,4 +85,4 @@ def get_health():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5005, debug=True)

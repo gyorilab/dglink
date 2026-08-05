@@ -55,7 +55,7 @@ Then open the Overview page at **http://localhost:5003**.
 | Variable            | Purpose                                              |
 | ------------------- | ---------------------------------------------------- |
 | `NEO4J_TARGET`      | Graph whose TSVs are mounted for the statistics.     |
-| `MCP_BACKEND_URL`   | Backend the query box proxies to (default `mcp_backend:8000`). |
+| `MCP_BACKEND_URL`   | Backend the query box proxies to (default `mcp_backend:8009`). |
 | `GRAPH_NAME`        | Human-readable graph name shown in the stats header. |
 | `NEO4J_BROWSER_URL` | Neo4j Browser web-view link (default `http://localhost:7474`, login-free). |
 | `FONT_SIZE`         | Font scale for the query box (shared with the chat). |
@@ -66,6 +66,6 @@ Then open the Overview page at **http://localhost:5003**.
 | Service             | Port |
 | ------------------- | ---- |
 | Overview            | 5003 |
-| Chat Assistant      | 5000 |
+| Chat Assistant      | 5005 |
 | Query Builder       | 5001 |
 | Sequence Search     | 5002 |

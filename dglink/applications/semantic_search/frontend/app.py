@@ -4,14 +4,14 @@ import ast
 import os
 app = Flask(__name__)
 
-# BACKEND_URL = "http://semantic_search_backend:8001/"
-SEMANTIC_SEARCH_BACKEND_URL = os.getenv('SEMANTIC_SEARCH_BACKEND_URL', 'http://semantic_search_backend:8001/')
+# BACKEND_URL = "http://semantic_search_backend:8010/"
+SEMANTIC_SEARCH_BACKEND_URL = os.getenv('SEMANTIC_SEARCH_BACKEND_URL', 'http://semantic_search_backend:8010/')
 
 # Shared DGLink navigation (see mcp/frontend/app.py). Defaults to the
 # docker-compose localhost ports; override via env for other deployments.
 NAV = {
     'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/'),
-    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
+    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5005/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
     'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
 }

@@ -20,7 +20,7 @@
     "num_turns": 8,
     "output_tokens": 3591,
     "wall_sec": 59.3,
-    "total_cost_usd": 0.27653880000000003,
+    "total_cost_usd": 0.27653880090000003,
     "model": "claude-sonnet-5"
   },
   "Which genes are called copy-number drivers in PDC proteogenomic studies and are also present in the Genomic Data Commons? Name a few, with the studies they came from.": {
