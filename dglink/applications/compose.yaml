@@ -3,8 +3,13 @@ services:
     build: ${NEO4J_TARGET}
     container_name: neo4j
     ports:
-      - "7687:7687"
-      - "7474:7474"
+      # Host-side remap only; the container still listens on the neo4j defaults.
+      - "7676:7687"
+      - "7484:7474"
+    environment:
+      # Port the Neo4j Browser is told to open bolt on (see compose.crdc.yaml for
+      # the full rationale). Must match the host side of the bolt mapping above.
+      - BOLT_ADVERTISED_PORT=7676
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
       interval: 10s

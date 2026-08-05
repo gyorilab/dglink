@@ -15,8 +15,17 @@ services:
     build: ${NEO4J_TARGET}
     container_name: neo4j
     ports:
-      - "7687:7687"
-      - "7474:7474"
+      # Host-side remap only; the container still listens on the neo4j defaults, so
+      # the healthcheck below and startup.sh's readiness loop are unaffected.
+      - "7676:7687"
+      - "7484:7474"
+    environment:
+      # The Neo4j Browser is a client-side app: it reads the bolt URL from this
+      # server's discovery document and connects from the visitor's browser. That
+      # document advertises port 7687 unless told otherwise, so with bolt published
+      # on a non-default host port the Browser would load and then fail to connect.
+      # Must match the host side of the bolt mapping above.
+      - BOLT_ADVERTISED_PORT=7676
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
       interval: 10s

@@ -2,6 +2,16 @@
 
 set -eoxu pipefail
 
+# The Neo4j Browser connects to bolt from the visitor's browser, using the address
+# in this server's discovery document. That address defaults to port 7687, so when
+# compose publishes bolt on a different host port the Browser must be told which one
+# or it loads and then fails to connect. Only the port is set: the host half still
+# follows the request's Host header, so this stays correct on any hostname.
+# Deleting first keeps this idempotent across container restarts (a duplicate key in
+# neo4j.conf is a startup error).
+sed -i '/^dbms.connector.bolt.advertised_address=/d' /etc/neo4j/neo4j.conf
+echo "dbms.connector.bolt.advertised_address=:${BOLT_ADVERTISED_PORT:-7687}" >> /etc/neo4j/neo4j.conf
+
 echo "Starting database"
 neo4j start
 

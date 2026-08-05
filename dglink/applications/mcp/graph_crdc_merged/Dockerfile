@@ -26,6 +26,9 @@ RUN wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/downloa
 RUN echo "dbms.security.procedures.unrestricted=apoc.*" >> /etc/neo4j/neo4j.conf
 RUN echo "apoc.export.file.enabled=true" >> /etc/neo4j/neo4j.conf
 
+## read only neo4j 
+RUN echo "dbms.databases.default_to_read_only=true" >> /etc/neo4j/neo4j.conf 
+
 COPY graph /sw/
 # Ingest graph content into neo4j
 RUN sed -i 's/#dbms.default_listen_address/dbms.default_listen_address/' /etc/neo4j/neo4j.conf
