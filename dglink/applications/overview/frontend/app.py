@@ -16,10 +16,19 @@ import os
 from collections import Counter, defaultdict
 from urllib.parse import quote
 
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Blueprint, Flask, render_template, request, jsonify, Response
 import requests
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+
+APPLICATION_ROOT = os.getenv("APPLICATION_ROOT", "").rstrip("/")
+bp = Blueprint(
+    "overview",
+    __name__,
+    url_prefix=APPLICATION_ROOT or None,
+    static_folder="static",
+)
 
 # Backend that runs the natural-language questions against Neo4j over MCP. This
 # is the same service the Chat Assistant frontend talks to.
@@ -32,10 +41,10 @@ GRAPH_DIR = os.getenv('GRAPH_DIR', '/app/resources')
 # Shared DGLink navigation (see mcp/frontend/app.py). Defaults to the
 # docker-compose localhost ports; override via env for other deployments.
 NAV = {
-    'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/'),
+    'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/crdc/'),
     'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5005/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
-    'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
+    'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/search/'),
 }
 
 # When false, the Sequence Search tab is hidden in the nav everywhere.
@@ -69,7 +78,7 @@ NEO4J_BROWSER_CONNECT_URL = (
 # Public MCP endpoint (the `mcp_http_server` service) that external clients connect to
 # by URL alone. Shown verbatim in the connection instructions, so it must be the address
 # as reachable from outside the container — override for a hosted deployment.
-MCP_HTTP_URL = os.getenv('MCP_HTTP_URL', 'http://localhost:8009/mcp/')
+MCP_HTTP_URL = os.getenv('MCP_HTTP_URL', 'http://localhost:8009/crdc/mcp/')
 
 # The three CRDC portals whose convergence is the point of the merge. Used to
 # compute the cross-portal overlap and the "shared across all three" headline.
@@ -448,7 +457,7 @@ except Exception as exc:  # pragma: no cover - defensive, don't crash the page
     STATS = None
 
 
-@app.route('/')
+@bp.route('/')
 def index():
     return render_template(
         'index.html',
@@ -466,7 +475,7 @@ def index():
     )
 
 
-@app.route('/run', methods=['POST'])
+@bp.route('/run', methods=['POST'])
 def run():
     """Proxy a natural-language MCP query to the backend and stream the reply."""
     try:
@@ -491,13 +500,17 @@ def run():
         return jsonify({'error': str(exc)}), 500
 
 
-@app.route('/api/health', methods=['GET'])
+@bp.route('/api/health', methods=['GET'])
 def health():
     return jsonify({
         'status': 'healthy',
         'stats_loaded': STATS is not None,
         'mcp_backend': MCP_BACKEND_URL,
     })
+
+
+app.register_blueprint(bp)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 if __name__ == '__main__':

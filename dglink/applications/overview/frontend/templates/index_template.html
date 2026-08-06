@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DGLink · Overview</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <link rel="stylesheet" href="/static/dglink.css">
+  <link rel="stylesheet" href="{{ url_for('overview.static', filename='dglink.css') }}">
   <style>
     :root { --chat-font: ${FONT_SIZE}rem; }
     html { scroll-behavior: smooth; }
@@ -435,7 +435,7 @@
       <div class="card">
         <div class="figure-row">
           <div class="figure-img">
-            <img src="/static/crdc_subgraph.svg"
+            <img src="{{ url_for('overview.static', filename='crdc_subgraph.svg') }}"
                  alt="Subgraph of the EGFR gene linked to studies and cases across the GC, GDC and PDC portals.">
           </div>
           <div class="figure-caption">
@@ -1256,7 +1256,7 @@ PRESENT: KRAS, EGFR, ERBB2, MYC, PTEN, RB1, BRCA2, MTOR, VHL, SMAD4, MAPK3, IGF1
   <footer class="site-footer">
     <div class="footer-inner">
       <a class="footer-logo" href="https://gyorilab.github.io" target="_blank" rel="noopener">
-        <img src="{{ url_for('static', filename='gyori_lab.png') }}"
+        <img src="{{ url_for('overview.static', filename='gyori_lab.png') }}"
              alt="Gyori Lab for Computational Biomedicine" width="1200" height="234">
       </a>
       <div class="footer-text">
@@ -1359,7 +1359,7 @@ PRESENT: KRAS, EGFR, ERBB2, MYC, PTEN, RB1, BRCA2, MTOR, VHL, SMAD4, MAPK3, IGF1
       responseBody.innerHTML = '<span class="loading-dot"></span> Thinking…';
 
       try {
-        const response = await fetch('/run', {
+        const response = await fetch('{{ url_for("overview.run") }}', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

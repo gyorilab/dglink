@@ -50,6 +50,9 @@ docker compose up --build
 
 Then open the Overview page at **http://localhost:5003**.
 
+For the public CRDC deployment (`compose.crdc.yaml` + host nginx), see
+[`deploy/crdc/README.md`](../deploy/crdc/README.md).
+
 ### Relevant environment variables (`.env`)
 
 | Variable            | Purpose                                              |
@@ -57,9 +60,13 @@ Then open the Overview page at **http://localhost:5003**.
 | `NEO4J_TARGET`      | Graph whose TSVs are mounted for the statistics.     |
 | `MCP_BACKEND_URL`   | Backend the query box proxies to (default `mcp_backend:8009`). |
 | `GRAPH_NAME`        | Human-readable graph name shown in the stats header. |
-| `NEO4J_BROWSER_URL` | Neo4j Browser web-view link (default `http://localhost:7474`, login-free). |
+| `NEO4J_BROWSER_URL` | Neo4j Browser web-view link (default `http://localhost:7484`, login-free). |
+| `APPLICATION_ROOT`  | URL path prefix for Flask routes (e.g. `/crdc`); set in `compose.crdc.yaml`; empty for `compose.yaml`. |
 | `FONT_SIZE`         | Font scale for the query box (shared with the chat). |
 | `NAV_*_URL`         | Cross-tool navigation links.                         |
+| `MCP_HTTP_URL`      | Public MCP endpoint shown on the page (e.g. `https://host/crdc/mcp/`). |
+
+For `compose.crdc.yaml` locally, use **http://localhost:5003/crdc/** (not the bare port root).
 
 ## Ports
 

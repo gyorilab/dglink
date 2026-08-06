@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DGLink · Query Builder</title>
-  <link rel="stylesheet" href="/static/dglink.css">
+  <link rel="stylesheet" href="{{ url_for('search.static', filename='dglink.css') }}">
   <style>
     /* Full-bleed layout: use the whole width of the page (matches Overview). */
     .container { max-width: none; width: 100%; margin: 0; padding: 1.5rem 2.5rem 3rem; }
@@ -62,7 +62,7 @@
           ] %}
           {% for value, text, img in roles %}
           <label class="role-card">
-            <img src="{{ url_for('static', filename=img) }}" alt="{{ text }}">
+            <img src="{{ url_for('search.static', filename=img) }}" alt="{{ text }}">
             <span class="role-option">
               <input type="radio" name="QueryType" value="{{ value }}"
                      {% if form_data.QueryType == value %}checked{% endif %}>
@@ -121,7 +121,7 @@
 
   <script>
   document.addEventListener('DOMContentLoaded', function () {
-    function setupAutocomplete(inputId, endpoint = "/autocomplete") {
+    function setupAutocomplete(inputId, endpoint = "{{ url_for('search.autocomplete') }}") {
       const input = document.getElementById(inputId);
       const suggestionBox = document.createElement('ul');
       suggestionBox.className = 'autocomplete';
