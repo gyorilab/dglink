@@ -69,7 +69,31 @@ cypher-shell -u neo4j -p "${NEO4J_PASSWORD:-password}" "CALL db.awaitIndexes(600
 neo4j stop
 
 ## read only neo4j 
-echo "dbms.databases.default_to_read_only=true" >> /etc/neo4j/neo4j.conf 
+echo "dbms.databases.default_to_read_only=true" >> /etc/neo4j/neo4j.conf
+
+# Bind bolt and HTTP to all interfaces inside the container. Use the internal
+# connector ports (7687, 7474)
+for key_val in \
+  "dbms.connector.bolt.listen_address=0.0.0.0:7687" \
+  "dbms.connector.http.listen_address=0.0.0.0:7474"
+do
+  key="${key_val%%=*}"
+  sed -i "/^${key}=/d" /etc/neo4j/neo4j.conf
+  echo "${key_val}" >> /etc/neo4j/neo4j.conf
+done
+
+# Production (NEO4J_PRODUCTION=true): tell the Neo4j Browser and remote bolt
+# clients the public hostname/port, and restrict CORS to the public HTTPS origin.
+if [ "${NEO4J_PRODUCTION:-false}" = "true" ]; then
+  bolt_host="${PUBLIC_HOST:-dglink.indra.bio}"
+  bolt_port="${BOLT_ADVERTISED_PORT:-7676}"
+  sed -i '/^dbms.connector.bolt.advertised_address=/d' /etc/neo4j/neo4j.conf
+  echo "dbms.connector.bolt.advertised_address=${bolt_host}:${bolt_port}" >> /etc/neo4j/neo4j.conf
+
+  cors_origin="${NEO4J_CORS_ALLOW_ORIGIN:-https://${PUBLIC_HOST:-dglink.indra.bio}}"
+  sed -i '/^dbms.security.http_access_control_allow_origin=/d' /etc/neo4j/neo4j.conf
+  echo "dbms.security.http_access_control_allow_origin=${cors_origin}" >> /etc/neo4j/neo4j.conf
+fi
 
 neo4j start
 

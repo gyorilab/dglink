@@ -28,6 +28,8 @@ services:
       # on a non-default host port the Browser would load and then fail to connect.
       # Must match the host side of the bolt mapping above.
       - BOLT_ADVERTISED_PORT=7676
+      # Enables public bolt advertised_address and CORS in graph_crdc_merged/startup.sh.
+      - NEO4J_PRODUCTION=true
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
       interval: 10s
