@@ -14,7 +14,7 @@ import re
 import gilda
 from bioregistry import normalize_curie, get_bioregistry_iri
 
-GROUNDING_SCORE_THRESHOLD = 0.7
+GROUNDING_SCORE_THRESHOLD = 0.5
 
 
 def slugify(name: str) -> str:
