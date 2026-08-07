@@ -78,7 +78,7 @@ def chat():
 def get_health():
     """Get health status from backend"""
     try:
-        response = requests.get(f"{BACKEND_URL}/health")
+        response = requests.get(f"{MCP_BACKEND_URL}/health")
         return jsonify(response.json())
     except Exception as e:
         return jsonify({"error": str(e)}), 500
