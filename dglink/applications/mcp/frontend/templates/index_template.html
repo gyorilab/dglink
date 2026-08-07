@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DGLink · Chat Assistant</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <link rel="stylesheet" href="/static/dglink.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='dglink.css') }}">
   <style>
     :root { --chat-font: ${FONT_SIZE}rem; }
     /* Full-bleed layout: use the whole width of the page (matches Overview). */
@@ -15,7 +15,7 @@
 <body>
   <header class="site-header">
     <a class="brand" href="{{ nav.chat }}">
-      <img class="brand-logo" src="/static/dglink-logo.svg" alt="">
+      <img class="brand-logo" src="{{ url_for('static', filename='dglink-logo.svg') }}" alt="">
       <span class="brand-name">DGLink</span>
     </a>
     <nav class="site-nav">
@@ -56,7 +56,7 @@
     let conversationHistory = [];
 
     // Same H2 mark as the header, on the navy .avatar tile.
-    const AVATAR = `<img src="/static/dglink-logo.svg" alt="">`;
+    const AVATAR = `<img src="{{ url_for('static', filename='dglink-logo.svg') }}" alt="">`;
 
     messageInput.addEventListener('input', function () {
       this.style.height = 'auto';

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DGLink · Sequence Search</title>
-  <link rel="stylesheet" href="/static/dglink.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='dglink.css') }}">
   <style>
     /* Full-bleed layout: use the whole width of the page (matches Overview). */
     .container { max-width: none; width: 100%; margin: 0; padding: 1.5rem 2.5rem 3rem; }
@@ -13,7 +13,7 @@
 <body>
   <header class="site-header">
     <a class="brand" href="{{ nav.chat }}">
-      <img class="brand-logo" src="/static/dglink-logo.svg" alt="">
+      <img class="brand-logo" src="{{ url_for('static', filename='dglink-logo.svg') }}" alt="">
       <span class="brand-name">DGLink</span>
     </a>
     <nav class="site-nav">

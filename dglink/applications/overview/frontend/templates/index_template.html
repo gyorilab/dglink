@@ -325,7 +325,7 @@
 <body>
   <header class="site-header">
     <a class="brand" href="{{ nav.overview }}">
-      <img class="brand-logo" src="/static/dglink-logo.svg" alt="">
+      <img class="brand-logo" src="{{ url_for('overview.static', filename='dglink-logo.svg') }}" alt="">
       <span class="brand-name">DGLink</span>
     </a>
     <nav class="site-nav">
@@ -1278,7 +1278,7 @@ PRESENT: KRAS, EGFR, ERBB2, MYC, PTEN, RB1, BRCA2, MTOR, VHL, SMAD4, MAPK3, IGF1
     const providerSelect = document.getElementById('providerSelect');
 
     // Same H2 mark as the header, on the navy .avatar tile.
-    const AVATAR = `<img src="/static/dglink-logo.svg" alt="">`;
+    const AVATAR = `<img src="{{ url_for('overview.static', filename='dglink-logo.svg') }}" alt="">`;
 
     // Example buttons load the question into the box and run it.
     document.querySelectorAll('.example-btn').forEach(function (btn) {

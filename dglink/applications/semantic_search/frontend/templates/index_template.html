@@ -13,7 +13,7 @@
 <body>
   <header class="site-header">
     <a class="brand" href="{{ nav.chat }}">
-      <img class="brand-logo" src="/static/dglink-logo.svg" alt="">
+      <img class="brand-logo" src="{{ url_for('search.static', filename='dglink-logo.svg') }}" alt="">
       <span class="brand-name">DGLink</span>
     </a>
     <nav class="site-nav">
