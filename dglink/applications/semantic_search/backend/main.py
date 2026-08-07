@@ -1,3 +1,6 @@
+from contextlib import asynccontextmanager
+import asyncio
+
 from fastapi import FastAPI, HTTPException
 from neo4j import GraphDatabase
 import os
@@ -5,14 +8,6 @@ import pygtrie
 import pandas
 from indra.databases import bioregistry_client
 from urllib.parse import quote
-
-app = FastAPI()
-
-
-driver = GraphDatabase.driver(
-    "bolt://neo-4j:7687",
-    auth=(os.environ.get("NEO4J_USER", "neo4j"), os.environ.get("NEO4J_PASSWORD")),
-)
 
 ## Methods for finding portal specific disease focus ##
 NF_DISEASE_FOCUS_TYPE = "has_diseaseFocus"
@@ -36,7 +31,6 @@ def load_prefix_sets(nodes_df, edges_df):
     node_prefix_set = node_prefix_set | pygtrie.PrefixSet(nodes_df["name"].dropna())
     # load edge prefix set
     edge_prefix_set = pygtrie.PrefixSet()
-    edges_df = pandas.read_csv(f"/app/resources/edges.tsv", sep="\t")
     edge_prefix_set = edge_prefix_set | pygtrie.PrefixSet(edges_df[":TYPE"])
     return node_prefix_set, edge_prefix_set
 
@@ -250,6 +244,67 @@ def add_disease_focus(record, object_whole, subject_whole):
     return subject_whole, object_whole
 
 
+node_prefix_set = None
+edge_prefix_set = None
+names_mapping = None
+inverse_names_mapping = None
+project_to_disease_focus = None
+EDGE_TYPES = frozenset()
+
+
+def _load_graph_data():
+    """Load graph TSVs and build in-memory indexes (runs off the event loop)."""
+    global node_prefix_set, edge_prefix_set, names_mapping
+    global inverse_names_mapping, project_to_disease_focus, EDGE_TYPES
+
+    nodes_df = pandas.read_csv("/app/resources/nodes.tsv", sep="\t")
+    edges_df = pandas.read_csv("/app/resources/edges.tsv", sep="\t")
+    node_prefix_set, edge_prefix_set = load_prefix_sets(nodes_df, edges_df)
+    names_mapping, inverse_names_mapping, project_to_disease_focus = load_mappings(
+        nodes_df, edges_df
+    )
+    EDGE_TYPES = frozenset(edges_df[":TYPE"].dropna().astype(str))
+
+
+def ensure_graph_loaded():
+    """Raise if graph indexes are not ready yet."""
+    if names_mapping is None:
+        raise HTTPException(status_code=503, detail="graph data is still loading")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Start graph loading in a worker thread so /health is available immediately."""
+    loop = asyncio.get_running_loop()
+    load_future = loop.run_in_executor(None, _load_graph_data)
+    yield
+    load_future.result()
+
+
+driver = GraphDatabase.driver(
+    "bolt://neo-4j:7687",
+    auth=(os.environ.get("NEO4J_USER", "neo4j"), os.environ.get("NEO4J_PASSWORD")),
+)
+
+app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/health")
+def health():
+    neo4j_connected = False
+    try:
+        driver.verify_connectivity()
+        neo4j_connected = True
+    except Exception:
+        pass
+    graph_loaded = names_mapping is not None and len(names_mapping) > 0
+    return {
+        "status": "healthy",
+        "neo4j_connected": neo4j_connected,
+        "graph_loaded": graph_loaded,
+    }
+
+
 @app.get("/query")
 def query_dispatch(
     agent: str,
@@ -257,6 +312,7 @@ def query_dispatch(
     other_agent: str = None,
     query_type: str = "Subject",
 ):
+    ensure_graph_loaded()
     agent = (agent or "").split(", ", maxsplit=1)[-1]
     other_agent = (other_agent or "").split(", ", maxsplit=1)[-1]
     if agent in names_mapping:
@@ -441,6 +497,7 @@ def object_search(
 
 @app.get("/autoComplete")
 def Autocomplete(query: str, completion_type: str, k: int = 100):
+    ensure_graph_loaded()
     if completion_type != "relation":
         res = ["".join(x) for x in node_prefix_set.iter(prefix=query)][:k]
         if len(res) > 0:
@@ -456,29 +513,3 @@ def Autocomplete(query: str, completion_type: str, k: int = 100):
     else:
         res = ["".join(x) for x in edge_prefix_set.iter(prefix=query)][:k]
     return {"suggestions": res}
-
-
-## read in the graph as data frame.
-nodes_df = pandas.read_csv(f"/app/resources/nodes.tsv", sep="\t")
-edges_df = pandas.read_csv(f"/app/resources/edges.tsv", sep="\t")
-node_prefix_set, edge_prefix_set = load_prefix_sets(nodes_df, edges_df)
-names_mapping, inverse_names_mapping, project_to_disease_focus = load_mappings(
-    nodes_df, edges_df
-)
-## allow-list for the one Cypher fragment that cannot be parameterized (see relation_pattern)
-EDGE_TYPES = frozenset(edges_df[":TYPE"].dropna().astype(str))
-
-
-@app.get("/health")
-def health():
-    neo4j_connected = False
-    try:
-        driver.verify_connectivity()
-        neo4j_connected = True
-    except Exception:
-        pass
-    return {
-        "status": "healthy",
-        "neo4j_connected": neo4j_connected,
-        "graph_loaded": len(names_mapping) > 0,
-    }
