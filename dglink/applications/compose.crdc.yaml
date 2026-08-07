@@ -76,7 +76,9 @@ services:
       required: true
   overview_frontend:
     build:
-      context: ./overview/frontend
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./overview/frontend/Dockerfile
       args:
         - FONT_SIZE=${FONT_SIZE}
     container_name: overview_flask_frontend
@@ -104,8 +106,10 @@ services:
       required: true
   semantic_search_frontend:
     build:
-     context: ./semantic_search/frontend
-     args:
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./semantic_search/frontend/Dockerfile
+      args:
         - PORTAL_NAME=${PORTAL_NAME}
     container_name: semantic_search_flask_frontend
     ports:

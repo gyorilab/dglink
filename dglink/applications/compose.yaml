@@ -37,7 +37,9 @@ services:
       required: true
   mcp_frontend:
     build:
-      context: ./mcp/frontend       
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./mcp/frontend/Dockerfile
       args:
         - FONT_SIZE=${FONT_SIZE}
     container_name: mcp_flask_frontend
@@ -50,7 +52,9 @@ services:
       required: true
   overview_frontend:
     build:
-      context: ./overview/frontend
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./overview/frontend/Dockerfile
       args:
         - FONT_SIZE=${FONT_SIZE}
     container_name: overview_flask_frontend
@@ -76,9 +80,11 @@ services:
     - path: ./.env
       required: true
   semantic_search_frontend:
-    build: 
-     context: ./semantic_search/frontend
-     args:
+    build:
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./semantic_search/frontend/Dockerfile
+      args:
         - PORTAL_NAME=${PORTAL_NAME}
     container_name: semantic_search_flask_frontend
     ports:
@@ -103,7 +109,10 @@ services:
     - path: ./.env
       required: true
   genomic_index_query_frontend:
-    build: ./genomic_index/genomic_index_query_frontend
+    build:
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./genomic_index/genomic_index_query_frontend/Dockerfile
     container_name: genomic-index-query-frontend
     ports:
       - "5002:5002"

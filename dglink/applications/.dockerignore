@@ -1,0 +1,29 @@
+# Build context for every frontend service is this directory (see shared/README.md),
+# so everything here is sent to the Docker daemon unless excluded below. Without this
+# file that is ~525M, almost all of it graph data no frontend image needs.
+
+# Graph data: mcp/graph_crdc_merged alone is 467M. Mounted at runtime as a volume
+# (see the `volumes:` keys in compose.yaml), never baked into an image.
+mcp/graph_*/
+genomic_index/mantis_index/
+
+# Secrets. Supplied at runtime via `env_file:`; must never end up in an image layer.
+.env
+*.env
+!.env.example
+
+# Backends and unrelated apps — the frontend images copy none of this.
+*/backend/
+mcp/graph_poster/
+project_similarity/
+
+# Notebooks, caches, local virtualenvs.
+**/__pycache__/
+**/*.pyc
+**/.venv/
+**/.ipynb_checkpoints/
+**/*.ipynb
+
+# Version control and editor noise.
+**/.git/
+**/.DS_Store

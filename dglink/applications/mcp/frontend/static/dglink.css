@@ -64,7 +64,9 @@ body {
   gap: .65rem;
   text-decoration: none;
 }
-.brand-logo { display: block; }
+/* The mark lives in static/dglink-logo.svg, so it has no intrinsic size of its
+   own — sizing it is this rule's job. */
+.brand-logo { display: block; width: 34px; height: 34px; }
 .brand-name {
   color: #fff;
   font-size: 1.35rem;
@@ -307,6 +309,7 @@ a.link:hover { text-decoration: underline; }
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
+.avatar img { width: 28px; height: 28px; display: block; }
 .msg-body {
   border-radius: 14px;
   padding: 1.1rem 1.4rem;

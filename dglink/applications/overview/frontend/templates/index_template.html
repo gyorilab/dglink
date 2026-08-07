@@ -286,13 +286,7 @@
 <body>
   <header class="site-header">
     <a class="brand" href="{{ nav.overview }}">
-      <svg class="brand-logo" width="26" height="26" viewBox="0 0 24 24" fill="none">
-        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
-        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
-        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
-      </svg>
+      <img class="brand-logo" src="/static/dglink-logo.svg" alt="">
       <span class="brand-name">DGLink</span>
     </a>
     <nav class="site-nav">
@@ -652,7 +646,8 @@
             <p class="lead">
               Prefer to write Cypher and see rendered subgraphs? The full knowledge graph is served by
               Neo4j Browser. Authentication is disabled for this deployment, so
-              <strong>no login is required</strong> — just click <em>Connect</em>.
+            <strong>no login is required  </strong> just enter <strong>bolt+s://dglink.indra.bio:7676</strong>  in the connection URL box
+            and click <em>Connect</em>.
             </p>
             <a class="btn-browser" href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Open Neo4j Browser ↗</a>
           </div>
@@ -1047,13 +1042,8 @@ PRESENT: KRAS, EGFR, ERBB2, MYC, PTEN, RB1, BRCA2, MTOR, VHL, SMAD4, MAPK3, IGF1
     const sendButton = document.getElementById('sendButton');
     const providerSelect = document.getElementById('providerSelect');
 
-    const AVATAR = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
-        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
-        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
-      </svg>`;
+    // Same H2 mark as the header, on the navy .avatar tile.
+    const AVATAR = `<img src="/static/dglink-logo.svg" alt="">`;
 
     // Example buttons load the question into the box and run it.
     document.querySelectorAll('.example-btn').forEach(function (btn) {
