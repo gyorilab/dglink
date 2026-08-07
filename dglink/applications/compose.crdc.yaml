@@ -1,8 +1,7 @@
 # CRDC demo deployment (e.g. AWS-hosted).
 #
 # Public path-prefix routing is documented in deploy/crdc/README.md. Copy
-# deploy/crdc/nginx.conf into the host nginx config; compose binds ports to
-# 127.0.0.1 so only nginx (and the ALB) reach the apps.
+# deploy/crdc/nginx.conf into the host nginx config.
 #
 # This is a trimmed variant of compose.yaml for exposing the DGLink CRDC demo
 # publicly. Relative to the full stack it intentionally does NOT bring up:
