@@ -106,6 +106,12 @@ services:
     container_name: semantic_search_fastapi_backend
     ports:
       - "8010:8010"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8010/health')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     env_file:
     - path: ./.env
       required: true
@@ -119,13 +125,21 @@ services:
     container_name: semantic_search_flask_frontend
     ports:
       - "5001:5001"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5001/search/api/health')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     environment:
       - SHOW_CHAT=false
       - SHOW_SEQUENCE_SEARCH=false
       - APPLICATION_ROOT=/search
     depends_on:
-      - semantic_search_backend
-      - neo-4j
+      semantic_search_backend:
+        condition: service_healthy
+      neo-4j:
+        condition: service_started
     env_file:
     - path: ./.env
       required: true

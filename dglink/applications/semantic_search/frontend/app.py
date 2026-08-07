@@ -1,4 +1,4 @@
-from flask import Blueprint, Flask, render_template, request
+from flask import Blueprint, Flask, render_template, request, jsonify
 import requests
 import ast
 import os
@@ -123,6 +123,17 @@ def autocomplete():
     )
     data = response.json()
     return data
+
+
+@bp.route("/api/health", methods=["GET"])
+def get_health():
+    """Get health status from backend"""
+    try:
+        base = SEMANTIC_SEARCH_BACKEND_URL.rstrip("/")
+        response = requests.get(f"{base}/health")
+        return jsonify(response.json())
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 app.register_blueprint(bp)

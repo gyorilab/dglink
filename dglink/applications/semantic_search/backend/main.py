@@ -467,3 +467,18 @@ names_mapping, inverse_names_mapping, project_to_disease_focus = load_mappings(
 )
 ## allow-list for the one Cypher fragment that cannot be parameterized (see relation_pattern)
 EDGE_TYPES = frozenset(edges_df[":TYPE"].dropna().astype(str))
+
+
+@app.get("/health")
+def health():
+    neo4j_connected = False
+    try:
+        driver.verify_connectivity()
+        neo4j_connected = True
+    except Exception:
+        pass
+    return {
+        "status": "healthy",
+        "neo4j_connected": neo4j_connected,
+        "graph_loaded": len(names_mapping) > 0,
+    }

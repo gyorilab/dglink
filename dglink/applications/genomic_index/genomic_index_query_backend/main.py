@@ -208,6 +208,14 @@ def parse_fasta(raw: str) -> list[SequenceQuery]:
 
 app = FastAPI()
 
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+    }
+
+
 @app.post("/query")
 def query(query_input, k, threshold, index):
     threshold = float(threshold)
