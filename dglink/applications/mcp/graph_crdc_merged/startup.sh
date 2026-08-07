@@ -95,6 +95,7 @@ if [ "${NEO4J_PRODUCTION:-false}" = "true" ]; then
   echo "dbms.security.http_access_control_allow_origin=${cors_origin}" >> /etc/neo4j/neo4j.conf
 fi
 
-neo4j start
-
-sleep 10000
+# Run `neo4j console` so Neo4j stays running in the foreground.
+# Using `neo4j start` will put the process in the background which means this
+# script will exit and the container will stop with it without any errors.
+neo4j console
