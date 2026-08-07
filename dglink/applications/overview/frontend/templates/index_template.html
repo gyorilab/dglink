@@ -358,7 +358,40 @@
       </div>
     </section>
 
-    <!-- ============ 1a. Cross-portal subgraph figure ============ -->
+    <!-- ============ 1a. What was processed (coverage) ============ -->
+    {% if stats and stats.processing_coverage %}
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Coverage</div>
+        <h2 class="page-title" style="font-size:1.6rem;">What was processed</h2>
+        <p class="lead">
+          DGLink extracts from the data files a portal makes downloadable, so how much of each portal
+          was processed differs. The General Commons was covered in full at the open-access level; the
+          Genomic and Proteomic Data Commons each only had a few cases/studies processed as a proof of concept.
+        </p>
+      </div>
+      <div class="portal-grid">
+        {% for c in stats.processing_coverage %}
+        <div class="portal-card">
+          <div class="p-key">{{ c.key }}</div>
+          <div class="p-name">{{ c.label }}</div>
+          <span class="cov-badge {{ c.variant }}">{{ c.scope }}</span>
+          <p class="cov-note">{{ c.note }}</p>
+          <div class="cov-metrics">
+            {% for m in c.metrics %}
+            <div class="cov-metric">
+              <div class="m-val">{{ '{:,}'.format(m.value) }}</div>
+              <div class="m-lab">{{ m.label }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ============ 1b. Cross-portal subgraph figure ============ -->
     <section class="section">
       <div class="card">
         <div class="figure-row">
@@ -518,40 +551,7 @@
       {% endif %}
     </section>
 
-    <!-- ============ 2a. What was processed (coverage) ============ -->
-    {% if stats and stats.processing_coverage %}
-    <section class="section">
-      <div class="section-head">
-        <div class="eyebrow">Coverage</div>
-        <h2 class="page-title" style="font-size:1.6rem;">What was processed</h2>
-        <p class="lead">
-          DGLink extracts from the data files a portal makes downloadable, so how much of each portal
-          was processed differs. The General Commons was covered in full at the open-access level; the
-          Genomic and Proteomic Data Commons each only had a few cases/studies processed as a proof of concept.
-        </p>
-      </div>
-      <div class="portal-grid">
-        {% for c in stats.processing_coverage %}
-        <div class="portal-card">
-          <div class="p-key">{{ c.key }}</div>
-          <div class="p-name">{{ c.label }}</div>
-          <span class="cov-badge {{ c.variant }}">{{ c.scope }}</span>
-          <p class="cov-note">{{ c.note }}</p>
-          <div class="cov-metrics">
-            {% for m in c.metrics %}
-            <div class="cov-metric">
-              <div class="m-val">{{ '{:,}'.format(m.value) }}</div>
-              <div class="m-lab">{{ m.label }}</div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-    {% endif %}
-
-    <!-- ============ 2b. Inside the merge (cross-portal story) ============ -->
+    <!-- ============ 2a. Inside the merge (cross-portal story) ============ -->
     {% if stats %}
     <section class="section">
       <div class="section-head">
