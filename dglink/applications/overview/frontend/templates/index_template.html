@@ -281,6 +281,45 @@
     .md-body code { font-family: var(--mono); font-size: .85em; word-break: break-word; }
     .md-body p { margin: .4rem 0; }
     .bench-q { font-style: italic; color: var(--body); border-left: 3px solid var(--teal); padding-left: .8rem; margin: .5rem 0 1rem; }
+
+    /* Benchmark: answer-quality outcome cards (what each arm actually got right) */
+    .bench-outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: .9rem 0 1.1rem; }
+    @media (max-width: 720px) { .bench-outcomes { grid-template-columns: 1fr; } }
+    .outcome { border: 1px solid var(--border); border-radius: 12px; padding: .8rem .9rem; background: #fafbfc; }
+    .outcome.win { border-color: var(--teal-tint-line); background: var(--teal-tint); }
+    .outcome .o-arm { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; color: var(--muted); }
+    .outcome.win .o-arm { color: var(--teal-dark); }
+    .outcome .o-head { display: flex; align-items: center; gap: .45rem; margin-top: .25rem; font-size: 1.05rem; font-weight: 800; color: var(--ink); line-height: 1.25; }
+    .outcome.win .o-head { color: var(--teal-dark); }
+    .o-mark { flex: none; width: 1.15rem; height: 1.15rem; border-radius: 50%; display: inline-grid; place-items: center;
+              font-size: .72rem; font-weight: 700; color: #fff; background: var(--orange); }
+    .outcome.win .o-mark { background: var(--teal); }
+    .outcome .o-note { font-size: .86rem; color: var(--body); margin-top: .35rem; }
+
+    /* Benchmark: metric comparison table with magnitude bars + advantage pills */
+    .bench-compare { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .9rem; }
+    .bench-compare th, .bench-compare td { padding: .5rem .7rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+    .bench-compare th { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; }
+    .bench-compare th.num, .bench-compare td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .bench-compare td.metric { font-weight: 600; color: var(--ink); }
+    .bench-compare td.v-api { color: var(--muted); }
+    .bench-compare th.kg-col, .bench-compare td.kg-col { background: var(--teal-tint); }
+    .bench-compare th.kg-col { color: var(--teal-dark); }
+    .bench-compare td.kg-col { color: var(--teal-dark); font-weight: 700; }
+    .bench-compare td.bars { width: 34%; min-width: 150px; }
+    .bar-pair { display: grid; gap: .22rem; }
+    .bar-track { height: .45rem; border-radius: 999px; background: #e9edf0; overflow: hidden; }
+    .bar-fill { display: block; height: 100%; border-radius: 999px; }
+    .bar-fill.api { background: var(--stripe-gray); }
+    .bar-fill.kg { background: var(--teal); }
+    .win-pill { display: inline-block; background: var(--teal); color: #fff; border-radius: 999px;
+                padding: .16rem .6rem; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+    .win-pill.tie { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .bench-legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .78rem; color: var(--muted); margin-top: .55rem; }
+    .bench-legend .swatch { display: inline-block; width: .7rem; height: .45rem; border-radius: 999px; margin-right: .35rem; vertical-align: middle; }
+    .bench-legend .swatch.api { background: var(--stripe-gray); }
+    .bench-legend .swatch.kg { background: var(--teal); }
+    .bench-sub { font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-top: 1.1rem; }
   </style>
 </head>
 <body>
@@ -827,16 +866,65 @@
         <div class="eyebrow">Query 1 &middot; cross-portal</div>
         <h2 class="page-title" style="font-size:1.6rem;">Is TP53 present in all three CRDC portals?</h2>
         <p class="bench-q">&ldquo;Is the gene TP53 present in all three CRDC portals in the ingested data &mdash; a GDC case, a GC (General Commons) study, and a PDC proteomic study? Name the specific study/case in each portal.&rdquo;</p>
-        <table class="prov-table">
-          <thead><tr><th>Metric</th><th class="num">Raw-API agent</th><th class="num">DGLink KG agent</th></tr></thead>
+        <div class="bench-outcomes">
+          <div class="outcome">
+            <div class="o-arm">Raw-API agent</div>
+            <div class="o-head"><span class="o-mark">✕</span>2 of 3 portals confirmed</div>
+            <p class="o-note">Confirmed TP53 in GDC and PDC, but <strong>could not verify the GC link</strong> &mdash; no gene-level field exists in the GC metadata API.</p>
+          </div>
+          <div class="outcome win">
+            <div class="o-arm">DGLink KG agent</div>
+            <div class="o-head"><span class="o-mark">✓</span>3 of 3 portals confirmed</div>
+            <p class="o-note">One merged gene node named the specific GDC case, GC study and PDC study in a single traversal.</p>
+          </div>
+        </div>
+        <h3 class="bench-sub">Effort to get there</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td class="pm">Agent turns</td><td class="num">26</td><td class="num">7</td></tr>
-            <tr><td class="pm">Output tokens</td><td class="num">11,739</td><td class="num">1,573</td></tr>
-            <tr><td class="pm">Wall time</td><td class="num">169.6 s</td><td class="num">31.1 s</td></tr>
-            <tr><td class="pm">Cost (USD)</td><td class="num">$0.63</td><td class="num">$0.17</td></tr>
+            <tr>
+              <td class="metric">Agent turns</td>
+              <td class="num v-api">26</td>
+              <td class="num kg-col">7</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:27%"></span></span></div></td>
+              <td><span class="win-pill">3.7× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Output tokens</td>
+              <td class="num v-api">11,739</td>
+              <td class="num kg-col">1,573</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:13%"></span></span></div></td>
+              <td><span class="win-pill">7.5× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Wall time</td>
+              <td class="num v-api">169.6 s</td>
+              <td class="num kg-col">31.1 s</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:18%"></span></span></div></td>
+              <td><span class="win-pill">5.5× faster</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Cost (USD)</td>
+              <td class="num v-api">$0.63</td>
+              <td class="num kg-col">$0.17</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:27%"></span></span></div></td>
+              <td><span class="win-pill">3.7× cheaper</span></td>
+            </tr>
           </tbody>
         </table>
-        <p class="lead"><strong>Comparison.</strong> The KG agent answered in roughly a quarter of the turns, an eighth of the output tokens, and a third of the cost &mdash; and reached a <em>more complete</em> answer. From a single merged gene node it confirmed TP53 in all three portals, whereas the raw-API agent confirmed GDC and PDC but <em>could not verify the GC link</em> from the metadata API alone.</p>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>Shorter teal bar = less effort for the same question.</span>
+        </div>
         <div class="bench-arms">
           <details class="bench-details"><summary>Raw-API agent response</summary><div id="x1-api" class="md-body"></div></details>
           <details class="bench-details"><summary>DGLink KG-agent response</summary><div id="x1-dglink" class="md-body"></div></details>
@@ -875,16 +963,65 @@ Note: many other GDC cases and PDC studies also link to TP53 (e.g., additional C
         <div class="eyebrow">Query 2 &middot; cross-portal</div>
         <h2 class="page-title" style="font-size:1.6rem;">Which cancer genes appear in both caNanoLab and a PDC proteomic study?</h2>
         <p class="bench-q">&ldquo;Which cancer genes appear in BOTH the caNanoLab (GC) study data files AND a PDC proteomic study? List a few shared genes.&rdquo;</p>
-        <table class="prov-table">
-          <thead><tr><th>Metric</th><th class="num">Raw-API agent</th><th class="num">DGLink KG agent</th></tr></thead>
+        <div class="bench-outcomes">
+          <div class="outcome">
+            <div class="o-arm">Raw-API agent</div>
+            <div class="o-head">7 shared genes surfaced</div>
+            <p class="o-note">Limited to text search over file <em>names</em>, it could only spot-check a handful of gene symbols &mdash; not compute the intersection.</p>
+          </div>
+          <div class="outcome win">
+            <div class="o-arm">DGLink KG agent</div>
+            <div class="o-head">2,586 shared genes, exactly</div>
+            <p class="o-note">Computed the full overlap &mdash; 2,586 of 2,652 caNanoLab-linked genes also appear in a PDC study &mdash; as one graph traversal.</p>
+          </div>
+        </div>
+        <h3 class="bench-sub">Effort to get there</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td class="pm">Agent turns</td><td class="num">44</td><td class="num">9</td></tr>
-            <tr><td class="pm">Output tokens</td><td class="num">11,149</td><td class="num">2,963</td></tr>
-            <tr><td class="pm">Wall time</td><td class="num">166.4 s</td><td class="num">48.4 s</td></tr>
-            <tr><td class="pm">Cost (USD)</td><td class="num">$1.15</td><td class="num">$0.27</td></tr>
+            <tr>
+              <td class="metric">Agent turns</td>
+              <td class="num v-api">44</td>
+              <td class="num kg-col">9</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:20%"></span></span></div></td>
+              <td><span class="win-pill">4.9× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Output tokens</td>
+              <td class="num v-api">11,149</td>
+              <td class="num kg-col">2,963</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:27%"></span></span></div></td>
+              <td><span class="win-pill">3.8× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Wall time</td>
+              <td class="num v-api">166.4 s</td>
+              <td class="num kg-col">48.4 s</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:29%"></span></span></div></td>
+              <td><span class="win-pill">3.4× faster</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Cost (USD)</td>
+              <td class="num v-api">$1.15</td>
+              <td class="num kg-col">$0.27</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:23%"></span></span></div></td>
+              <td><span class="win-pill">4.3× cheaper</span></td>
+            </tr>
           </tbody>
         </table>
-        <p class="lead"><strong>Comparison.</strong> This is a set-intersection across portals &mdash; a single traversal in the graph, but expensive over raw APIs. The KG agent computed the full overlap (2,586 of 2,652 caNanoLab-linked genes also appear in a PDC study) in 9 turns, while the raw-API agent, limited to text search over file names, surfaced only a handful of genes after 44 turns and 4&times; the cost.</p>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>A set intersection across portals is one traversal in the graph, but expensive over raw APIs.</span>
+        </div>
         <div class="bench-arms">
           <details class="bench-details"><summary>Raw-API agent response</summary><div id="x2-api" class="md-body"></div></details>
           <details class="bench-details"><summary>DGLink KG-agent response</summary><div id="x2-dglink" class="md-body"></div></details>
@@ -941,25 +1078,121 @@ Yes — there's substantial overlap. Of the 2,652 distinct genes linked to caNan
         <div class="eyebrow">Gene panel &middot; scored vs. independent gold</div>
         <h2 class="page-title" style="font-size:1.6rem;">Which of a 20-gene panel appear in caNanoLab data files?</h2>
         <p class="bench-q">&ldquo;For each gene in this 20-gene panel, determine whether it appears in any data file of the caNanoLab study (NCI General Commons, phs_accession 10.17917).&rdquo;</p>
-        <p class="lead">Unlike the open-ended queries above, this task is scored automatically against an independent gold standard (14 of the 20 panel genes are truly present). Both agents have perfect precision (i.e. no false positives); however, they differ sharply in recall.</p>
-        <table class="prov-table">
-          <thead><tr><th>Arm</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1</th><th class="num">Accuracy</th><th class="num">True positives</th></tr></thead>
+        <p class="lead">Unlike the open-ended queries above, this task is scored automatically against an independent gold standard: 14 of the 20 panel genes are truly present. Neither agent produced a false positive, so the whole difference is in <strong>recall</strong> &mdash; how many of the 14 each one actually found.</p>
+        <div class="bench-outcomes">
+          <div class="outcome">
+            <div class="o-arm">Raw-API agent</div>
+            <div class="o-head">4 of 14 genes found</div>
+            <p class="o-note">Recall 0.29 &middot; F1 0.44. Limited to filename/metadata text search, it cannot see genes buried inside the study&rsquo;s data tables.</p>
+          </div>
+          <div class="outcome win">
+            <div class="o-arm">DGLink KG agent</div>
+            <div class="o-head">12 of 14 genes found</div>
+            <p class="o-note">Recall 0.86 &middot; F1 0.92. File-content gene mentions are pre-indexed on the graph, so it reads them straight off the study node.</p>
+          </div>
+        </div>
+        <h3 class="bench-sub">Scored against the gold standard</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td class="pm">DGLink KG agent</td><td class="num">1.00</td><td class="num">0.86</td><td class="num">0.92</td><td class="num">0.90</td><td class="num">12 / 14</td></tr>
-            <tr><td class="pm">Raw-API agent</td><td class="num">1.00</td><td class="num">0.29</td><td class="num">0.44</td><td class="num">0.50</td><td class="num">4 / 14</td></tr>
+            <tr>
+              <td class="metric">Precision</td>
+              <td class="num v-api">1.00</td>
+              <td class="num kg-col">1.00</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill tie">tie</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Recall</td>
+              <td class="num v-api">0.29</td>
+              <td class="num kg-col">0.86</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:34%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">3.0× higher</span></td>
+            </tr>
+            <tr>
+              <td class="metric">F1</td>
+              <td class="num v-api">0.44</td>
+              <td class="num kg-col">0.92</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:48%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">2.1× higher</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Accuracy</td>
+              <td class="num v-api">0.50</td>
+              <td class="num kg-col">0.90</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:56%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">1.8× higher</span></td>
+            </tr>
+            <tr>
+              <td class="metric">True positives</td>
+              <td class="num v-api">4 / 14</td>
+              <td class="num kg-col">12 / 14</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:33%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">3.0× more</span></td>
+            </tr>
           </tbody>
         </table>
-        <p class="bench-stats-note" style="color:var(--muted);font-size:.85rem;">Gold-positive: 14/20. KG agent missed IDH1, TP53. Raw-API agent missed BRCA2, IDH1, IGF1R, MAPK3, MTOR, PTEN, RB1, SMAD4, TP53, VHL.</p>
-        <table class="prov-table" style="margin-top:1rem;">
-          <thead><tr><th>Effort</th><th class="num">Raw-API agent</th><th class="num">DGLink KG agent</th></tr></thead>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>Longer teal bar = better score (higher is better for every metric above).</span>
+        </div>
+        <p class="bench-stats-note" style="color:var(--muted);font-size:.85rem;margin-top:.6rem;">Gold-positive: 14/20. KG agent missed IDH1, TP53. Raw-API agent missed BRCA2, IDH1, IGF1R, MAPK3, MTOR, PTEN, RB1, SMAD4, TP53, VHL.</p>
+        <h3 class="bench-sub">Effort to get there</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td class="pm">Agent turns</td><td class="num">51</td><td class="num">12</td></tr>
-            <tr><td class="pm">Output tokens</td><td class="num">18,575</td><td class="num">3,575</td></tr>
-            <tr><td class="pm">Wall time</td><td class="num">222.2 s</td><td class="num">71.3 s</td></tr>
-            <tr><td class="pm">Cost (USD)</td><td class="num">$1.37</td><td class="num">$0.19</td></tr>
+            <tr>
+              <td class="metric">Agent turns</td>
+              <td class="num v-api">51</td>
+              <td class="num kg-col">12</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:24%"></span></span></div></td>
+              <td><span class="win-pill">4.3× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Output tokens</td>
+              <td class="num v-api">18,575</td>
+              <td class="num kg-col">3,575</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:19%"></span></span></div></td>
+              <td><span class="win-pill">5.2× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Wall time</td>
+              <td class="num v-api">222.2 s</td>
+              <td class="num kg-col">71.3 s</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:32%"></span></span></div></td>
+              <td><span class="win-pill">3.1× faster</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Cost (USD)</td>
+              <td class="num v-api">$1.37</td>
+              <td class="num kg-col">$0.19</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:14%"></span></span></div></td>
+              <td><span class="win-pill">7.2× cheaper</span></td>
+            </tr>
           </tbody>
         </table>
-        <p class="lead"><strong>Comparison.</strong> Both agents are perfectly precise, but the KG agent recovers 12 of the 14 gold-positive genes (F1&nbsp;0.92) versus only 4 for the raw-API agent (F1&nbsp;0.44). Because file-content gene mentions are pre-indexed on the graph, the KG agent reads them off the study node directly; the raw-API agent, limited to filename/metadata text search, cannot see genes buried inside the study&rsquo;s data tables &mdash; at a third the recall, and for 7&times; the cost.</p>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>Shorter teal bar = less effort &mdash; here, for 3&times; the recall.</span>
+        </div>
         <div class="bench-arms">
           <details class="bench-details"><summary>Raw-API agent response</summary><div id="panel-api" class="md-body"></div></details>
           <details class="bench-details"><summary>DGLink KG-agent response</summary><div id="panel-dglink" class="md-body"></div></details>
