@@ -14,6 +14,7 @@ import csv
 import json
 import os
 from collections import Counter, defaultdict
+from urllib.parse import quote
 
 from flask import Flask, render_template, request, jsonify, Response
 import requests
@@ -54,6 +55,16 @@ GRAPH_NAME = os.getenv('GRAPH_NAME', 'Merged CRDC graph (NCI GDC · GC · PDC)')
 # opens the graph with no login required — one "Connect" click. Override for
 # non-localhost deployments.
 NEO4J_BROWSER_URL = os.getenv('NEO4J_BROWSER_URL', 'http://localhost:7474')
+
+# Bolt URL (with scheme) passed to the browser as ``connectURL`` to pre-fill the connection form.
+NEO4J_BOLT_URL = os.getenv('NEO4J_BOLT_URL', 'bolt://localhost:7687')
+
+# Browser link with the bolt address pre-filled via ``connectURL`` (encode so the ``+`` in bolt+s survives).
+_sep = '&' if '?' in NEO4J_BROWSER_URL else '?'
+NEO4J_BROWSER_CONNECT_URL = (
+    f"{NEO4J_BROWSER_URL}{_sep}connectURL={quote(NEO4J_BOLT_URL, safe='')}"
+    if NEO4J_BOLT_URL else NEO4J_BROWSER_URL
+)
 
 # Public MCP endpoint (the `mcp_http_server` service) that external clients connect to
 # by URL alone. Shown verbatim in the connection instructions, so it must be the address
@@ -449,7 +460,7 @@ def index():
         example_answers=EXAMPLE_ANSWERS,
         show_sequence=SHOW_SEQUENCE_SEARCH,
         show_chat=SHOW_CHAT,
-        neo4j_browser_url=NEO4J_BROWSER_URL,
+        neo4j_browser_url=NEO4J_BROWSER_CONNECT_URL,
         mcp_http_url=MCP_HTTP_URL,
         browser_sample_cypher=BROWSER_SAMPLE_CYPHER,
     )
