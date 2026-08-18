@@ -1,0 +1,656 @@
+{
+  "_meta": {
+    "study": "caNanoLab (10.17917)",
+    "cananolab_coverage": {
+      "n_files_total": 5394,
+      "n_scanned": 5394,
+      "n_parsed": 5384,
+      "n_unparsed": 10
+    },
+    "criterion": "case-insensitive exact-token match of gene symbol/alias in tabular file content; ambiguous symbols (APC/MET/KIT/ATM) excluded",
+    "built_unix": 1785793533
+  },
+  "TP53": {
+    "aliases": [
+      "TP53",
+      "Trp53",
+      "p53"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 12,
+      "examples": [
+        {
+          "file": "20100610_17-34-59-341_553Support1.xls",
+          "token": "P53"
+        },
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "TRP53"
+        },
+        {
+          "file": "20161213_11-41-35-310_Dose_Levels.xls",
+          "token": "P53"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "TRP53"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "TRP53"
+        }
+      ],
+      "adjudicated": "scan found Trp53/TP53/p53 in 12 files (real); graph missed (uningested files)"
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 64
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 1461
+    }
+  },
+  "KRAS": {
+    "aliases": [
+      "KRAS",
+      "Kras"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 0,
+      "examples": [],
+      "adjudicated": "graph grounded 'GTPase KRas isoform X1 [Mus musculus]' (Description col) \u2014 real gene; scan's tabular scope missed that file"
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 63
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 136
+    }
+  },
+  "EGFR": {
+    "aliases": [
+      "EGFR",
+      "Egfr",
+      "ERBB1"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 9,
+      "examples": [
+        {
+          "file": "table_1.csv",
+          "token": "EGFR"
+        },
+        {
+          "file": "AdditionalProtocolMetadata.xlsx",
+          "token": "EGFR"
+        },
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "EGFR"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "EGFR"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "EGFR"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 84
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 580
+    }
+  },
+  "ERBB2": {
+    "aliases": [
+      "ERBB2",
+      "Erbb2",
+      "HER2"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 6,
+      "examples": [
+        {
+          "file": "table_1.csv",
+          "token": "HER2"
+        },
+        {
+          "file": "AdditionalProtocolMetadata.xlsx",
+          "token": "HER2"
+        },
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "ERBB2"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "ERBB2"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "ERBB2"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 83
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 305
+    }
+  },
+  "MYC": {
+    "aliases": [
+      "MYC",
+      "Myc"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 8,
+      "examples": [
+        {
+          "file": "20100610_17-34-59-341_553Support1.xls",
+          "token": "MYC"
+        },
+        {
+          "file": "20240906_16-18-56-789_omole-steinmetz et-al-gel band seq.xlsx",
+          "token": "MYC"
+        },
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "MYC"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "MYC"
+        },
+        {
+          "file": "20240906_16-18-56-789_omole-steinmetz et-al-gel band seq.xlsx",
+          "token": "MYC"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 63
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 201
+    }
+  },
+  "PTEN": {
+    "aliases": [
+      "PTEN",
+      "Pten"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 7,
+      "examples": [
+        {
+          "file": "table_1.csv",
+          "token": "PTEN"
+        },
+        {
+          "file": "table_1.csv",
+          "token": "PTEN"
+        },
+        {
+          "file": "table_1.csv",
+          "token": "PTEN"
+        },
+        {
+          "file": "table_1.csv",
+          "token": "PTEN"
+        },
+        {
+          "file": "table_1.csv",
+          "token": "PTEN"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 83
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 896
+    }
+  },
+  "RB1": {
+    "aliases": [
+      "RB1",
+      "Rb1"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 4,
+      "examples": [
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "RB1"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "RB1"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "RB1"
+        },
+        {
+          "file": "20210613_11-33-55-110_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "RB1"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 86
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 580
+    }
+  },
+  "BRCA1": {
+    "aliases": [
+      "BRCA1",
+      "Brca1"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": false,
+      "n_files": 0,
+      "examples": []
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 63
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 457
+    }
+  },
+  "BRCA2": {
+    "aliases": [
+      "BRCA2",
+      "Brca2"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 0,
+      "examples": [],
+      "adjudicated": "graph grounded 'breast cancer type 2 susceptibility protein homolog [Mus musculus]' (full name) \u2014 real; symbol scan can't catch full names"
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 40
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 822
+    }
+  },
+  "MTOR": {
+    "aliases": [
+      "MTOR",
+      "Mtor"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 4,
+      "examples": [
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "MTOR"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "MTOR"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "MTOR"
+        },
+        {
+          "file": "20210613_11-33-55-110_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "MTOR"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 90
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 592
+    }
+  },
+  "VHL": {
+    "aliases": [
+      "VHL",
+      "Vhl"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 4,
+      "examples": [
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "VHL"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "VHL"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "VHL"
+        },
+        {
+          "file": "20210613_11-33-55-110_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "VHL"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 35
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 301
+    }
+  },
+  "PIK3CA": {
+    "aliases": [
+      "PIK3CA",
+      "Pik3ca"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": false,
+      "n_files": 0,
+      "examples": []
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 66
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 436
+    }
+  },
+  "CDKN2A": {
+    "aliases": [
+      "CDKN2A",
+      "Cdkn2a"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": false,
+      "n_files": 0,
+      "examples": []
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 46
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 361
+    }
+  },
+  "SMAD4": {
+    "aliases": [
+      "SMAD4",
+      "Smad4"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 4,
+      "examples": [
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "SMAD4"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "SMAD4"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "SMAD4"
+        },
+        {
+          "file": "20210613_11-33-55-110_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "SMAD4"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 64
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 336
+    }
+  },
+  "NF1": {
+    "aliases": [
+      "NF1",
+      "Nf1"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": false,
+      "n_files": 0,
+      "examples": []
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 95
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 1135
+    }
+  },
+  "IDH1": {
+    "aliases": [
+      "IDH1",
+      "Idh1"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 1,
+      "examples": [
+        {
+          "file": "20250515_23-18-28-667_Figure 4a Data.xlsx",
+          "token": "IDH1"
+        }
+      ],
+      "adjudicated": "scan found Idh1 (real gene table); graph missed"
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 90
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 103
+    }
+  },
+  "MAPK3": {
+    "aliases": [
+      "MAPK3",
+      "Mapk3",
+      "ERK1"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 5,
+      "examples": [
+        {
+          "file": "20250515_23-18-28-667_Figure 4a Data.xlsx",
+          "token": "MAPK3"
+        },
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "MAPK3"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "MAPK3"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "MAPK3"
+        },
+        {
+          "file": "20210613_11-33-55-110_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "MAPK3"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 85
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 108
+    }
+  },
+  "IGF1R": {
+    "aliases": [
+      "IGF1R",
+      "Igf1r"
+    ],
+    "ambiguous": null,
+    "decoy": false,
+    "cananolab": {
+      "present": true,
+      "n_files": 4,
+      "examples": [
+        {
+          "file": "20210630_17-51-41-094_Immune Cell Abundances (mRNA) cell scores.csv",
+          "token": "IGF1R"
+        },
+        {
+          "file": "20210613_11-33-25-032_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "IGF1R"
+        },
+        {
+          "file": "20210628_11-35-06-063_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "IGF1R"
+        },
+        {
+          "file": "20210613_11-33-55-110_Table_2_Cowpea Mosaic Virus Nanoparticle Enhancement of Hypofractionated Radiation in a B16 Murine Melanoma Model.xlsx",
+          "token": "IGF1R"
+        }
+      ]
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 90
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 394
+    }
+  },
+  "HBB": {
+    "aliases": [
+      "HBB",
+      "Hbb"
+    ],
+    "ambiguous": null,
+    "decoy": true,
+    "cananolab": {
+      "present": false,
+      "n_files": 0,
+      "examples": []
+    },
+    "pdc": {
+      "present": true,
+      "n_studies": 100
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 98
+    }
+  },
+  "OR4F5": {
+    "aliases": [
+      "OR4F5"
+    ],
+    "ambiguous": null,
+    "decoy": true,
+    "cananolab": {
+      "present": false,
+      "n_files": 0,
+      "examples": []
+    },
+    "pdc": {
+      "present": false,
+      "n_studies": 0
+    },
+    "gdc": {
+      "present": true,
+      "n_ssms": 32
+    }
+  }
+}

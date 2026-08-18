@@ -1,19 +1,43 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Blueprint, Flask, render_template, request, jsonify
 import requests
 import ast
 import os
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 app = Flask(__name__)
 
-# BACKEND_URL = "http://semantic_search_backend:8001/"
-SEMANTIC_SEARCH_BACKEND_URL = os.getenv('SEMANTIC_SEARCH_BACKEND_URL', 'http://semantic_search_backend:8001/')
+APPLICATION_ROOT = os.getenv("APPLICATION_ROOT", "").rstrip("/")
+bp = Blueprint(
+    "search",
+    __name__,
+    url_prefix=APPLICATION_ROOT or None,
+    static_folder="static",
+)
+
+SEMANTIC_SEARCH_BACKEND_URL = os.getenv('SEMANTIC_SEARCH_BACKEND_URL', 'http://semantic_search_backend:8010/')
 
 # Shared DGLink navigation (see mcp/frontend/app.py). Defaults to the
 # docker-compose localhost ports; override via env for other deployments.
 NAV = {
-    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
+    'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/crdc/'),
+    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5005/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
-    'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
+    'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/search/'),
 }
+
+# When false, the Sequence Search tab is hidden in the nav everywhere.
+SHOW_SEQUENCE_SEARCH = os.getenv('SHOW_SEQUENCE_SEARCH', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
+# When false, the Chat Assistant tab (and every other reference to the MCP chat
+# interface) is hidden in the nav everywhere. Disabled for deployments where the
+# LLM-writes-Cypher chat interface should not be exposed.
+SHOW_CHAT = os.getenv('SHOW_CHAT', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
+# Neo4j Browser web-view, linked from the nav on every page. Authentication is
+# disabled for this deployment, so the URL opens with no login required.
+NEO4J_BROWSER_URL = os.getenv('NEO4J_BROWSER_URL', 'http://localhost:7474')
+
+
 def process_results(raw_results):
     processed = []
     for row in raw_results:
@@ -43,12 +67,12 @@ def process_results(raw_results):
                             }
                         )
             except:
-                processed_row.append({"text": ent, "url": None})  # store the actual url
+                processed_row.append({"text": ent, "url": None})
         processed.append(processed_row)
     return processed
 
 
-@app.route("/", methods=["GET", "POST"])
+@bp.route("/", methods=["GET", "POST"])
 def index():
     result = None
     form_data = {
@@ -80,11 +104,13 @@ def index():
         result = process_results(raw_results=raw_result)
 
     return render_template(
-        "index.html", result=result, form_data=form_data, nav=NAV, active="query"
+        "index.html", result=result, form_data=form_data, nav=NAV, active="query",
+        show_sequence=SHOW_SEQUENCE_SEARCH, show_chat=SHOW_CHAT,
+        neo4j_browser_url=NEO4J_BROWSER_URL,
     )
 
 
-@app.route("/autocomplete")
+@bp.route("/autocomplete")
 def autocomplete():
     query = request.args.get("query", "")
     completion_type = request.args.get("inputId", "").lower()
@@ -97,6 +123,21 @@ def autocomplete():
     )
     data = response.json()
     return data
+
+
+@bp.route("/api/health", methods=["GET"])
+def get_health():
+    """Get health status from backend"""
+    try:
+        base = SEMANTIC_SEARCH_BACKEND_URL.rstrip("/")
+        response = requests.get(f"{base}/health")
+        return jsonify(response.json())
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+app.register_blueprint(bp)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 if __name__ == "__main__":

@@ -13,15 +13,29 @@ BACKEND_URL = os.getenv('GENOMIC_INDEX_QUERY_BACKEND_URL', 'http://localhost:800
 # Shared DGLink navigation (see mcp/frontend/app.py). Defaults to the
 # docker-compose localhost ports; override via env for other deployments.
 NAV = {
-    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5000/'),
+    'overview': os.getenv('NAV_OVERVIEW_URL', 'http://localhost:5003/'),
+    'chat': os.getenv('NAV_CHAT_URL', 'http://localhost:5005/'),
     'sequence': os.getenv('NAV_SEQUENCE_URL', 'http://localhost:5002/'),
     'query': os.getenv('NAV_QUERY_URL', 'http://localhost:5001/'),
 }
 
+# When false, the Sequence Search tab is hidden in the nav everywhere.
+SHOW_SEQUENCE_SEARCH = os.getenv('SHOW_SEQUENCE_SEARCH', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
+# When false, the Chat Assistant tab (and every other reference to the MCP chat
+# interface) is hidden in the nav everywhere. Disabled for deployments where the
+# LLM-writes-Cypher chat interface should not be exposed.
+SHOW_CHAT = os.getenv('SHOW_CHAT', 'true').strip().lower() in ('1', 'true', 'yes', 'on')
+
+# Neo4j Browser web-view, linked from the nav on every page. Authentication is
+# disabled for this deployment, so the URL opens with no login required.
+NEO4J_BROWSER_URL = os.getenv('NEO4J_BROWSER_URL', 'http://localhost:7474')
+
 
 @app.route('/')
 def index():
-    return render_template('index.html', nav=NAV, active='sequence')
+    return render_template('index.html', nav=NAV, active='sequence', show_sequence=SHOW_SEQUENCE_SEARCH,
+                           show_chat=SHOW_CHAT, neo4j_browser_url=NEO4J_BROWSER_URL)
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():

@@ -3,8 +3,13 @@ services:
     build: ${NEO4J_TARGET}
     container_name: neo4j
     ports:
-      - "7687:7687"
-      - "7474:7474"
+      # Host-side remap only; the container still listens on the neo4j defaults.
+      - "7676:7687"
+      - "7484:7474"
+    environment:
+      # Port the Neo4j Browser is told to open bolt on (see compose.crdc.yaml for
+      # the full rationale). Must match the host side of the bolt mapping above.
+      - BOLT_ADVERTISED_PORT=7676
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
       interval: 10s
@@ -17,12 +22,13 @@ services:
   mcp_backend:
     volumes:
       - ${NEO4J_TARGET}/graph:/app/resources
+      - ${LOCAL_DATA_PATH}:/.data/
     build:
       context: ./mcp       
       dockerfile: ./backend/Dockerfile 
     container_name: mcp_fastapi_backend
     ports:
-      - "8000:8000"
+      - "8009:8009"
     depends_on:
       neo-4j:
         condition: service_healthy
@@ -31,12 +37,31 @@ services:
       required: true
   mcp_frontend:
     build:
-      context: ./mcp/frontend       
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./mcp/frontend/Dockerfile
       args:
         - FONT_SIZE=${FONT_SIZE}
     container_name: mcp_flask_frontend
     ports:
-      - "5000:5000"
+      - "5005:5005"
+    depends_on:
+      - mcp_backend
+    env_file:
+    - path: ./.env
+      required: true
+  overview_frontend:
+    build:
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./overview/frontend/Dockerfile
+      args:
+        - FONT_SIZE=${FONT_SIZE}
+    container_name: overview_flask_frontend
+    ports:
+      - "5003:5003"
+    volumes:
+      - ${NEO4J_TARGET}/graph:/app/resources
     depends_on:
       - mcp_backend
     env_file:
@@ -50,14 +75,16 @@ services:
       dockerfile: ./backend/Dockerfile 
     container_name: semantic_search_fastapi_backend
     ports:
-      - "8001:8001"
+      - "8010:8010"
     env_file:
     - path: ./.env
       required: true
   semantic_search_frontend:
-    build: 
-     context: ./semantic_search/frontend
-     args:
+    build:
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./semantic_search/frontend/Dockerfile
+      args:
         - PORTAL_NAME=${PORTAL_NAME}
     container_name: semantic_search_flask_frontend
     ports:
@@ -82,7 +109,10 @@ services:
     - path: ./.env
       required: true
   genomic_index_query_frontend:
-    build: ./genomic_index/genomic_index_query_frontend
+    build:
+      # Context is applications/ so the image can pull in shared/static/.
+      context: .
+      dockerfile: ./genomic_index/genomic_index_query_frontend/Dockerfile
     container_name: genomic-index-query-frontend
     ports:
       - "5002:5002"

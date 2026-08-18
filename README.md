@@ -4,6 +4,8 @@ DGLink introduces semantic interoperability within data portals through automate
 
 ## Applications
 
+1. Overview: A landing page for the DGLink tool suite with a description of DGLink, summary statistics for the active knowledge graph (by default the merged CRDC graph), an overview of the MCP application, example MCP queries, and a box to run natural-language MCP queries live. Served at http://localhost:5003.
+
 1. MCP: A chat interface that connects to a Neo4j database using the Model Context Protocol (MCP). It supports both OpenAI (GPT) and Anthropic (Claude) models with real-time streaming responses and markdown rendering.
 
 1. Semantic search: Run semantic queries on the knowledge graph via a simple to use web-UI.
@@ -28,8 +30,8 @@ DGLink introduces semantic interoperability within data portals through automate
 - cd `dglink/applications/mcp`
 - `docker compose up --build`
 ### Accessing the MCP service
-- **Frontend UI**: http://localhost:5000
-- **Backend API**: http://localhost:8000
+- **Frontend UI**: http://localhost:5005
+- **Backend API**: http://localhost:8009
 - **Neo4j Browser**: http://localhost:7474
 
 ## Semantic Search Web UI
@@ -73,5 +75,5 @@ The index can also be queried via a web-UI which can be brought up by running
 
 ### Accessing the genomic index service
 - **Frontend UI**: http://localhost:5001
-- **Backend API**: http://localhost:8001
+- **Backend API**: http://localhost:8010
 - **Neo4j Browser**: http://localhost:7474

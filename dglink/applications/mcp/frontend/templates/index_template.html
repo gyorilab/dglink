@@ -4,26 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DGLink · Chat Assistant</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <link rel="stylesheet" href="/static/dglink.css">
-  <style>:root { --chat-font: ${FONT_SIZE}rem; }</style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dglink.css') }}">
+  <style>
+    :root { --chat-font: ${FONT_SIZE}rem; }
+    /* Full-bleed layout: use the whole width of the page (matches Overview). */
+    .chat { max-width: none; width: 100%; margin: 0; padding: 1.5rem 2.5rem 2rem; }
+  </style>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="{{ nav.chat }}">
-      <svg class="brand-logo" width="26" height="26" viewBox="0 0 24 24" fill="none">
-        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
-        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
-        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
-      </svg>
+      <img class="brand-logo" src="{{ url_for('static', filename='dglink-logo.svg') }}" alt="">
       <span class="brand-name">DGLink</span>
     </a>
     <nav class="site-nav">
-      <a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>
-      <a href="{{ nav.sequence }}" class="{{ 'active' if active == 'sequence' else '' }}">Sequence Search</a>
+      <a href="{{ nav.overview }}" class="{{ 'active' if active == 'overview' else '' }}">Overview</a>
+      {% if show_chat %}<a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>{% endif %}
       <a href="{{ nav.query }}" class="{{ 'active' if active == 'query' else '' }}">Query Builder</a>
+      {% if show_sequence %}<a href="{{ nav.sequence }}" class="{{ 'active' if active == 'sequence' else '' }}">Sequence Search</a>{% endif %}
+      <a href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Graph Browser ↗</a>
+      <a href="https://github.com/gyorilab/dglink" target="_blank" rel="noopener">Project Repository ↗</a>
+      <a href="https://gyorilab.github.io/papers/dglink_ismb_2026.pdf" target="_blank" rel="noopener">Project Abstract ↗</a>
     </nav>
   </header>
   <div class="accent-stripe"></div>
@@ -53,13 +56,8 @@
 
     let conversationHistory = [];
 
-    const AVATAR = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <line x1="6.5" y1="6.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <line x1="6.5" y1="17.5" x2="16.5" y2="12" stroke="#2f9e8f" stroke-width="1.7"/>
-        <circle cx="6" cy="6" r="2.6" fill="#2fb3a2"/>
-        <circle cx="6" cy="18" r="2.6" fill="#e08a3c"/>
-        <circle cx="17" cy="12" r="2.6" fill="#d8d1c4"/>
-      </svg>`;
+    // Same H2 mark as the header, on the navy .avatar tile.
+    const AVATAR = `<img src="{{ url_for('static', filename='dglink-logo.svg') }}" alt="">`;
 
     messageInput.addEventListener('input', function () {
       this.style.height = 'auto';

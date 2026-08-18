@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DGLink · Overview</title>
+  <link rel="icon" href="{{ url_for('overview.static', filename='favicon.ico') }}" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('overview.static', filename='dglink.css') }}">
+  <style>
+    :root { --chat-font: ${FONT_SIZE}rem; }
+    html { scroll-behavior: smooth; }
+
+    /* Full-bleed layout: use the whole width of the page. */
+    .container { max-width: none; width: 100%; margin: 0; padding: 1.5rem 2.5rem 3rem; }
+    .section { margin: 2rem 0; }
+    .section-head { margin-bottom: 1rem; }
+    .lead { font-size: 1.08rem; color: var(--body); margin: .6rem 0; }
+    .lead strong { color: var(--ink); }
+
+    /* Hero */
+    .hero { padding: 2rem 1.9rem; }
+    .hero .page-title { font-size: 2.3rem; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.4rem; }
+    .btn-browser.secondary { background: transparent; color: var(--teal-dark); border: 1px solid var(--teal); }
+    .btn-browser.secondary:hover { background: var(--teal-tint); }
+
+    /* Cross-portal subgraph figure */
+    .figure-row { display: flex; flex-wrap: wrap; gap: 1.6rem 2rem; align-items: center; }
+    .figure-img { flex: 1 1 360px; min-width: 280px; text-align: center; }
+    .figure-img img { width: 100%; max-width: 520px; height: auto; }
+    .figure-caption { flex: 1 1 300px; min-width: 260px; }
+    .figure-legend { list-style: none; margin: 1rem 0 0; display: grid; gap: .55rem; }
+    .figure-legend li { display: flex; align-items: center; gap: .6rem; color: var(--body); font-size: .95rem; }
+    .figure-legend .dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+    .figure-legend .dot.gc { background: #4c8eda; }
+    .figure-legend .dot.gdc { background: #8dcc93; }
+    .figure-legend .dot.pdc { background: #f26869; }
+    .figure-legend .dot.gene { background: #ecb5c9; }
+
+    /* Stat tiles */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .stat-tile {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.2rem 1.3rem;
+      box-shadow: var(--shadow);
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: .35rem;
+    }
+    /* Headline tile — highlights the standout cross-portal number. */
+    .stat-tile.feature { border-color: var(--gold); background: var(--teal-tint); }
+    .stat-tile.feature .stat-value { color: var(--teal-dark); }
+
+    /* Breakdown tables (entities / relationships by type) */
+    .breakdown { margin-top: 1.2rem; }
+    .breakdown h3 {
+      font-size: .82rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); font-weight: 700; margin-bottom: .7rem;
+    }
+    /* A neutral-track share bar used inside table rows. */
+    .mini-bar { flex: 1; min-width: 60px; height: 8px; background: var(--bg); border-radius: 999px; overflow: hidden; }
+    .mini-bar > span { display: block; height: 100%; min-width: 4px; background: var(--teal); border-radius: 999px; }
+    .mini-bar.gold > span { background: var(--gold); }
+    /* Per-type table cells */
+    .prov-table td.z { color: var(--muted); }                    /* an empty (zero) count */
+    .prov-table th.xp, .prov-table td.xp { color: var(--teal-dark); }   /* cross-portal overlap */
+    .prov-table td.xp { font-weight: 700; }
+    .prov-table td.tot { font-weight: 700; color: var(--ink); }
+
+    .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .portal-card { border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.2rem; background: var(--card); box-shadow: var(--shadow); }
+    .portal-card .p-key { font-family: var(--mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--teal-dark); }
+    .portal-card .p-name { font-weight: 700; color: var(--ink); margin: .1rem 0 .6rem; }
+    .portal-card .p-nums { font-size: .88rem; color: var(--body); }
+    .portal-card .p-nums strong { color: var(--ink); }
+
+    /* Processing-coverage cards */
+    .cov-badge {
+      display: inline-block; font-family: var(--mono); font-size: .62rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em; padding: .18rem .5rem; border-radius: 6px;
+    }
+    .cov-badge.full { background: var(--teal-tint); color: var(--teal-dark); }
+    .cov-badge.poc { background: var(--gold-tint); color: var(--gold-text); }
+    .cov-note { color: var(--body); font-size: .9rem; margin: .6rem 0 .9rem; }
+    .cov-metrics { display: flex; flex-wrap: wrap; gap: 1.1rem 1.6rem; }
+    .cov-metric .m-val { font-size: 1.5rem; font-weight: 800; color: var(--teal-dark); line-height: 1; letter-spacing: -.02em; }
+    .cov-metric .m-lab { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .25rem; max-width: 130px; }
+
+    .feature-list { list-style: none; margin: .5rem 0 0; }
+    .feature-list li { padding: .35rem 0 .35rem 1.6rem; position: relative; color: var(--body); }
+    .feature-list li::before {
+      content: ""; position: absolute; left: 0; top: .78rem;
+      width: 8px; height: 8px; border-radius: 2px; background: var(--teal);
+    }
+
+    /* Portal list in the hero intro — shares the feature-list bullet treatment. */
+    .portal-list { list-style: none; margin: .2rem 0 1rem; }
+    .portal-list li { padding: .35rem 0 .35rem 1.6rem; position: relative; font-size: 1.08rem; color: var(--body); }
+    .portal-list li::before {
+      content: ""; position: absolute; left: 0; top: .82rem;
+      width: 8px; height: 8px; border-radius: 2px; background: var(--teal);
+    }
+
+    /* Example queries */
+    .examples { display: flex; flex-direction: column; gap: .6rem; }
+    /* An example query: the question is the <summary>, so clicking it opens the
+       saved agent response. Falls back to a plain div when no answer is cached. */
+    .example-item { display: flex; flex-direction: column; }
+    .example-item .example-btn { width: 100%; }
+    .example-q {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 10px;
+      padding: .8rem 1rem;
+      font-size: .95rem;
+      color: var(--body);
+    }
+    details.example-item > summary.example-q { cursor: pointer; list-style-position: inside; }
+    details.example-item > summary.example-q:hover { background: var(--teal-tint); border-left-color: var(--teal-dark); }
+    details.example-item[open] > summary.example-q {
+      border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+      border-left-color: var(--teal-dark); background: var(--teal-tint);
+    }
+    .example-body {
+      border: 1px solid var(--border); border-top: none;
+      border-left: 3px solid var(--teal-dark);
+      border-radius: 0 0 10px 10px;
+      padding: .9rem 1.1rem 1rem;
+      background: var(--card);
+    }
+    .answer-label {
+      font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em;
+      font-size: .68rem; font-weight: 700; color: var(--muted); margin-bottom: .5rem;
+    }
+    .example-stats {
+      font-family: var(--mono); font-size: .72rem; color: var(--muted);
+      border-top: 1px solid var(--border); padding: .5rem 0 0; margin: .6rem 0 0;
+    }
+    .example-body .example-btn { width: auto; margin-top: .7rem; padding: .45rem .8rem; font-size: .82rem; }
+    .example-btn {
+      text-align: left;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 10px;
+      padding: .8rem 1rem;
+      font-family: var(--sans);
+      font-size: .95rem;
+      color: var(--body);
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .example-btn:hover { background: var(--teal-tint); border-left-color: var(--teal-dark); }
+
+    /* Query box (reuses chat primitives, but sits in the page flow) */
+    .query-panel { padding: 1.6rem 1.9rem; }
+    .query-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: .5rem; margin-bottom: .8rem; }
+    .query-toolbar label { font-size: .85rem; color: var(--muted); }
+    .query-messages { display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 1rem; max-height: 520px; overflow-y: auto; }
+    .query-messages:empty { display: none; }
+    .hint { color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+
+    /* Provenance breakdown table (extracted vs metadata by portal membership) */
+    .prov-table { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .9rem; }
+    .prov-table th, .prov-table td { padding: .55rem .7rem; border-bottom: 1px solid var(--border); text-align: left; }
+    .prov-table th { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; }
+    .prov-table th.num, .prov-table td.num { text-align: right; font-family: var(--mono); }
+    .prov-table td.pm { font-weight: 600; color: var(--ink); }
+    .prov-table tr.overlap td.pm { color: var(--teal-dark); }
+    .prov-table tr.total-row td { border-top: 2px solid var(--border); border-bottom: none; font-weight: 700; }
+    .prov-table .badge {
+      font-family: var(--mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .06em;
+      background: var(--teal-tint); color: var(--teal-dark); padding: .1rem .4rem; border-radius: 6px;
+      margin-left: .45rem; vertical-align: middle;
+    }
+    .split { display: flex; align-items: center; gap: .55rem; min-width: 130px; }
+    .split-bar { flex: 1; min-width: 70px; height: 8px; background: var(--gold); border-radius: 999px; overflow: hidden; }
+    .split-extracted { display: block; height: 100%; background: var(--teal); border-radius: 999px; }
+    .split-pct { font-family: var(--mono); font-size: .78rem; color: var(--muted); width: 46px; text-align: right; }
+    .legend { display: flex; gap: 1.2rem; margin-top: .7rem; font-size: .82rem; color: var(--muted); }
+    .legend .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: .35rem; vertical-align: middle; }
+    .legend .swatch.teal { background: var(--teal); }
+    .legend .swatch.gold { background: var(--gold); }
+
+    /* Headline callout (three-way genes) */
+    .callout {
+      border-left: 4px solid var(--gold);
+      background: var(--teal-tint);
+      border-radius: 0 12px 12px 0;
+      padding: 1.1rem 1.3rem;
+      margin-top: 1.1rem;
+    }
+    .callout .big { font-size: 2.1rem; font-weight: 800; color: var(--teal-dark); line-height: 1; letter-spacing: -.02em; }
+    .callout .cap { color: var(--body); margin-top: .35rem; }
+
+    /* Neo4j browser card */
+    .browser-row { display: flex; flex-wrap: wrap; gap: 1.4rem; align-items: flex-start; }
+    .browser-row > div { flex: 1 1 280px; }
+    .btn-browser {
+      display: inline-block; text-decoration: none;
+      background: var(--teal); color: #fff; font-weight: 700;
+      padding: .7rem 1.2rem; border-radius: 10px; margin-top: .5rem;
+      transition: background .15s;
+    }
+    .btn-browser:hover { background: var(--teal-dark); }
+    .cypher {
+      font-family: var(--mono); font-size: .82rem;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: .9rem 1rem; white-space: pre; overflow-x: auto; color: var(--ink); margin: 0;
+    }
+    .copy-btn {
+      font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em;
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: .35rem .7rem; cursor: pointer; margin-top: .5rem; color: var(--muted);
+    }
+    .copy-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+  
+    /* Footer — lab attribution. Sits on the light page background rather than the navy
+       header, where the logo's dark-grey wordmark would lose contrast. */
+    .site-footer { border-top: 1px solid var(--border); background: var(--card); margin-top: 1rem; }
+    /* Logo beside the text, both left-aligned. Top-aligned so the mark lines up with the
+       first line of the credit rather than drifting to the middle of the block. */
+    .footer-inner {
+      display: flex; align-items: flex-start; gap: 1.2rem 2.2rem; flex-wrap: wrap;
+      padding: 1.8rem 2.5rem 2rem;
+    }
+    .footer-logo { flex: none; display: block; line-height: 0; opacity: .92; transition: opacity .15s ease; }
+    .footer-logo:hover { opacity: 1; }
+    /* The asset is a wide (5:1) lockup; height-constrain it and let width follow. */
+    .footer-logo img { height: 46px; width: auto; display: block; }
+    /* The credit and funding note stack as two lines beside the logo. max-width keeps
+       the measure readable on a full-bleed page instead of running the whole width. */
+    .footer-text {
+      flex: 1 1 480px; min-width: 280px; max-width: 110ch;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    /* Same size for both; they differ only in colour, so the credit still leads. */
+    .footer-note, .footer-funding {
+      margin: 0; font-size: .96rem; line-height: 1.55;
+    }
+    .footer-note { color: var(--body); }
+    .footer-note strong { font-weight: 600; }
+    .footer-funding { color: var(--muted); }
+    @media (max-width: 720px) {
+      .footer-inner { padding: 1.4rem 1rem 1.6rem; gap: 1rem; }
+      .footer-logo img { height: 38px; }
+    }
+
+    /* MCP benchmark section */
+    .bench-details { margin-top: .7rem; border: 1px solid var(--border); border-radius: 10px; padding: 0 .9rem; background: var(--card); }
+    .bench-details > summary { cursor: pointer; font-weight: 600; color: var(--teal-dark); padding: .6rem 0; font-size: .9rem; list-style-position: inside; }
+    .bench-details[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: .6rem; }
+    .bench-arms { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: .3rem 0 .6rem; }
+    @media (max-width: 720px) { .bench-arms { grid-template-columns: 1fr; } }
+    .md-body { font-size: .9rem; color: var(--body); overflow-x: auto; padding-bottom: .6rem; }
+    .md-body table { width: 100%; border-collapse: collapse; margin: .6rem 0; font-size: .84rem; }
+    .md-body th, .md-body td { border: 1px solid var(--border); padding: .35rem .5rem; text-align: left; vertical-align: top; }
+    .md-body th { background: var(--bg); }
+    .md-body h2, .md-body h3 { font-size: 1rem; margin: .5rem 0 .3rem; }
+    .md-body code { font-family: var(--mono); font-size: .85em; word-break: break-word; }
+    .md-body p { margin: .4rem 0; }
+    .bench-q { font-style: italic; color: var(--body); border-left: 3px solid var(--teal); padding-left: .8rem; margin: .5rem 0 1rem; }
+
+    /* Benchmark: answer-quality outcome cards (what each arm actually got right) */
+    .bench-outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: .9rem 0 1.1rem; }
+    @media (max-width: 720px) { .bench-outcomes { grid-template-columns: 1fr; } }
+    .outcome { border: 1px solid var(--border); border-radius: 12px; padding: .8rem .9rem; background: #fafbfc; }
+    .outcome.win { border-color: var(--teal-tint-line); background: var(--teal-tint); }
+    .outcome .o-arm { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; color: var(--muted); }
+    .outcome.win .o-arm { color: var(--teal-dark); }
+    .outcome .o-head { display: flex; align-items: center; gap: .45rem; margin-top: .25rem; font-size: 1.05rem; font-weight: 800; color: var(--ink); line-height: 1.25; }
+    .outcome.win .o-head { color: var(--teal-dark); }
+    .o-mark { flex: none; width: 1.15rem; height: 1.15rem; border-radius: 50%; display: inline-grid; place-items: center;
+              font-size: .72rem; font-weight: 700; color: #fff; background: var(--orange); }
+    .outcome.win .o-mark { background: var(--teal); }
+    .outcome .o-note { font-size: .86rem; color: var(--body); margin-top: .35rem; }
+
+    /* Benchmark: metric comparison table with magnitude bars + advantage pills */
+    .bench-compare { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .9rem; }
+    .bench-compare th, .bench-compare td { padding: .5rem .7rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+    .bench-compare th { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; }
+    .bench-compare th.num, .bench-compare td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .bench-compare td.metric { font-weight: 600; color: var(--ink); }
+    .bench-compare td.v-api { color: var(--muted); }
+    .bench-compare th.kg-col, .bench-compare td.kg-col { background: var(--teal-tint); }
+    .bench-compare th.kg-col { color: var(--teal-dark); }
+    .bench-compare td.kg-col { color: var(--teal-dark); font-weight: 700; }
+    .bench-compare td.bars { width: 34%; min-width: 150px; }
+    .bar-pair { display: grid; gap: .22rem; }
+    .bar-track { height: .45rem; border-radius: 999px; background: #e9edf0; overflow: hidden; }
+    .bar-fill { display: block; height: 100%; border-radius: 999px; }
+    .bar-fill.api { background: var(--stripe-gray); }
+    .bar-fill.kg { background: var(--teal); }
+    .win-pill { display: inline-block; background: var(--teal); color: #fff; border-radius: 999px;
+                padding: .16rem .6rem; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+    .win-pill.tie { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .bench-legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .78rem; color: var(--muted); margin-top: .55rem; }
+    .bench-legend .swatch { display: inline-block; width: .7rem; height: .45rem; border-radius: 999px; margin-right: .35rem; vertical-align: middle; }
+    .bench-legend .swatch.api { background: var(--stripe-gray); }
+    .bench-legend .swatch.kg { background: var(--teal); }
+    .bench-sub { font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-top: 1.1rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ nav.overview }}">
+      <img class="brand-logo" src="{{ url_for('overview.static', filename='dglink-logo.svg') }}" alt="">
+      <span class="brand-name">DGLink</span>
+    </a>
+    <nav class="site-nav">
+      <a href="{{ nav.overview }}" class="{{ 'active' if active == 'overview' else '' }}">Overview</a>
+      {% if show_chat %}<a href="{{ nav.chat }}" class="{{ 'active' if active == 'chat' else '' }}">Chat Assistant</a>{% endif %}
+      <a href="{{ nav.query }}" class="{{ 'active' if active == 'query' else '' }}">Query Builder</a>
+      {% if show_sequence %}<a href="{{ nav.sequence }}" class="{{ 'active' if active == 'sequence' else '' }}">Sequence Search</a>{% endif %}
+      <a href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Graph Browser ↗</a>
+      <a href="https://github.com/gyorilab/dglink" target="_blank" rel="noopener">Project Repository ↗</a>
+      <a href="https://gyorilab.github.io/papers/dglink_ismb_2026.pdf" target="_blank" rel="noopener">Project Abstract ↗</a>
+
+    </nav>
+  </header>
+  <div class="accent-stripe"></div>
+
+  <div class="container">
+
+    <!-- ============ 1. About DGLink ============ -->
+    <section class="section">
+      <div class="card hero">
+        <!-- <div class="eyebrow">DGLink</div> -->
+        <h1 class="page-title">DGLink: Automated knowledge graph construction from biomedical data repositories</h1>
+        <p class="lead">
+          While portals supporting user-submitted biomedical data hold substantial scientific value,
+          the re-use of this data at scale is limited by a lack of standardization and annotation.
+          DGLink addresses this gap by automatically assembling portal content into a knowledge graph
+          linking data <strong>within</strong> a portal and mapping it to <strong>external knowledge</strong>.
+          This knowledge graph creates a shared interoperability layer that enables knowledge-driven data
+          interpretation and cross-portal discovery. Crucially, the DGLink system not only aggregates existing
+          metadata for projects but also automatically parses and annotates experimental data files directly,
+          greatly increasing annotation depth. For more information on the system please feel free to
+          read the <a class="link" href="https://gyorilab.github.io/papers/dglink_ismb_2026.pdf" target="_blank" rel="noopener">abstract</a>
+          of our talk recently presented at ISMB 2026 or take a look at our <a class="link" href="https://github.com/gyorilab/dglink" target="_blank" rel="noopener">GitHub repository</a>.
+
+          <!-- DGLink brings <strong>semantic interoperability</strong> to data portals through -->
+          <!-- automated metadata extraction and knowledge-graph construction. It links data -->
+          <!-- <strong>within</strong> a portal and maps it to <strong>external knowledge</strong>, -->
+          <!-- enabling knowledge-driven data interpretation and cross-portal discovery. -->
+
+        </p>
+        <p class="lead">
+          This page provides access to a DGLink-constructed knowledge graph combining content from
+          multiple <a class="link" href="https://datacommons.cancer.gov/" target="_blank" rel="noopener">National Cancer Institute Cancer Research Data Commons (NCI-CRDC)</a> data portals, namely:
+        </p>
+        <ul class="portal-list">
+          <li><a class="link" href="https://datacommons.cancer.gov/repository/general-commons" target="_blank" rel="noopener">The NCI General Commons (GC)</a>.</li>
+          <li><a class="link" href="https://portal.gdc.cancer.gov/" target="_blank" rel="noopener">The NCI Genomic Data Commons (GDC)</a>.</li>
+          <li><a class="link" href="https://proteomic.datacommons.cancer.gov/pdc/" target="_blank" rel="noopener">The NCI Proteomic Data Commons (PDC)</a>.</li>
+        </ul>
+        <p class="lead">
+          Additionally, we provide summary statistics for the merged NCI-CRDC knowledge graph and example applications including
+          a <a class="link" href="{{ nav.query }}">structured semantic interface</a>.
+          <!-- and an MCP-based knowledge-graph server{% if show_chat %} with a live LLM <a class="link" href="{{ nav.chat }}">chat assistant</a>{% endif %}. -->
+          Finally, we explore how DGLink can integrate into an agentic workflow via an MCP-based
+          knowledge-graph server, providing both example MCP queries and benchmarking MCP performance.
+          <!-- Finally, we give examples of MCP queries demonstrating the utility of the system for cross-portal integration, data discovery and biologically -->
+          <!-- meaningful hypothesis generation. -->
+          <!-- This page is the hub for the DGLink tool suite. Explore the graph statistics below, -->
+          <!-- then jump into the <a class="link" href="{{ nav.chat }}">Chat Assistant</a>{% if show_sequence %},
+          <a class="link" href="{{ nav.query }}">Query Builder</a>, or
+          <a class="link" href="{{ nav.sequence }}">Sequence Search</a>{% else %} or
+          <a class="link" href="{{ nav.query }}">Query Builder</a>{% endif %} — or run a natural-language
+          query right here. -->
+        </p>
+        <div class="hero-cta">
+          {% if show_chat %}<a class="btn-browser" href="#query">Ask the graph a question ↓</a>{% endif %}
+          <a class="btn-browser secondary" href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Explore in Neo4j Browser ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 1a. What was processed (coverage) ============ -->
+    {% if stats and stats.processing_coverage %}
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Coverage</div>
+        <h2 class="page-title" style="font-size:1.6rem;">What was processed</h2>
+        <p class="lead">
+          DGLink extracts from the data files a portal makes downloadable, so how much of each portal
+          was processed differs. The General Commons was covered in full at the open-access level; the
+          Genomic and Proteomic Data Commons each only had a few cases/studies processed as a proof of concept.
+        </p>
+      </div>
+      <div class="portal-grid">
+        {% for c in stats.processing_coverage %}
+        <div class="portal-card">
+          <div class="p-key">{{ c.key }}</div>
+          <div class="p-name">{{ c.label }}</div>
+          <span class="cov-badge {{ c.variant }}">{{ c.scope }}</span>
+          <p class="cov-note">{{ c.note }}</p>
+          <div class="cov-metrics">
+            {% for m in c.metrics %}
+            <div class="cov-metric">
+              <div class="m-val">{{ '{:,}'.format(m.value) }}</div>
+              <div class="m-lab">{{ m.label }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ============ 1b. Cross-portal subgraph figure ============ -->
+    <section class="section">
+      <div class="card">
+        <div class="figure-row">
+          <div class="figure-img">
+            <img src="{{ url_for('overview.static', filename='crdc_subgraph.svg') }}"
+                 alt="Subgraph of the EGFR gene linked to studies and cases across the GC, GDC and PDC portals.">
+          </div>
+          <div class="figure-caption">
+            <div class="eyebrow">Cross-portal</div>
+            <h2 class="page-title" style="font-size:1.6rem;">One gene, three portals</h2>
+            <p class="lead">
+              <strong>EGFR</strong> — a single gene node — linked to studies and cases drawn from
+              <strong>all three</strong> CRDC portals. This triangulation across data modalities is
+              exactly what DGLink's merge produces, and what no single portal can show on its own.
+            </p>
+            <ul class="figure-legend">
+              <li><span class="dot gene"></span>Gene (EGFR)</li>
+              <li><span class="dot gc"></span>General Commons (GC)</li>
+              <li><span class="dot gdc"></span>Genomic Data Commons (GDC)</li>
+              <li><span class="dot pdc"></span>Proteomic Data Commons (PDC)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 2. Graph summary stats ============ -->
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Knowledge graph</div>
+        <h2 class="page-title" style="font-size:1.6rem;">{{ graph_name }}</h2>
+      </div>
+
+      {% if stats %}
+      <div class="stat-grid">
+        <div class="stat-tile feature">
+          <div class="stat-value">{{ '{:,}'.format(stats.three_way_genes) }}</div>
+          <div class="stat-label">Genes in all 3 portals</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ '{:,}'.format(stats.node_total) }}</div>
+          <div class="stat-label">Nodes</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ '{:,}'.format(stats.edge_total) }}</div>
+          <div class="stat-label">Edges</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ stats.label_count }}</div>
+          <div class="stat-label">Entity types</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ stats.edge_type_count }}</div>
+          <div class="stat-label">Relation types</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value">{{ '{:,}'.format(stats.multi_portal_nodes) }}</div>
+          <div class="stat-label">Cross-portal nodes</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem;">
+        <div class="breakdown">
+          <h3>Entities by type &middot; {{ stats.label_count }} types</h3>
+          <table class="prov-table">
+            <thead>
+              <tr>
+                <th>Entity type</th>
+                {% for k in stats.portal_keys %}<th class="num">{{ stats.portal_col_labels[k] }}</th>{% endfor %}
+                <th class="num">Total</th>
+                <th class="num xp">Cross-portal</th>
+                <th>Share of all nodes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in stats.node_type_rows %}
+              <tr>
+                <td class="pm">{{ r.name }}</td>
+                {% for k in stats.portal_keys %}
+                <td class="num {{ 'z' if not r.by_portal[k] }}">{{ '{:,}'.format(r.by_portal[k]) if r.by_portal[k] else '–' }}</td>
+                {% endfor %}
+                <td class="num tot">{{ '{:,}'.format(r.total) }}</td>
+                <td class="num xp {{ 'z' if not r.shared }}">{{ '{:,}'.format(r.shared) if r.shared else '–' }}</td>
+                <td>
+                  <div class="split">
+                    <span class="mini-bar"><span style="width: {{ r.pct }}%"></span></span>
+                    <span class="split-pct">{{ r.pct }}%</span>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <p class="hint" style="margin-top:.6rem;">
+            Portal columns count a node once for <em>each</em> portal it belongs to, so cross-portal
+            entities add to more than one — <strong>Cross-portal</strong> is how many nodes of that type
+            are shared across two or more portals.
+          </p>
+        </div>
+
+        <div class="breakdown">
+          <h3>Relationships by type &middot; {{ stats.edge_type_count }} types</h3>
+          <table class="prov-table">
+            <thead>
+              <tr>
+                <th>Relationship type</th>
+                {% for k in stats.portal_keys %}<th class="num">{{ stats.portal_col_labels[k] }}</th>{% endfor %}
+                <th class="num">Total</th>
+                <th>Share of all edges</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in stats.edge_type_rows %}
+              <tr>
+                <td class="pm">{{ r.name }}</td>
+                {% for k in stats.portal_keys %}
+                <td class="num {{ 'z' if not r.by_portal[k] }}">{{ '{:,}'.format(r.by_portal[k]) if r.by_portal[k] else '–' }}</td>
+                {% endfor %}
+                <td class="num tot">{{ '{:,}'.format(r.total) }}</td>
+                <td>
+                  <div class="split">
+                    <span class="mini-bar gold"><span style="width: {{ r.pct }}%"></span></span>
+                    <span class="split-pct">{{ r.pct }}%</span>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {% if stats.portals %}
+      <div class="breakdown" style="margin-top:1.4rem;">
+        <h3>Coverage by portal</h3>
+        <div class="portal-grid">
+          {% for p in stats.portals %}
+          <div class="portal-card">
+            <div class="p-key">{{ p.key }}</div>
+            <div class="p-name">{{ p.label }}</div>
+            <div class="p-nums"><strong>{{ '{:,}'.format(p.nodes) }}</strong> nodes · <strong>{{ '{:,}'.format(p.edges) }}</strong> edges</div>
+          </div>
+          {% endfor %}
+        </div>
+        <p class="hint" style="margin-top:.8rem;">
+          Nodes are counted once per portal they appear in, so cross-portal entities
+          (e.g. a shared gene) contribute to more than one column — that overlap is
+          exactly what merging the portals produces.
+        </p>
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="error-banner">
+        Graph statistics are unavailable — the graph files were not found at the mount point.
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- ============ 2a. Inside the merge (cross-portal story) ============ -->
+    {% if stats %}
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Interoperability</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Inside the merge</h2>
+        <p class="lead">
+          Every node and edge records the portal(s) it came from. When DGLink recognizes that an
+          entity seen in different portals is the <strong>same real-world thing</strong>, it collapses
+          them into one node whose portal list keeps every origin. Those shared nodes are the bridges
+          that make cross-portal questions answerable.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="callout">
+          <div class="big">{{ '{:,}'.format(stats.three_way_genes) }}</div>
+          <div class="cap">
+            genes observed across <strong>all three</strong> CRDC portals (GC · GDC · PDC) — the same
+            gene independently surfacing in genomic, general and proteomic commons. That triangulation
+            across data modalities is something no single portal can produce.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem;">
+        <div class="breakdown">
+          <h3>Extracted vs. exposed metadata, by portal membership</h3>
+          <p class="hint" style="margin-top:-.3rem;">
+            Each row is a set of portals a node belongs to; rows spanning more than one portal are the
+            cross-portal <strong>bridges</strong>. <em>Extracted</em> = content DGLink pulled from the data
+            files; <em>metadata</em> = what the portals already expose.
+          </p>
+          <table class="prov-table">
+            <thead>
+              <tr>
+                <th>Portal membership</th>
+                <th class="num">Extracted</th>
+                <th class="num">Metadata</th>
+                <th class="num">Total</th>
+                <th>Split (% extracted)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in stats.provenance_breakdown.rows %}
+              <tr class="{{ 'overlap' if r.portals_count > 1 else '' }}">
+                <td class="pm">{{ r.combo }}{% if r.portals_count > 1 %}<span class="badge">bridge</span>{% endif %}</td>
+                <td class="num">{{ '{:,}'.format(r.extracted) }}</td>
+                <td class="num">{{ '{:,}'.format(r.metadata) }}</td>
+                <td class="num">{{ '{:,}'.format(r.total) }}</td>
+                <td>
+                  <div class="split">
+                    <span class="split-bar"><span class="split-extracted" style="width: {{ r.pct_extracted }}%"></span></span>
+                    <span class="split-pct">{{ r.pct_extracted }}%</span>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+              <tr class="total-row">
+                <td class="pm">All portals</td>
+                <td class="num">{{ '{:,}'.format(stats.provenance_breakdown.total.extracted) }}</td>
+                <td class="num">{{ '{:,}'.format(stats.provenance_breakdown.total.metadata) }}</td>
+                <td class="num">{{ '{:,}'.format(stats.provenance_breakdown.total.total) }}</td>
+                <td>
+                  <div class="split">
+                    <span class="split-bar"><span class="split-extracted" style="width: {{ stats.provenance_breakdown.total.pct_extracted }}%"></span></span>
+                    <span class="split-pct">{{ stats.provenance_breakdown.total.pct_extracted }}%</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="legend">
+            <span><span class="swatch teal"></span>Extracted from files</span>
+            <span><span class="swatch gold"></span>Exposed metadata</span>
+          </div>
+          <p class="hint" style="margin-top:.7rem;">
+            The bridge rows are almost entirely <strong>extracted</strong> content — cross-portal links come
+            from what DGLink mined out of the data files, not from portal-exposed metadata.
+          </p>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ============ 2c. Explore the graph directly ============ -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Explore</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Open the graph in Neo4j Browser</h2>
+        <div class="browser-row">
+          <div>
+            <p class="lead">
+              Prefer to write Cypher and see rendered subgraphs? The full knowledge graph is served by
+              Neo4j Browser. The button below pre-fills the connection URL and, since authentication
+            is disabled for this deployment, <strong>no login is required</strong> just click <em>Connect</em>.
+            If you need to enter it manually, select <strong>bolt+s://</strong> and enter
+            <strong>dglink.indra.bio:7676</strong> as the URL, then select <strong>No authentication</strong>
+            under Authentication type and click <em>Connect</em>.
+            </p>
+            <a class="btn-browser" href="{{ neo4j_browser_url }}" target="_blank" rel="noopener">Open Neo4j Browser ↗</a>
+          </div>
+          <div>
+            <p class="hint" style="margin-bottom:.4rem;">Paste this to render the cross-portal gene set:</p>
+            <pre class="cypher" id="sampleCypher">{{ browser_sample_cypher }}</pre>
+            <button type="button" class="copy-btn" id="copyCypher">Copy Cypher</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. About the MCP application ============ -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Application</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Ask the CRDC knowledge graph questions directly</h2>
+        <p class="lead">
+          The DGLink <strong>Model Context Protocol (MCP)</strong> server lets you put a question to
+          the merged CRDC knowledge graph in plain English. It gives LLM agents direct access to the
+          graph, so a single question can reason across the GDC, GC, and PDC &mdash; with no Cypher
+          to write.
+        </p>
+        <ul class="feature-list">
+          <li><strong>MCP integration:</strong> direct, tool-based access to Neo4j via the <code>mcp-neo4j-cypher</code> server.</li>
+          <li><strong>Model-agnostic:</strong> works with any MCP-capable client (Claude Desktop, Cursor, or a custom agent).</li>
+          <li><strong>Cross-portal reasoning:</strong> a single question can span GDC, GC, and PDC data.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 4 & 5. Example queries + live query box ============ -->
+    <section class="section" id="query">
+      <div class="card query-panel">
+        <div class="eyebrow">Try it</div>
+        {% if show_chat %}
+        <h2 class="page-title" style="font-size:1.6rem;">Run an MCP query</h2>
+        <p class="hint">Click a question to read the agent&rsquo;s saved response, or re-run it live against the MCP backend. You can also type your own question below.</p>
+        {% else %}
+        <h2 class="page-title" style="font-size:1.6rem;">Example MCP queries</h2>
+        <p class="hint">Click a question to read the agent&rsquo;s response. Connect your own LLM to the MCP server (below) to run them yourself.</p>
+        {% endif %}
+
+        <div class="examples">
+          {% for q in examples %}
+          {% set ans = example_answers.get(q) %}
+          {% if ans %}
+          <details class="example-item">
+            <summary class="example-q">{{ q }}</summary>
+            <div class="example-body">
+              <div class="answer-label">Agent response</div>
+              <div id="ex-{{ loop.index0 }}" class="md-body"></div>
+              <p class="example-stats">
+                {{ ans.model or 'claude-sonnet-5' }} &middot; {{ ans.num_turns }} agent turns
+                &middot; {{ '{:,}'.format(ans.output_tokens) }} output tokens &middot; {{ ans.wall_sec }} s{% if ans.total_cost_usd %}
+                &middot; ${{ '%.2f'|format(ans.total_cost_usd) }}{% endif %}
+              </p>
+              {% if show_chat %}
+              <button type="button" class="example-btn" data-q="{{ q }}">Re-run this live &#9656;</button>
+              {% endif %}
+            </div>
+          </details>
+          <!-- Raw markdown, rendered client-side by marked. Injected with |safe on
+               purpose: this is a raw-text element, so escaping would leak entities
+               into the output (app.py neutralises the one breakout sequence). -->
+          <script type="text/markdown" data-target="ex-{{ loop.index0 }}">{{ ans.answer|safe }}</script>
+          {% else %}
+          {# No saved response — show the question, still runnable when chat is on. #}
+          <div class="example-item">
+            {% if show_chat %}
+            <button type="button" class="example-btn" data-q="{{ q }}">{{ q }}</button>
+            {% else %}
+            <div class="example-q">{{ q }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+
+        {% if show_chat %}
+        <div class="query-toolbar" style="margin-top:1.4rem;">
+          <label for="providerSelect">Model</label>
+          <select id="providerSelect" class="provider-select">
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="openai">OpenAI (GPT)</option>
+          </select>
+        </div>
+
+        <div class="query-messages" id="messages"></div>
+
+        <div class="composer">
+          <textarea id="messageInput" placeholder="Ask a question about the knowledge graph…" rows="1"></textarea>
+          <button id="sendButton" class="btn btn-primary">Run</button>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- ============ 6. Connect your own LLM to the MCP server ============ -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Connect</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Add the MCP server to your own LLM</h2>
+        <p class="lead">
+          DGLink serves the merged graph over a <strong>streamable-HTTP MCP endpoint</strong>, so
+          any MCP-capable client &mdash; <a class="link" href="https://claude.ai/download" target="_blank" rel="noopener">Claude Desktop</a>,
+          Claude Code, Cursor, or a custom agent &mdash; can connect with just a URL. No
+          authentication is required, and there is nothing to install locally: no <code>uv</code>,
+          no Python, no Neo4j driver.
+        </p>
+        <!-- <table class="prov-table">
+          <tbody>
+            <tr><td class="pm">Endpoint</td><td><code>{{ mcp_http_url }}</code></td></tr>
+            <tr><td class="pm">Transport</td><td>Streamable HTTP</td></tr>
+            <tr><td class="pm">Authentication</td><td>None — open for public read queries</td></tr>
+            <tr><td class="pm">Access</td><td><strong>Read-only</strong> — the write tool is not exposed</td></tr>
+          </tbody>
+        </table> -->
+        <p class="hint" style="margin-top:1.2rem;">For example, to add it to Claude Desktop, merge the following into <code>claude_desktop_config.json</code>:</p>
+        <pre class="cypher"><code>{
+  "mcpServers": {
+    "dglink-crdc": {
+      "url": "{{ mcp_http_url }}"
+    }
+  }
+}</code></pre>
+        <p class="hint">Or from the command line with Claude Code:</p>
+        <pre class="cypher"><code>claude mcp add --transport http dglink-crdc {{ mcp_http_url }}</code></pre>
+        <p class="hint">
+          Your client then gets tools to inspect the graph schema and run read Cypher against
+          it. The endpoint is read-only, so queries can explore the graph but never modify it.
+          Older clients without native remote-MCP support can bridge to the same URL with
+          <code>npx mcp-remote {{ mcp_http_url }}</code>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ 7. MCP benchmarking ============ -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Benchmark</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Does the knowledge graph help? Raw API vs. knowledge graph agent</h2>
+        <p class="lead">
+          One immediate follow-up question to this type of approach might be, &ldquo;Is the knowledge graph actually
+          necessary, or could a state-of-the-art LLM get the same result if just given access to a portal&rsquo;s API?&rdquo;
+          We can test exactly this by giving the same agent the same question twice: once with only API access, and once
+          with access to the knowledge graph. Everything else is held constant &mdash; same model, system prompt, and
+          turn budget &mdash; so the only variable is the MCP toolset.
+          <!-- We benchmark whether giving an agent the DGLink knowledge graph beats giving it raw -->
+          <!-- access to the CRDC portal APIs. Both arms are the <strong>same Claude Code agent</strong> -->
+          <!-- &mdash; same model, system prompt, and turn budget &mdash; changing exactly one variable: -->
+          <!-- the MCP toolset. -->
+        </p>
+        <p class="hint">
+          All trials were run using Claude Sonnet&nbsp;5 headless via  
+          <code>claude -p</code>, with the built-in file and shell tools disabled so an agent&rsquo;s 
+          only capability is its own MCP server.
+          <!-- For each trial, both agents were given the  -->
+          <!-- Every run on this page &mdash; both benchmark arms and the saved example responses above -->
+          <!-- &mdash; used <strong><code>claude-sonnet-5</code></strong> (Claude Sonnet&nbsp;5) headless via -->
+          <!-- <code>claude -p</code>, with the built-in file and shell tools disabled so an agent&rsquo;s only -->
+          <!-- capability is its own MCP server. -->
+        </p>
+        <ul class="feature-list">
+          <li><strong>Raw-API agent:</strong> Agent was given access to each portal's GraphQL client as well as tools for previewing and downloading portal data files. </li>
+          <!-- <li><strong>Raw-API agent:</strong> GDC / GC / PDC GraphQL + schema introspection + file download &amp; preview &mdash; a scientist who just has the portal APIs and must discover the schema, write queries, find the files, and scan their contents at query time.</li> -->
+          <li><strong>Knowledge graph (KG) agent (DGLink):</strong> Agent was given direct MCP access to the merged CRDC KG.</li>
+          <!-- <li><strong>Knowledge graph (KG) agent (DGLink):</strong> the <code>neo4j</code> MCP over the merged CRDC graph, where cross-portal links and file-content gene mentions are already indexed.</li> -->
+        </ul>
+        <p class="hint">Both agents can reach the same files &mdash; the comparison is <em>pre-indexed graph</em> vs. <em>search-at-query-time</em>, not &ldquo;can read files&rdquo; vs. &ldquo;can&rsquo;t&rdquo;.</p>
+      </div>
+    </section>
+
+    <!-- Query 1 -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Query 1 &middot; cross-portal</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Is TP53 present in all three CRDC portals?</h2>
+        <p class="bench-q">&ldquo;Is the gene TP53 present in all three CRDC portals in the ingested data &mdash; a GDC case, a GC (General Commons) study, and a PDC proteomic study? Name the specific study/case in each portal.&rdquo;</p>
+        <div class="bench-outcomes">
+          <div class="outcome">
+            <div class="o-arm">Raw-API agent</div>
+            <div class="o-head"><span class="o-mark">✕</span>2 of 3 portals confirmed</div>
+            <p class="o-note">Confirmed TP53 in GDC and PDC, but <strong>could not verify the GC link</strong> &mdash; no gene-level field exists in the GC metadata API.</p>
+          </div>
+          <div class="outcome win">
+            <div class="o-arm">DGLink KG agent</div>
+            <div class="o-head"><span class="o-mark">✓</span>3 of 3 portals confirmed</div>
+            <p class="o-note">One merged gene node named the specific GDC case, GC study and PDC study in a single traversal.</p>
+          </div>
+        </div>
+        <h3 class="bench-sub">Effort to get there</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="metric">Agent turns</td>
+              <td class="num v-api">26</td>
+              <td class="num kg-col">7</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:27%"></span></span></div></td>
+              <td><span class="win-pill">3.7× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Output tokens</td>
+              <td class="num v-api">11,739</td>
+              <td class="num kg-col">1,573</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:13%"></span></span></div></td>
+              <td><span class="win-pill">7.5× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Wall time</td>
+              <td class="num v-api">169.6 s</td>
+              <td class="num kg-col">31.1 s</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:18%"></span></span></div></td>
+              <td><span class="win-pill">5.5× faster</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Cost (USD)</td>
+              <td class="num v-api">$0.63</td>
+              <td class="num kg-col">$0.17</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:27%"></span></span></div></td>
+              <td><span class="win-pill">3.7× cheaper</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>Shorter teal bar = less effort for the same question.</span>
+        </div>
+        <div class="bench-arms">
+          <details class="bench-details"><summary>Raw-API agent response</summary><div id="x1-api" class="md-body"></div></details>
+          <details class="bench-details"><summary>DGLink KG-agent response</summary><div id="x1-dglink" class="md-body"></div></details>
+        </div>
+        <script type="text/markdown" data-target="x1-api">
+## Answer
+
+**TP53 is confirmed present in GDC and PDC, but cannot be confirmed in GC (CDS) through the available metadata API.**
+
+**GDC (Genomic Data Commons)** — Confirmed.
+Gene lookup: `TP53` = Ensembl gene `ENSG00000141510`. A somatic mutation (SSM) query for gene symbol TP53 returned 1,461 total simple somatic mutations. One example case carrying a TP53 SSM:
+- **Case**: `933c1d5d-7c52-43ab-81a8-7ec0889ab7a9` (submitter ID `ALCH-B2O1`), project **ALCHEMIST-ALCH** (SSM `e1d0cb5d-d510-57ef-bed1-e8a515395d4a`)
+
+**PDC (Proteomic Data Commons)** — Confirmed.
+The `geneSpectralCount(gene_name: "TP53")` query returned protein spectral-count data for TP53 across 60+ studies. Example study with a strong spectral count (1068):
+- **Study**: `CGU OSCC APOBEC3A - Global Phosphoproteome` (study_id `ca40e63b-2d0f-4eff-b3fc-c3bbfe76f22d`)
+
+**GC ("General Commons" / CDS)** — Not confirmable via the API.
+I inspected the GC GraphQL schema's `Sample`, `Diagnosis`, `Genomic_Info`, and `File` types — none carry a gene-symbol, variant, or mutation field. GC's ingested metadata is study/sample/file-level only; gene-level content (e.g., TP53 mutation calls) would live inside actual sequence files (VCF/MAF) in studies like `phs003155` (TCGA WGS Variants Across 18 Cancer Types) or `phs001287` (CPTAC Pan-Cancer), but the metadata API exposes no queryable field to verify TP53's presence at the gene level. I cannot name a specific GC study containing TP53 without file-content inspection, which is outside the available tools.
+</script>
+        <script type="text/markdown" data-target="x1-dglink">
+Yes — TP53 is present across all three portals in the ingested knowledge graph. It's merged into a single `biolink:Gene` node (curie `hgnc:11998`) with `portal: ["gdc", "pdc", "gc"]`, each connected via `biolink:related_to` edges:
+
+- **GDC**: Case `ncigdc:1656dfde-fdd5-467e-8231-7e4af281f10a` (submitter ID `DLBCL10932`, a diffuse large B-cell lymphoma case)
+- **GC (General Commons)**: Study `ncigc:phs002371_image` — "Human Tumor Atlas Network (HTAN) imaging data"
+- **PDC (Proteomic Data Commons)**: Study `pdc:50464f55-692b-4f3f-8765-a2cb0b5008dc` — "CPTAC UCEC Confirmatory Study - CompRef Acetylome"
+
+Note: many other GDC cases and PDC studies also link to TP53 (e.g., additional CPTAC AML, GBM, LUAD, STAD, LSCC studies), but the GC portal shows only this one HTAN study connection in the graph.
+</script>
+      </div>
+    </section>
+
+    <!-- Query 2 -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Query 2 &middot; cross-portal</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Which cancer genes appear in both caNanoLab and a PDC proteomic study?</h2>
+        <p class="bench-q">&ldquo;Which cancer genes appear in BOTH the caNanoLab (GC) study data files AND a PDC proteomic study? List a few shared genes.&rdquo;</p>
+        <div class="bench-outcomes">
+          <div class="outcome">
+            <div class="o-arm">Raw-API agent</div>
+            <div class="o-head">7 shared genes surfaced</div>
+            <p class="o-note">Limited to text search over file <em>names</em>, it could only spot-check a handful of gene symbols &mdash; not compute the intersection.</p>
+          </div>
+          <div class="outcome win">
+            <div class="o-arm">DGLink KG agent</div>
+            <div class="o-head">2,586 shared genes, exactly</div>
+            <p class="o-note">Computed the full overlap &mdash; 2,586 of 2,652 caNanoLab-linked genes also appear in a PDC study &mdash; as one graph traversal.</p>
+          </div>
+        </div>
+        <h3 class="bench-sub">Effort to get there</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="metric">Agent turns</td>
+              <td class="num v-api">44</td>
+              <td class="num kg-col">9</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:20%"></span></span></div></td>
+              <td><span class="win-pill">4.9× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Output tokens</td>
+              <td class="num v-api">11,149</td>
+              <td class="num kg-col">2,963</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:27%"></span></span></div></td>
+              <td><span class="win-pill">3.8× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Wall time</td>
+              <td class="num v-api">166.4 s</td>
+              <td class="num kg-col">48.4 s</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:29%"></span></span></div></td>
+              <td><span class="win-pill">3.4× faster</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Cost (USD)</td>
+              <td class="num v-api">$1.15</td>
+              <td class="num kg-col">$0.27</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:23%"></span></span></div></td>
+              <td><span class="win-pill">4.3× cheaper</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>A set intersection across portals is one traversal in the graph, but expensive over raw APIs.</span>
+        </div>
+        <div class="bench-arms">
+          <details class="bench-details"><summary>Raw-API agent response</summary><div id="x2-api" class="md-body"></div></details>
+          <details class="bench-details"><summary>DGLink KG-agent response</summary><div id="x2-dglink" class="md-body"></div></details>
+        </div>
+        <script type="text/markdown" data-target="x2-api">
+## Answer
+
+Cross-referencing gene/protein mentions in **caNanoLab (GC)** study data files against genes quantified in a **PDC proteomic study**, several cancer-related genes appear in both:
+
+| Gene | caNanoLab (GC, phs_accession `10.17917`) evidence | PDC proteomic study evidence |
+|---|---|---|
+| **EGFR** | File `20230725_18-16-45-045_SOX2, MYC, and EGFR expression.JPG` | Quantified in *CPTAC GBM Discovery Study – Proteome* (PDC000204) |
+| **MYC** | Same file as above | Quantified in PDC (confirmed via `getPaginatedUIGene`) |
+| **SOX2** | Same file as above | Quantified in PDC000204 |
+| **KRAS** | 1 matching caNanoLab file | Quantified in PDC000204 |
+| **BRAF** | 3 matching caNanoLab files | Quantified in PDC000204 |
+| **CD44** | 40 matching caNanoLab files | Quantified in PDC000204 |
+| **S100A9** | 43 matching caNanoLab files (e.g., antibody production/SDS-PAGE protocols for nanoparticle-S100A9 conjugates) | Quantified in PDC000204 |
+
+**Method / citations:**
+- GC portal: `studies` query identified caNanoLab as `phs_accession = 10.17917` ("caNanoLab Data"). `globalSearch` (which effectively indexes caNanoLab's file names/descriptions) was queried per gene symbol to find matches in file names.
+- PDC portal: `allPrograms`/`study` queries listed proteomic studies; `getPaginatedUIGene` was used against **PDC000204** ("CPTAC GBM Discovery Study – Proteome", CPTAC/Clinical Proteomic Tumor Analysis Consortium) to confirm each gene symbol is part of that study's quantified protein set.
+
+Note: in caNanoLab, these gene names appear in nanomaterial-related file titles (e.g., antibody conjugation protocols, expression/marker figures) rather than as structured gene annotations — the platform doesn't have a dedicated "gene" metadata field, so matches are text-based on the ~8,392 files under that study.
+</script>
+        <script type="text/markdown" data-target="x2-dglink">
+## Answer
+
+Yes — there's substantial overlap. Of the 2,652 distinct genes linked to caNanoLab (GC) study data files (`curie: ncigc:10.17917`, "caNanoLab Data"), **2,586** also appear in at least one PDC proteomic study's gene set.
+
+**Well-known cancer genes shared between both**, with example PDC proteomic studies they co-occur in:
+- **TP53** family/related — not directly hit in my filtered list, but **PTEN**, **EGFR**, **ERBB2**, **KRAS**, **NRAS**, **BRAF**-family, **MYC**, **RB1**, **VHL**, **KIT**, **MET**, **ATM**, **JAK2**, **BRCA2** all matched.
+
+| Gene | Example shared PDC study |
+|---|---|
+| EGFR | CPTAC CCRCC Discovery Study – Intact Glycoproteome |
+| ERBB2 | CPTAC GBM Discovery Study – CompRef Acetylome |
+| KRAS | CPTAC AML Study – CompRef Phosphoproteome |
+| MYC | CPTAC UCEC Confirmatory Study – CompRef Acetylome |
+| PTEN | CPTAC STAD Study – Glycoproteome |
+| RB1 | CPTAC STAD Study – Glycoproteome |
+| BRCA2 | CPTAC CCRCC Discovery Study – Intact Glycoproteome |
+| VHL | CPTAC UCEC Confirmatory Study – Acetylome |
+| MET | CPTAC CCRCC Discovery Study – Intact Glycoproteome |
+
+**Caveat:** the overlap is very large (~97% of caNanoLab-linked genes also appear in PDC studies) because PDC proteomic (acetylome/phosphoproteome/glycoproteome) studies each cover thousands of proteins, and the caNanoLab gene set is derived from mining nanomaterial-study text/columns rather than a curated cancer-gene panel — so this reflects broad proteome coverage, not necessarily a targeted biological association. Sources: `biolink:Study {name: 'caNanoLab Data', curie: 'ncigc:10.17917'}` and PDC `biolink:Study` nodes (portal = `pdc`) such as `pdc:c15b40f0-...` (CPTAC STAD), `pdc:3288ae80-...` (CPTAC AML), `pdc:46a0b9b0-...` (CPTAC GBM Confirmatory).
+</script>
+      </div>
+    </section>
+
+    <!-- Panel -->
+    <section class="section">
+      <div class="card">
+        <div class="eyebrow">Gene panel &middot; scored vs. independent gold</div>
+        <h2 class="page-title" style="font-size:1.6rem;">Which of a 20-gene panel appear in caNanoLab data files?</h2>
+        <p class="bench-q">&ldquo;For each gene in this 20-gene panel, determine whether it appears in any data file of the caNanoLab study (NCI General Commons, phs_accession 10.17917).&rdquo;</p>
+        <p class="lead">Unlike the open-ended queries above, this task is scored automatically against an independent gold standard: 14 of the 20 panel genes are truly present. Neither agent produced a false positive, so the whole difference is in <strong>recall</strong> &mdash; how many of the 14 each one actually found.</p>
+        <div class="bench-outcomes">
+          <div class="outcome">
+            <div class="o-arm">Raw-API agent</div>
+            <div class="o-head">4 of 14 genes found</div>
+            <p class="o-note">Recall 0.29 &middot; F1 0.44. Limited to filename/metadata text search, it cannot see genes buried inside the study&rsquo;s data tables.</p>
+          </div>
+          <div class="outcome win">
+            <div class="o-arm">DGLink KG agent</div>
+            <div class="o-head">12 of 14 genes found</div>
+            <p class="o-note">Recall 0.86 &middot; F1 0.92. File-content gene mentions are pre-indexed on the graph, so it reads them straight off the study node.</p>
+          </div>
+        </div>
+        <h3 class="bench-sub">Scored against the gold standard</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="metric">Precision</td>
+              <td class="num v-api">1.00</td>
+              <td class="num kg-col">1.00</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill tie">tie</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Recall</td>
+              <td class="num v-api">0.29</td>
+              <td class="num kg-col">0.86</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:34%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">3.0× higher</span></td>
+            </tr>
+            <tr>
+              <td class="metric">F1</td>
+              <td class="num v-api">0.44</td>
+              <td class="num kg-col">0.92</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:48%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">2.1× higher</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Accuracy</td>
+              <td class="num v-api">0.50</td>
+              <td class="num kg-col">0.90</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:56%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">1.8× higher</span></td>
+            </tr>
+            <tr>
+              <td class="metric">True positives</td>
+              <td class="num v-api">4 / 14</td>
+              <td class="num kg-col">12 / 14</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:33%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:100%"></span></span></div></td>
+              <td><span class="win-pill">3.0× more</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>Longer teal bar = better score (higher is better for every metric above).</span>
+        </div>
+        <p class="bench-stats-note" style="color:var(--muted);font-size:.85rem;margin-top:.6rem;">Gold-positive: 14/20. KG agent missed IDH1, TP53. Raw-API agent missed BRCA2, IDH1, IGF1R, MAPK3, MTOR, PTEN, RB1, SMAD4, TP53, VHL.</p>
+        <h3 class="bench-sub">Effort to get there</h3>
+        <table class="bench-compare">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="num">Raw-API agent</th>
+              <th class="num kg-col">DGLink KG agent</th>
+              <th>Relative</th>
+              <th>DGLink advantage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="metric">Agent turns</td>
+              <td class="num v-api">51</td>
+              <td class="num kg-col">12</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:24%"></span></span></div></td>
+              <td><span class="win-pill">4.3× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Output tokens</td>
+              <td class="num v-api">18,575</td>
+              <td class="num kg-col">3,575</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:19%"></span></span></div></td>
+              <td><span class="win-pill">5.2× fewer</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Wall time</td>
+              <td class="num v-api">222.2 s</td>
+              <td class="num kg-col">71.3 s</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:32%"></span></span></div></td>
+              <td><span class="win-pill">3.1× faster</span></td>
+            </tr>
+            <tr>
+              <td class="metric">Cost (USD)</td>
+              <td class="num v-api">$1.37</td>
+              <td class="num kg-col">$0.19</td>
+              <td class="bars"><div class="bar-pair"><span class="bar-track"><span class="bar-fill api" style="width:100%"></span></span><span class="bar-track"><span class="bar-fill kg" style="width:14%"></span></span></div></td>
+              <td><span class="win-pill">7.2× cheaper</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="bench-legend">
+          <span><span class="swatch api"></span>Raw-API agent</span>
+          <span><span class="swatch kg"></span>DGLink KG agent</span>
+          <span>Shorter teal bar = less effort &mdash; here, for 3&times; the recall.</span>
+        </div>
+        <div class="bench-arms">
+          <details class="bench-details"><summary>Raw-API agent response</summary><div id="panel-api" class="md-body"></div></details>
+          <details class="bench-details"><summary>DGLink KG-agent response</summary><div id="panel-dglink" class="md-body"></div></details>
+        </div>
+        <script type="text/markdown" data-target="panel-api">
+## Findings
+
+Searched the caNanoLab study (NCI General Commons, phs_accession `10.17917`, study_acronym "caNanoLab", 8,392 files) using cross-portal full-text search (`globalSearch`) against each panel gene symbol (plus common aliases: HER2/c-Kit/c-Met/p53/CD117), then verified every hit's `phs_accession` against `10.17917` to confirm study membership.
+
+| Gene | Result | Evidence (file_id — file_name) |
+|---|---|---|
+| KRAS | ✅ Present | `dg.4DFC/0f8351aa-97fb-571f-98dd-c4a9b883e3f4` — "20220311_16-19-25-437_loading affinity of KrasI.JPG" |
+| EGFR | ✅ Present | `dg.4DFC/61db1512-ec5b-5171-8fb6-a7a52b8830d6` — "20230725_18-16-45-045_SOX2, MYC, and EGFR expression.JPG" |
+| MYC | ✅ Present | same file as above |
+| ERBB2 | ✅ Present (via HER2 alias) | `dg.4DFC/2ea2e146-...` "MC38-HER2 Antibody Data.prism", `dg.4DFC/363d0ff8-...` "MC38-HER2 Tumor Growth.prism", `dg.4DFC/5fb2bf75-...` "CT26-HER2 Antibody Data.pzfx", `dg.4DFC/733bc506-...` "20241004 HER2 Serum CT26-HER2.prism", `dg.4DFC/983e0ae2-...` "CT26-HER2 Tumor Growth.pzfx" — all confirmed `phs_accession = 10.17917` |
+| TP53, PTEN, RB1, BRCA1, BRCA2, MTOR, VHL, PIK3CA, CDKN2A, SMAD4, NF1, IDH1, MAPK3, IGF1R, APC, ATM, HBB, OR4F5 | ❌ No matches found (direct symbol search, 0 hits) |
+| KIT | ❌ Not confirmed | Substring "KIT" matched 36,641 files portal-wide, but every sampled hit was from unrelated genomic sequencing files (fastq/cram/idat) belonging to other studies, not caNanoLab. Alias searches "c-Kit"/"CD117" returned 0 caNanoLab hits. |
+| MET | ❌ No matches (direct + "c-Met" alias, 0 hits) |
+
+Note: `globalSearch` indexes filenames/metadata text (not raw cell-level content of every CSV table), so this reflects gene mentions discoverable via that index; a small number of genes (KRAS, MYC, EGFR, ERBB2/HER2) surfaced directly as figure/data filenames within the study's files.
+
+PRESENT: KRAS, EGFR, MYC, ERBB2
+</script>
+        <script type="text/markdown" data-target="panel-dglink">
+Confirmed — these 8 genes exist as nodes in the graph but have no `related_to` edge to the caNanoLab study (ncigc:10.17917), meaning they don't appear in any of that study's data files.
+
+**Analysis:** I queried the knowledge graph for the caNanoLab study node (`curie: ncigc:10.17917`, portal `gc`) and traversed its `biolink:related_to` edges to `biolink:Gene` nodes. Each edge carries `file_id` (the specific data file(s) the gene mention came from), `columns`, and `raw_texts` provenance. Of the 20 panel genes, 12 have such edges (backed by specific file IDs, e.g. `ncigc:dg.4DFC/c259f146-...` for the "CPMV nanostring raw data" file, or `ncigc:dg.4DFC/09d82136-...` etc. for PTEN's "gene" column). The remaining 8 genes exist elsewhere in the merged graph but have no edge connecting them to this study, so they don't appear in any of its data files.
+
+| Gene | In caNanoLab data files? | Example file(s) |
+|---|---|---|
+| TP53 | No | — |
+| KRAS | Yes | dg.4DFC/5d1885e8-..., dg.4DFC/cc6807c2-... |
+| EGFR | Yes | dg.4DFC/c259f146-..., dg.4DFC/d73dffcc-..., dg.4DFC/e96fdaf5-..., dg.4DFC/cfca1756-..., dg.4DFC/fc632c93-... |
+| ERBB2 | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-... |
+| MYC | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-... |
+| PTEN | Yes | dg.4DFC/611247fe-..., dg.4DFC/9026c8e0-..., + 5 more |
+| RB1 | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-... |
+| BRCA1 | No | — |
+| BRCA2 | Yes | dg.4DFC/5d1885e8-..., dg.4DFC/cc6807c2-... |
+| MTOR | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-... |
+| VHL | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-..., dg.4DFC/5d1885e8-..., dg.4DFC/cc6807c2-... |
+| PIK3CA | No | — |
+| CDKN2A | No | — |
+| SMAD4 | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-... |
+| NF1 | No | — |
+| IDH1 | No | — |
+| MAPK3 | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-... |
+| IGF1R | Yes | dg.4DFC/c259f146-..., dg.4DFC/e96fdaf5-..., dg.4DFC/fc632c93-... |
+| HBB | No | — |
+| OR4F5 | No | — |
+
+PRESENT: KRAS, EGFR, ERBB2, MYC, PTEN, RB1, BRCA2, MTOR, VHL, SMAD4, MAPK3, IGF1R
+</script>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <a class="footer-logo" href="https://gyorilab.github.io" target="_blank" rel="noopener">
+        <img src="{{ url_for('overview.static', filename='gyori_lab.png') }}"
+             alt="Gyori Lab for Computational Biomedicine" width="1200" height="234">
+      </a>
+      <div class="footer-text">
+        <p class="footer-note">
+          DGLink is developed by the <strong><a class="link" href="https://gyorilab.github.io" target="_blank" rel="noopener">Gyori Lab for Computational Biomedicine</a></strong> at Northeastern University.
+        </p>
+        <p class="footer-funding">
+          This work was funded by the DARPA Automating Scientific Knowledge Extraction and Modeling (ASKEM) and ARPA-H Biomedical Data Fabric (BDF) programs (HR00112220036).
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    {% if show_chat %}
+    const messagesDiv = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const providerSelect = document.getElementById('providerSelect');
+
+    // Same H2 mark as the header, on the navy .avatar tile.
+    const AVATAR = `<img src="{{ url_for('overview.static', filename='dglink-logo.svg') }}" alt="">`;
+
+    // Example buttons load the question into the box and run it.
+    document.querySelectorAll('.example-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        messageInput.value = btn.dataset.q;
+        messageInput.style.height = 'auto';
+        messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+        sendMessage();
+      });
+    });
+    {% endif %}
+
+    // Copy the sample Cypher for Neo4j Browser.
+    const copyBtn = document.getElementById('copyCypher');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        const text = document.getElementById('sampleCypher').textContent;
+        navigator.clipboard.writeText(text).then(function () {
+          const original = copyBtn.textContent;
+          copyBtn.textContent = 'Copied ✓';
+          setTimeout(function () { copyBtn.textContent = original; }, 1500);
+        });
+      });
+    }
+
+    {% if show_chat %}
+    messageInput.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+    });
+
+    messageInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    sendButton.addEventListener('click', sendMessage);
+
+    function addMessage(content, role) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+
+      if (role === 'assistant') {
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.innerHTML = AVATAR;
+        messageDiv.appendChild(avatar);
+      }
+
+      const body = document.createElement('div');
+      body.className = 'msg-body';
+      if (role === 'user') {
+        body.textContent = content;
+      } else {
+        body.innerHTML = content ? marked.parse(content) : '';
+      }
+
+      messageDiv.appendChild(body);
+      messagesDiv.appendChild(messageDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      return body;
+    }
+
+    async function sendMessage() {
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      messageInput.disabled = true;
+      sendButton.disabled = true;
+
+      addMessage(message, 'user');
+      messageInput.value = '';
+      messageInput.style.height = 'auto';
+
+      const responseBody = addMessage('', 'assistant');
+      responseBody.innerHTML = '<span class="loading-dot"></span> Thinking…';
+
+      try {
+        const response = await fetch('{{ url_for("overview.run") }}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: message,
+            provider: providerSelect.value
+          })
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = '';
+        responseBody.innerHTML = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          fullResponse += decoder.decode(value, { stream: true });
+          responseBody.innerHTML = marked.parse(fullResponse);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      } catch (error) {
+        responseBody.textContent = 'Error: ' + error.message;
+        responseBody.classList.add('error');
+      }
+
+      messageInput.disabled = false;
+      sendButton.disabled = false;
+      messageInput.focus();
+    }
+    {% endif %}
+  </script>
+
+  <script>
+    // Render benchmark model responses (raw markdown) with marked.
+    document.querySelectorAll('script[type="text/markdown"]').forEach(function (s) {
+      var target = document.getElementById(s.dataset.target);
+      if (target) target.innerHTML = marked.parse(s.textContent.trim());
+    });
+  </script>
+</body>
+</html>

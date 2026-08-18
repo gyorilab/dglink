@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "pdc_api": {
+      "command": ".venv/bin/python",
+      "args": [
+        "scripts/benchmark/pdc_api_mcp_server.py"
+      ]
+    }
+  }
+}

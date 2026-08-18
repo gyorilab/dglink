@@ -55,8 +55,8 @@ This will:
 
 Once all services are running:
 
-- **Frontend UI**: http://localhost:5000
-- **Backend API**: http://localhost:8000
+- **Frontend UI**: http://localhost:5005
+- **Backend API**: http://localhost:8009
 - **Neo4j Browser**: http://localhost:7474
 
 Default Neo4j credentials:
@@ -65,7 +65,7 @@ Default Neo4j credentials:
 
 ## Using the Chat Interface
 
-1. Open http://localhost:5000 in your browser
+1. Open http://localhost:5005 in your browser
 2. Select your preferred model provider (Anthropic/Claude or OpenAI/GPT) from the dropdown
 3. Type your question about the Neo4j database
 4. The assistant will use MCP tools to query the database and provide answers
@@ -130,7 +130,7 @@ Response:
 - Check backend logs: `docker compose logs backend`
 
 ### Frontend can't connect to backend
-- Verify backend is running: `curl http://localhost:8000/health`
+- Verify backend is running: `curl http://localhost:8009/health`
 - Check frontend logs: `docker compose logs frontend`
 
 ### MCP connection issues

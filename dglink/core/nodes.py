@@ -54,9 +54,10 @@ class NodeSet:
         self.nodes = dict()
         self.node_type = node_type
         self.attributes = attributes
+        self.set_attributes = [x for x in self.attributes if "string[]" in x]
 
     def __getitem__(self, key: str):
-        return self.nodes[key]
+        return self.nodes.get(key, None)
 
     def __len__(self):
         return len(self.nodes)
@@ -118,7 +119,7 @@ class NodeSet:
                         val = set(str(val).replace('"', "").replace("'", "").split(";"))
 
                     self.nodes[curie][attribute] = val
-    
+
     def write_node_set(self, path, pascalify: bool = False):
         if pascalify:
             self.pascalify_nodes()
@@ -131,22 +132,26 @@ class NodeSet:
                     if type(val) == set:
                         if len(val) > 20:
                             val = list(val)[:20]
-                        joined = ";".join(v for v in val if v)  # also skip empty strings within the set
+                        joined = ";".join(
+                            v for v in val if v
+                        )  # also skip empty strings within the set
                         val = f'"{joined}"' if joined else ""
-                    elif val is None or val == 'None':
-                        val = ''
+                    elif val is None or val == "None":
+                        val = ""
                     write_str += f"{val}".replace("\n", "") + "\t"
-                write_str = write_str.replace('""', '')
-                f.write(write_str[:-1] + "\n")   
+                write_str = write_str.replace('""', "")
+                f.write(write_str[:-1] + "\n")
 
     def pascalify_nodes(self):
-        ## prevent being called twice in case already done 
-        pascalify = lambda x: "".join(w.capitalize() for w in x.replace("biolink:", "").split("_"))
+        ## prevent being called twice in case already done
+        pascalify = lambda x: "".join(
+            w.capitalize() for w in x.replace("biolink:", "").split("_")
+        )
         nodes = {}
         for node_id, node_rep in self.nodes.items():
-            node_rep = node_rep.copy() 
-            raw_label = node_rep[':LABEL']
-            node_rep[':LABEL'] = pascalify(raw_label)
-            node_rep['raw_label'] = raw_label
+            node_rep = node_rep.copy()
+            raw_label = node_rep[":LABEL"]
+            node_rep[":LABEL"] = pascalify(raw_label)
+            node_rep["raw_label"] = raw_label
             nodes[node_id] = node_rep
         self.nodes = nodes

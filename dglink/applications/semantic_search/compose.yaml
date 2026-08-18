@@ -11,7 +11,7 @@ services:
       dockerfile: ./backend/Dockerfile 
     container_name: semantic_search_standalone_fastapi_backend
     ports:
-      - "8001:8001"
+      - "8010:8010"
     volumes:
       - ./neo4j/graph:/app/resources
   semantic_search_frontend:

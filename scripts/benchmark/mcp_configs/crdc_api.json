@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "crdc_api": {
+      "command": ".venv/bin/python",
+      "args": [
+        "scripts/benchmark/crdc_api_mcp_server.py"
+      ],
+      "env": {
+        "GEN3_CREDENTIAL_FILE": "${GEN3_CREDENTIAL_FILE}"
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DGLink brand mark — concept H2, "lattice, solid unlinked cells".
+
+  The 3x3 lattice reads as table cells; the linked subset (solid nodes joined by
+  edges) reads as a graph. The faint dots are the unlinked cells — that contrast
+  is the whole idea of the mark, so don't flatten the opacity out of it.
+
+  Derived from `logo designs/H2/dglink-h2-color.svg`, with two deliberate changes:
+
+    1. Palette inverted for a dark ground. The source draws its solid nodes in
+       navy #14212b, which is exactly the navy token in dglink.css — the colour of
+       the .site-header and the .avatar tile this mark sits on, so verbatim it
+       would be invisible. Ink goes near-white and the teal/gold are brightened
+       to hold contrast.
+    2. viewBox cropped to the mark's ink bounds. The source centres 18.4 units of
+       artwork on a 24-unit canvas; that ~23% dead margin made the mark render far
+       smaller than its box. Cropping lets it fill the space it's given.
+
+  No width/height here on purpose — callers size it (.brand-logo in dglink.css,
+  or width/height attrs on the chat avatar <img>).
+
+  Kept byte-identical in each frontend's static/ dir, the same way dglink.css is.
+  Edit one copy, then copy it to the others.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2.8 2.8 18.4 18.4" fill="none">
+  <title>DGLink</title>
+  <g stroke="#2f9e8f" stroke-width="1.6" stroke-linecap="round">
+    <line x1="5.5" y1="5.5" x2="12" y2="12"/>
+    <line x1="12" y1="12" x2="18.5" y2="12"/>
+    <line x1="12" y1="12" x2="12" y2="18.5"/>
+  </g>
+  <circle cx="5.5" cy="5.5" r="2.3" fill="#eef2f4"/>
+  <circle cx="5.5" cy="12" r="1.5" fill="#e0a83c" opacity="0.65"/>
+  <circle cx="5.5" cy="18.5" r="1.5" fill="#e0a83c" opacity="0.65"/>
+  <circle cx="12" cy="5.5" r="1.5" fill="#e0a83c" opacity="0.65"/>
+  <circle cx="12" cy="12" r="2.3" fill="#eef2f4"/>
+  <circle cx="12" cy="18.5" r="2.3" fill="#eef2f4"/>
+  <circle cx="18.5" cy="5.5" r="1.5" fill="#e0a83c" opacity="0.65"/>
+  <circle cx="18.5" cy="12" r="2.3" fill="#eef2f4"/>
+  <circle cx="18.5" cy="18.5" r="1.5" fill="#e0a83c" opacity="0.65"/>
+</svg>

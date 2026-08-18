@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # Needed to forego timezone configuration
 ENV DEBIAN_FRONTEND=noninteractive
@@ -32,7 +32,8 @@ RUN sed -i 's/#dbms.default_listen_address/dbms.default_listen_address/' /etc/ne
 RUN sed -i 's/#dbms.security.auth_enabled/dbms.security.auth_enabled/' /etc/neo4j/neo4j.conf
 RUN neo4j-admin import --delimiter='TAB' --skip-duplicate-nodes=true --skip-bad-relationships=true \
     --relationships /sw/edges.tsv \
-    --nodes /sw/nodes.tsv 
+    --nodes /sw/nodes.tsv
+
 ENV DOCKERIZED="TRUE"
 ENV NEO4J_URL="bolt://localhost:7687"
 
