@@ -142,16 +142,65 @@ def count_untyped_edges(edge_set) -> int:
     )
 
 
-def validate_graph(node_set, edge_set) -> dict:
+def _name(curie: str) -> str:
+    return next(_candidate_names(curie))
+
+
+def check_schema(edges) -> list:
+    """Return problems with a schema's (subject, predicate, object, association) edges.
+
+    Each category and predicate must be valid, and the subject and object categories
+    must fall within the predicate's Biolink domain and range.
+    """
+    t = _toolkit()
+    problems = []
+    for subj, pred, obj, assoc in edges:
+        for cat in (subj, obj):
+            if not is_valid_category(cat):
+                problems.append(f"{cat} is not a valid category")
+        if assoc and t.get_element(_name(assoc)) is None:
+            problems.append(f"{assoc} is not a Biolink association")
+        if not is_valid_predicate(pred):
+            problems.append(f"{pred} is not a valid predicate")
+            continue
+        el = t.get_element(_name(pred))
+        for cat, allowed in ((subj, el.domain), (obj, el.range)):
+            ancestors = t.get_ancestors(_name(cat), formatted=False)
+            if allowed and allowed not in ancestors:
+                problems.append(f"{cat} is outside {allowed} for {pred}")
+    return problems
+
+
+def find_schema_violations(node_set, edge_set, allowed_triples) -> dict:
+    """Count edges whose (subject label, type, object label) is not allowed."""
+    bad = Counter()
+    for edge in edge_set.edges.values():
+        subj = node_set.nodes.get(edge.get(":START_ID"))
+        obj = node_set.nodes.get(edge.get(":END_ID"))
+        if subj is None or obj is None:
+            continue
+        triple = (subj.get(":LABEL"), edge.get(":TYPE"), obj.get(":LABEL"))
+        if triple not in allowed_triples:
+            bad[triple] += 1
+    return dict(bad)
+
+
+def validate_graph(node_set, edge_set, allowed_triples=None) -> dict:
     """Validate a NodeSet/EdgeSet pair. Returns a report dict.
 
     ``conformant`` is True only when no node label and no edge type violates the
-    Biolink model, no edge is untyped, and no edge points at a missing node.
+    Biolink model, no edge is untyped, no edge points at a missing node and, if
+    ``allowed_triples`` is given, every edge matches an allowed triple.
     """
     bad_labels = validate_node_set(node_set)
     bad_types = validate_edge_set(edge_set)
     dangling = find_dangling_edges(node_set, edge_set)
     untyped = count_untyped_edges(edge_set)
+    off_schema = (
+        find_schema_violations(node_set, edge_set, allowed_triples)
+        if allowed_triples is not None
+        else {}
+    )
     return {
         "biolink_version": _toolkit().get_model_version(),
         "n_nodes": len(node_set),
@@ -160,7 +209,8 @@ def validate_graph(node_set, edge_set) -> dict:
         "invalid_edge_types": bad_types,
         "dangling_edges": dangling,
         "n_untyped_edges": untyped,
-        "conformant": not bad_labels and not bad_types and not dangling and not untyped,
+        "off_schema_edges": off_schema,
+        "conformant": not (bad_labels or bad_types or dangling or untyped or off_schema),
     }
 
 
