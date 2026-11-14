@@ -74,7 +74,7 @@ PROTEIN_CURIE_PREFIXES = {"uniprot", "uniprotkb", "pr"}
 ## INDRA types HPO terms as "disease"; Biolink models them as phenotypic features
 PHENOTYPE_CURIE_PREFIXES = {"hp"}
 ## Disease vocabularies that INDRA's ontology may not type
-DISEASE_CURIE_PREFIXES = {"mondo", "orphanet", "omim", "doid"}
+DISEASE_CURIE_PREFIXES = {"mondo", "orpha", "omim", "doid"}
 
 
 def map_biolink_category(indra_type, curie=None):
