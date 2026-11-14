@@ -17,6 +17,7 @@ from functools import lru_cache
 from typing import NamedTuple
 
 import gilda
+import gilda.ner
 from bioregistry import normalize_curie, get_bioregistry_iri
 from indra.ontology.bio import bio_ontology
 
@@ -27,6 +28,24 @@ DEFAULT_BIOLINK_CATEGORY = "biolink:NamedThing"
 ## distinct texts kept by annotate_text; a full portal run sees millions, so it is bounded
 ## (least recently used texts are dropped, and re-grounded if seen again)
 ANNOTATE_CACHE_SIZE = 2**20
+
+## Grounder used by this module, None means Gilda's default grounder
+_grounder = None
+
+
+def set_grounder(grounder: gilda.Grounder | None) -> None:
+    """Set the Gilda grounder used for grounding, None restores Gilda's default."""
+    global _grounder
+    _grounder = grounder
+    annotate_text.cache_clear()
+
+
+def _ground(text: str, context: str | None = None):
+    return (_grounder or gilda.get_grounder()).ground(text, context=context)
+
+
+def _annotate(text: str, context: str | None = None):
+    return gilda.ner.annotate(text, grounder=_grounder, context_text=context)
 
 
 def slugify(name: str) -> str:
@@ -53,14 +72,14 @@ def _best_match(text: str, score_threshold: float, min_span_fraction: float, con
         return None
 
     ## 1) prefer a grounding of the entire string
-    full = gilda.ground(text, context=context)
+    full = _ground(text, context=context)
     if full and full[0].score >= score_threshold:
         return full[0]
 
     ## 2) fall back to the longest grounded span within the string. Without a context,
     ## gilda.annotate uses `text` itself as the context
     best_match, best_span = None, -1
-    for annotation in gilda.annotate(text, context_text=context):
+    for annotation in _annotate(text, context=context):
         if not annotation.matches:
             continue
         top = annotation.matches[0]  # gilda returns matches best-score-first
@@ -108,7 +127,7 @@ def annotate_text(text: str) -> TextGrounding | None:
     columns, tables and portals; callers apply their own exclusions (e.g. a table's
     terms_to_exclude) to the result.
     """
-    ans = gilda.annotate(text)
+    ans = _annotate(text)
     if not ans:
         return None
     term = ans[0].matches[0].term
