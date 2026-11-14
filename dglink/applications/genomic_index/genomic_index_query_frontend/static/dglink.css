@@ -497,8 +497,9 @@ input[type="radio"] { accent-color: var(--teal); width: 16px; height: 16px; }
 .match-count { margin-bottom: .25rem; }
 
 @media (max-width: 720px) {
-  .site-header { padding: 0 1rem; }
-  .site-nav { gap: 1rem; }
+  .site-header { height: auto; flex-wrap: wrap; padding: .6rem 1rem 0; }
+  .site-nav { gap: 1rem; width: 100%; overflow-x: auto; white-space: nowrap;
+              padding: .5rem 0 .4rem; }
   .results-grid, .role-grid { grid-template-columns: 1fr; }
   .def-row { grid-template-columns: 1fr; gap: .2rem; }
   .card { padding: 1.5rem 1.25rem; }
