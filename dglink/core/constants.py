@@ -73,6 +73,8 @@ GENE_CURIE_PREFIXES = {"hgnc", "hgnc.symbol", "ncbigene", "ensembl", "ensemblgen
 PROTEIN_CURIE_PREFIXES = {"uniprot", "uniprotkb", "pr"}
 ## INDRA types HPO terms as "disease"; Biolink models them as phenotypic features
 PHENOTYPE_CURIE_PREFIXES = {"hp"}
+## Disease vocabularies that INDRA's ontology may not type
+DISEASE_CURIE_PREFIXES = {"mondo", "orpha", "omim", "doid"}
 
 
 def map_biolink_category(indra_type, curie=None):
@@ -81,12 +83,15 @@ def map_biolink_category(indra_type, curie=None):
     Gene/protein-ambiguous types are disambiguated using the grounded CURIE's
     namespace (e.g. hgnc -> biolink:Gene, uniprot -> biolink:Protein). Falls back
     to biolink:Gene when the namespace is unknown. HPO terms are biolink:PhenotypicFeature
-    whatever their INDRA type. Any non-ambiguous type is looked up in
-    INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP; unknown types are returned as-is.
+    and terms from disease vocabularies are biolink:Disease whatever their INDRA type.
+    Any non-ambiguous type is looked up in INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP;
+    unknown types are returned as-is.
     """
     prefix = curie.split(":")[0].lower() if isinstance(curie, str) and curie else ""
     if prefix in PHENOTYPE_CURIE_PREFIXES:
         return "biolink:PhenotypicFeature"
+    if prefix in DISEASE_CURIE_PREFIXES:
+        return "biolink:Disease"
     if indra_type in GENE_OR_PROTEIN_INDRA_TYPES:
         if prefix in PROTEIN_CURIE_PREFIXES:
             return "biolink:Protein"

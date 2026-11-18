@@ -125,13 +125,14 @@ class TabularDataset:
                     break
         return col_sample
 
-    def ground_table(self, biolink_entity_types: bool = False):
+    def ground_table(self, biolink_entity_types: bool = False, grounder=None):
         """Ground the table using gilda.
 
         Replaces each column `col` with six columns (GROUNDING_SUFFIXES): `col_entity`,
         `col_type`, `col_name`, `col_raw_text`, `col_column_name` and `col_iri`. Each
         distinct value of a column is grounded once (`_ground_value`), and the gilda lookup
-        itself is cached across columns and tables (`annotate_text`).
+        itself is cached across columns and tables (`annotate_text`). `grounder` is a Gilda
+        grounder to use instead of Gilda's default.
         """
         grounded = {}
         for col in self.table.columns:
@@ -146,7 +147,7 @@ class TabularDataset:
                     continue
                 text = str(val)
                 if text not in column_groundings:
-                    column_groundings[text] = self._ground_value(text)
+                    column_groundings[text] = self._ground_value(text, grounder)
                 curie, entity_type, name, iri = column_groundings[text]
                 cells.append((curie, entity_type, name, val, col, iri))
             fields = list(zip(*cells)) if cells else [()] * len(GROUNDING_SUFFIXES)
@@ -163,14 +164,14 @@ class TabularDataset:
                     for t, e in zip(self.table[type_col], self.table[entity_col])
                 ]
 
-    def _ground_value(self, text: str) -> tuple:
+    def _ground_value(self, text: str, grounder=None) -> tuple:
         """Ground a (non-missing) cell's text with Gilda (see `annotate_text`).
 
         Returns:
             Tuple of (curie, entity_type, name, iri); all pandas.NA if the text does not
             ground or its match is one of this table's `terms_to_exclude`.
         """
-        grounding = annotate_text(normalize_for_grounding(text))
+        grounding = annotate_text(normalize_for_grounding(text), grounder)
         if grounding is None or grounding.norm_text in self.terms_to_exclude:
             return pandas.NA, pandas.NA, pandas.NA, pandas.NA
         return grounding.curie, grounding.entity_type, grounding.name, grounding.iri
