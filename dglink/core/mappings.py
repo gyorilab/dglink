@@ -3,9 +3,9 @@
 import re
 from typing import NamedTuple
 
+import obonet
 from bioregistry import normalize_curie
 
-_XREF = re.compile(r"^xref: (\S+)(?: \{(.*)\})?")
 _SOURCE = re.compile(r'source="([^"]+)"')
 
 
@@ -24,25 +24,22 @@ def read_obo_mappings(path: str, qualifier_predicates: dict) -> list:
     example `xref: SCTID:64572001 {source="MONDO:equivalentTo"}`.
     `qualifier_predicates` maps such annotations to a predicate, and
     cross-references with no annotation in it are skipped. CURIEs are normalized
-    with Bioregistry, and ones it cannot normalize are skipped.
+    with Bioregistry, and ones it cannot normalize are skipped, as are obsolete
+    terms.
     """
+    graph = obonet.read_obo(path, include_clauses=True)
     mappings = []
-    term = None
-    with open(path) as fh:
-        for line in fh:
-            if line.startswith("["):
-                term = None
-            elif line.startswith("id: "):
-                term = normalize_curie(line[4:].strip())
-            elif term and (match := _XREF.match(line)):
-                xref, qualifiers = match.groups()
-                obj = normalize_curie(xref)
-                predicates = {
-                    qualifier_predicates[q]
-                    for q in _SOURCE.findall(qualifiers or "")
-                    if q in qualifier_predicates
-                }
-                ## Conflicting qualifiers leave the mapping untyped
-                if obj and len(predicates) == 1:
-                    mappings.append(Mapping(term, predicates.pop(), obj))
+    for node, data in graph.nodes(data=True):
+        term = normalize_curie(node)
+        ## Terms only referenced by others have no clauses
+        for clause in data.get("_clauses", {}).get("xref", []):
+            obj = normalize_curie(clause["value"])
+            predicates = {
+                qualifier_predicates[q]
+                for q in _SOURCE.findall(clause["trailing_modifier"] or "")
+                if q in qualifier_predicates
+            }
+            ## Conflicting qualifiers leave the mapping untyped
+            if term and obj and len(predicates) == 1:
+                mappings.append(Mapping(term, predicates.pop(), obj))
     return mappings
