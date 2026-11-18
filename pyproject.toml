@@ -71,11 +71,15 @@ openai = [
     "openai>=2.14.0",
 ]
 
+bedrock = [
+    "boto3>=1.43",
+]
+
 ollama = [
     "ollama>=0.6.2",
 ]
 
-llm_clients = ["dglink[ollama,openai]"]
+llm_clients = ["dglink[ollama,openai,bedrock]"]
 
 modality_specific = ["dglink[vcf,dicom]"]
 
