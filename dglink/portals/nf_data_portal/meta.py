@@ -1,80 +1,45 @@
-from dglink.core.constants import RESOURCE_PATH
-from .constants import syn
-from dglink.core.nodes import NodeSet
-from dglink.core.edges import EdgeSet
-from dglink import write_graph
-import gilda
-from bioregistry import normalize_curie, get_bioregistry_iri
-from indra.ontology.bio import bio_ontology
+from .constants import PROJECT_ATTRS, METADATA_NODES, GROUND_FIELDS, syn
+from .utils import _unpack_dict_list, parse_dict_fields, parse_related_studies, get_project_name, get_project_summary
+from dglink.core.constants import RESOURCE_PATH 
+from dglink import NodeSet, EdgeSet, write_graph
+
+
 import tqdm
 import logging
 import os
 
 logger = logging.getLogger(__name__)
 
+def parse_project_attrs(project_id:str, project_metadata:dict, node_set:NodeSet)->NodeSet:
+    """Extract study node attributes from metadata"""
+    project_attrs = {}
+    for attr in PROJECT_ATTRS:
+        project_attrs[f'{attr}:string[]'] = _unpack_dict_list(project_metadata, attr)
+    # take the name as the curie when no text name is available #
+    project_attrs['name'] = get_project_name(project_id)
+    project_attrs['summary'] = get_project_summary(project_id)
+    node_set.update_nodes(project_attrs, new_node_id=project_id, fill_empty=True)
+    return node_set
 
-def get_entities_from_meta(
-    study_metadata,
-    ground_fields,
-    unground_fields,
-    node_set: NodeSet,
-    edge_set: EdgeSet,
-):
-    """parse entities from project metadata."""
-    for field in ground_fields + unground_fields:
-        if field in study_metadata.keys():
-            field_val = (
-                study_metadata[field]
-                if type(study_metadata[field]) == list
-                else [study_metadata[field]]
-            )
-            ## loop through in case list
-            for entry in field_val:
-                ## ground the node if it is in a grounded field
-                ## add the nodes with their corresponding meta data fields
-                entry = str(entry)
-                node_attributes = {
-                    "curie:ID": entry,
-                    ":LABEL": field,
-                    "name": entry,
-                    "columns:string[]": "metadata",
-                    "raw_texts:string[]": entry,
-                    "source:string[]": "metadata",
-                }
-                if field in ground_fields:
-                    ans = gilda.annotate(entry)
-                    ## if the node should be grounded and can be grounded save the node as that entity type as well.
-                    if ans:
-                        nsid = ans[0].matches[0].term
-                        curie = normalize_curie(f"{nsid.db}:{nsid.id}")
-                        node_attributes = {
-                            "curie:ID": curie,
-                            ":LABEL": bio_ontology.get_type(nsid.db, nsid.id),
-                            "name": nsid.entry_name,
-                            "iri": get_bioregistry_iri(nsid.db, nsid.id),
-                            "raw_texts:string[]": entry,
-                            "columns:string[]": "metadata",
-                            "source:string[]": "metadata",
-                        }
-                        # edge_set.add((study_metadata.id, curie, f"has_{field}"))
-                        edge_set.update_edges(
-                            {
-                                ":START_ID": study_metadata.id,
-                                ":END_ID": curie,
-                                ":TYPE": f"has_{field}",
-                                "source:string[]": "metadata",
-                            }
+def parse_project_meta(project_id:str, project_metadata:dict, node_set: NodeSet, edge_set: EdgeSet)->tuple[NodeSet, EdgeSet]:
+    node_set = parse_project_attrs(project_id = project_id, project_metadata=project_metadata,node_set=node_set)
+    node_set, edge_set = parse_dict_fields(
+                                        meta_curie=project_id,
+                                        meta= project_metadata,
+                                        node_types = METADATA_NODES + GROUND_FIELDS,
+                                        source='metadata',
+                                        node_set=node_set, 
+                                        edge_set=edge_set,
                         )
-                # edge_set.add((study_metadata.id, entry, f"has_{field}"))
-                edge_set.update_edges(
-                    {
-                        ":START_ID": study_metadata.id,
-                        ":END_ID": entry,
-                        ":TYPE": f"has_{field}",
-                        "source:string[]": "metadata",
-                    }
-                )
-                node_set.update_nodes(new_node=node_attributes)
+    
+    node_set, edge_set = parse_related_studies(
+                meta_curie=project_id,
+                meta= project_metadata,
+                key = 'relatedStudies',
+                source='metadata',
+                node_set=node_set, 
+                edge_set=edge_set,
+    )
     return node_set, edge_set
 
 
@@ -82,24 +47,21 @@ def get_meta(
     project_ids: list,
     node_set: NodeSet,
     edge_set: EdgeSet,
-    ground_field: list,
-    ungrounded_field: list,
     write_set: bool = False,
 ):
     """pull all fields from a series of project meta data."""
     logger.info("starting meta data pull")
     for project_id in tqdm.tqdm(project_ids):
         try:
-            study_metadata = syn.get(project_id)
-            node_set, edge_set = get_entities_from_meta(
-                study_metadata=study_metadata,
-                ground_fields=ground_field,
-                unground_fields=ungrounded_field,
+            project_metadata = syn.get(project_id)
+            node_set, edge_set = parse_project_meta(
+                project_id=project_id, 
+                project_metadata=project_metadata, 
                 node_set=node_set,
-                edge_set=edge_set,
+                edge_set=edge_set
             )
-        except Exception:
-            logger.warning(f"Project: {project_id} metadata could not be loaded ")
+        except Exception as e:
+            logger.warning(f"Project: {project_id} metadata could not be loaded, {e}")
     if write_set:
         write_graph(
             node_set=node_set,

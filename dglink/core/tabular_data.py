@@ -13,24 +13,40 @@ from .constants import (
 from .utils import write_graph
 from .nodes import NodeSet
 from .edges import EdgeSet
-import os
-from frictionless import Schema, Resource, formats, Package
-from .column_selectors import HeuristicSelector, LLMSelector
+from .column_selectors import HeuristicSelector, LLMSelector, HierarchicalSelector
 from .tabular_dataset import TabularDataset
+from .timing import TIMER
+
+from frictionless import Schema, Resource, formats, Package
 import pandas
+
+
 from pathlib import Path
-from functools import lru_cache
-from indra.ontology.bio import bio_ontology
-from bioregistry import normalize_curie, get_bioregistry_iri
-import tqdm
-import gilda
 import logging
+import tqdm
 from typing import Iterator
-import json
-import numpy as np
-from openai import BadRequestError
+import os
+import time
+
 
 logger = logging.getLogger(__name__)
+
+
+def _is_utf8(pth: Path, sample_size: int = 1_000_000) -> bool:
+    """Best-effort check for whether a file decodes cleanly as UTF-8.
+
+    Frictionless's encoding auto-detection has a known false-positive on UTF-7 for
+    plain ASCII/UTF-8 files whose content contains runs of '+' (a UTF-7 shift-sequence
+    marker) - e.g. genomic annotation columns like 'GERP++_RS'. Forcing UTF-8 for files
+    that genuinely are UTF-8 avoids that misdetection without touching files that are
+    actually encoded some other way (those still fall back to Frictionless's detector).
+    """
+    try:
+        with open(pth, "rb") as f:
+            f.read(sample_size).decode("utf-8")
+        return True
+    except UnicodeDecodeError:
+        return False
 
 
 def get_frictionless_package(pth):
@@ -58,6 +74,8 @@ def get_frictionless_package(pth):
     pac = Package()
     format = pth.suffix
     control_func = lambda x: None
+    ## utf-8 encoding is preferred but can also try to infer it directly ##
+    encoding = "utf-8" if _is_utf8(pth) else None
     if pth.suffix in [".xlsx", ".xls"]:
         ## try to directly load as a package
         try:
@@ -96,19 +114,21 @@ def get_frictionless_package(pth):
             first_line = tmp.readline()
         # Check tab-separated first (more specific)
         if len(first_line.split("\t")) > 1:
-            pac.add_resource(Resource(pth, format="tsv"))
+            pac.add_resource(Resource(pth, format="tsv", encoding=encoding))
             format = ".tsv"
         # Then check comma-separated
         elif len(first_line.split(",")) > 1:
-            pac.add_resource(Resource(pth, format="csv"))
+            pac.add_resource(Resource(pth, format="csv", encoding=encoding))
             format = ".csv"
         # Fallback: let Frictionless auto-detect
         else:
-            pac.add_resource(Resource(pth))
+            pac.add_resource(Resource(pth, encoding=encoding))
     else:
-        pac.add_resource(Resource(pth))
+        pac.add_resource(Resource(pth, encoding=encoding))
     for res in pac.resources:
-        raw_schema = Schema.describe(res.path, control=control_func(res), format=format)
+        raw_schema = Schema.describe(
+            res.path, control=control_func(res), format=format, encoding=encoding
+        )
         to_drop = [field.name for field in raw_schema.fields if field.type != "string"]
         for x in to_drop:
             raw_schema.remove_field(x)
@@ -190,7 +210,7 @@ def extract_df_graph(
         Edge types are dynamically created based on entity type (e.g., "has_protein").
     """
     pascalify = lambda x: "".join(
-        w.capitalize() for w in x.strip("biolink:").split("_")
+        w.capitalize() for w in x.removeprefix("biolink:").split("_")
     )
     generate_edge_type = lambda x: (
         f"has_{x}" if not table.biolink_entity_types else GROUP_ENTITY_BIOLINK_PREDICATE
@@ -333,10 +353,13 @@ def load_file(group_identifier: str, fp: str):
 def quality_check_groundings(qc_method: str, table: TabularDataset, **kwargs) -> None:
     if qc_method == "heuristic":
         selector = HeuristicSelector(**kwargs)
-        selector.execute(table, verbose=True)
     elif qc_method == "llm_schema_match":
         selector = LLMSelector(**kwargs)
-        selector.execute(table, verbose=True)
+    elif qc_method in ("hierarchical_selector", "hierarchal_selector"):
+        selector = HierarchicalSelector(**kwargs)
+    else:
+        raise ValueError(f"invalid QC method {qc_method}")
+    selector.execute(table, verbose=True)
 
 
 def get_tabular_data(
@@ -345,7 +368,7 @@ def get_tabular_data(
     edge_set: EdgeSet,
     tabular_iterator: Iterator,
     write_reports: bool = True,
-    quality_check_method: str = "heuristic",
+    quality_check_method: str|None = "heuristic",
     **kwargs,
 ) -> list[pandas.DataFrame]:
     """Process tabular data files from multiple groups and build knowledge graph.
@@ -357,12 +380,22 @@ def get_tabular_data(
     logger.info(f"Adding tabular experimental data for {len(group_identifiers)} groups")
     files_read = []
     cols_read = []
+    quality_check_method = quality_check_method or 'heuristic'
     for group_identifier, file_paths, file_ids in tqdm.tqdm(
         tabular_iterator, total=len(group_identifiers)
     ):
         for fp, file_id in zip(file_paths, file_ids):
+            t0 = time.perf_counter()
             dfs, read_states = load_file(group_identifier=group_identifier, fp=fp)
+            parse_s = time.perf_counter() - t0
+            TIMER.record("tabular.parse", parse_s)
+            try:
+                TIMER.add("tabular.parse", files=1, bytes=os.path.getsize(fp))
+            except OSError:
+                TIMER.add("tabular.parse", files=1)
             for df, read_state in zip(dfs, read_states):
+                read_state["file_id"] = file_id
+                read_state["parse_seconds"] = round(parse_s, 4)
                 files_read.append(read_state)
                 if df is not None:
                     tabular_dataset = TabularDataset(
@@ -371,11 +404,14 @@ def get_tabular_data(
                         table=df,
                     )
                     ## try to ground everything in the dataframe
+                    t0 = time.perf_counter()
                     tabular_dataset.ground_table(biolink_entity_types=True)
+                    t1 = time.perf_counter()
                     ## quality check groundings and only select those that pass ##
                     quality_check_groundings(
                         qc_method=quality_check_method, table=tabular_dataset, **kwargs
                     )
+                    t2 = time.perf_counter()
                     node_set, edge_set = extract_df_graph(
                         tabular_dataset,
                         group_identifier,
@@ -383,6 +419,13 @@ def get_tabular_data(
                         node_set=node_set,
                         edge_set=edge_set,
                     )
+                    t3 = time.perf_counter()
+                    TIMER.record("tabular.grounding", t1 - t0)
+                    TIMER.record("tabular.column_selection", t2 - t1)
+                    TIMER.record("tabular.extract", t3 - t2)
+                    read_state["grounding_seconds"] = round(t1 - t0, 4)
+                    read_state["column_selection_seconds"] = round(t2 - t1, 4)
+                    read_state["extract_seconds"] = round(t3 - t2, 4)
                     for col in tabular_dataset.entity_columns:
                         cols_read.append(
                             {
@@ -393,7 +436,9 @@ def get_tabular_data(
                                 "col": col,
                             }
                         )
-        write_graph(node_set=node_set, edge_set=edge_set)
+        ## checkpoint the graph after each group (timed separately: it's I/O, not processing)
+        with TIMER.stage("tabular.checkpoint_write"):
+            write_graph(node_set=node_set, edge_set=edge_set)
     files_df = pandas.DataFrame(data=files_read)
     cols_df = pandas.DataFrame(data=cols_read)
     if write_reports:

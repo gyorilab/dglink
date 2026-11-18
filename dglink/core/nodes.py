@@ -1,5 +1,14 @@
+import math
 import os
 import polars as pl
+
+from .tsv import clean_tsv_text
+
+def _is_empty(val) -> bool:
+    ## standardize empty data representation (pandas fills missing cells with NaN)
+    if val is None or (isinstance(val, float) and math.isnan(val)):
+        return True
+    return str(val).replace('"', "").replace("'", "").strip() in ("", "None")
 
 
 class Node:
@@ -68,21 +77,26 @@ class NodeSet:
             rep += f"{node}:{str(self.nodes[node])}\n"
         return rep
 
-    def update_nodes(self, new_node: dict, new_node_id=None):
+    def update_nodes(self, new_node: dict, new_node_id=None, fill_empty: bool = False):
+        """Add a node, or merge into an existing one. string[] attributes are unioned;
+        other attributes keep their first value unless `fill_empty`, in which case an
+        empty value is filled in (an existing value is never overwritten)."""
         self.set_attributes = [x for x in self.attributes if "string[]" in x]
         new_node_id = new_node_id or new_node.get("curie:ID", "no_id")
         if new_node_id in self.nodes:
-            for attribute in self.set_attributes:
+            for attribute in self.attributes:
                 attr_val = new_node.get(attribute, "")
-                if attribute not in self.set_attributes:
-                    ## standardize empty data representation
-                    if attr_val.replace('"', "").replace("'", "") != "":
-                        self.nodes[new_node_id][attribute].add(attr_val)
-                else:
+                if attribute in self.set_attributes:
                     attr_val = set([attr_val]) if type(attr_val) == str else attr_val
                     self.nodes[new_node_id][attribute] = self.nodes[new_node_id][
                         attribute
                     ].union(attr_val)
+                elif (
+                    fill_empty
+                    and _is_empty(self.nodes[new_node_id][attribute])
+                    and not _is_empty(attr_val)
+                ):
+                    self.nodes[new_node_id][attribute] = attr_val
         else:
             self.nodes[new_node_id] = dict()
             for attribute in self.attributes:
@@ -130,15 +144,18 @@ class NodeSet:
                 for col in self.attributes:
                     val = self.nodes[curie][col]
                     if type(val) == set:
-                        if len(val) > 20:
-                            val = list(val)[:20]
+                        ## sort for deterministic output, then take max of 20
+                        val = sorted(val, key=str)[:20]
+                        items = (clean_tsv_text(v, array_item=True) for v in val)
                         joined = ";".join(
-                            v for v in val if v
+                            v for v in items if v
                         )  # also skip empty strings within the set
                         val = f'"{joined}"' if joined else ""
                     elif val is None or val == "None":
                         val = ""
-                    write_str += f"{val}".replace("\n", "") + "\t"
+                    else:
+                        val = clean_tsv_text(val)
+                    write_str += f"{val}" + "\t"
                 write_str = write_str.replace('""', "")
                 f.write(write_str[:-1] + "\n")
 

@@ -12,15 +12,32 @@ Run as a script against a graph directory::
 
 from collections import Counter
 from functools import lru_cache
+from importlib.resources import files
 import re
 import sys
 
-import bmt
+from dglink.core.optional_deps import import_optional
+
+bmt = import_optional("bmt", "validate_kg")
+
+## pinned in pyproject.toml; the schema is read from the installed biolink-model
+## package rather than bmt's default (an older release fetched from GitHub)
+BIOLINK_MODEL_VERSION = "4.4.3"
+BIOLINK_PREDICATE_MAP_URL = (
+    "https://raw.githubusercontent.com/biolink/biolink-model/"
+    f"v{BIOLINK_MODEL_VERSION}/predicate_mapping.yaml"
+)
 
 
 @lru_cache(maxsize=1)
 def _toolkit() -> "bmt.Toolkit":
-    return bmt.Toolkit()
+    schema = files("biolink_model.schema").joinpath("biolink_model.yaml")
+    toolkit = bmt.Toolkit(schema=str(schema), predicate_map=BIOLINK_PREDICATE_MAP_URL)
+    if toolkit.get_model_version() != BIOLINK_MODEL_VERSION:
+        raise RuntimeError(
+            f"installed biolink-model is {toolkit.get_model_version()}, expected {BIOLINK_MODEL_VERSION}"
+        )
+    return toolkit
 
 
 def _candidate_names(label: str):
@@ -99,21 +116,51 @@ def validate_edge_set(edge_set) -> dict:
     return dict(bad)
 
 
+def find_dangling_edges(node_set, edge_set) -> dict:
+    """Count edges whose ``:START_ID`` or ``:END_ID`` is not a node in ``node_set``.
+
+    Returns ``{raw_type: count}`` (falling back to ``:TYPE``) so the source of the
+    dangling edges is easy to trace.
+    """
+    bad = Counter()
+    for edge in edge_set.edges.values():
+        if (
+            edge.get(":START_ID") not in node_set.nodes
+            or edge.get(":END_ID") not in node_set.nodes
+        ):
+            raw = edge.get("raw_type:string[]")
+            if isinstance(raw, (set, list, tuple)):
+                raw = ";".join(sorted(map(str, raw)))
+            bad[raw or edge.get(":TYPE", "") or "<untyped>"] += 1
+    return dict(bad)
+
+
+def count_untyped_edges(edge_set) -> int:
+    """Count edges with a missing or empty ``:TYPE``."""
+    return sum(
+        1 for edge in edge_set.edges.values() if not str(edge.get(":TYPE") or "").strip()
+    )
+
+
 def validate_graph(node_set, edge_set) -> dict:
     """Validate a NodeSet/EdgeSet pair. Returns a report dict.
 
     ``conformant`` is True only when no node label and no edge type violates the
-    Biolink model.
+    Biolink model, no edge is untyped, and no edge points at a missing node.
     """
     bad_labels = validate_node_set(node_set)
     bad_types = validate_edge_set(edge_set)
+    dangling = find_dangling_edges(node_set, edge_set)
+    untyped = count_untyped_edges(edge_set)
     return {
         "biolink_version": _toolkit().get_model_version(),
         "n_nodes": len(node_set),
         "n_edges": len(edge_set),
         "invalid_node_labels": bad_labels,
         "invalid_edge_types": bad_types,
-        "conformant": not bad_labels and not bad_types,
+        "dangling_edges": dangling,
+        "n_untyped_edges": untyped,
+        "conformant": not bad_labels and not bad_types and not dangling and not untyped,
     }
 
 
@@ -136,6 +183,14 @@ def _print_report(report: dict) -> None:
             print(f"  {n:>10,}  {type_!r}")
     else:
         print("All edge types are valid Biolink predicates. ✓")
+    print(f"\nuntyped edges: {report['n_untyped_edges']:,}")
+    if report["dangling_edges"]:
+        total = sum(report["dangling_edges"].values())
+        print(f"DANGLING edges (endpoint not in nodes): {total:,}, by raw type:")
+        for type_, n in sorted(report["dangling_edges"].items(), key=lambda kv: -kv[1]):
+            print(f"  {n:>10,}  {type_!r}")
+    else:
+        print("No dangling edges. ✓")
     print(f"\nCONFORMANT: {report['conformant']}")
 
 
