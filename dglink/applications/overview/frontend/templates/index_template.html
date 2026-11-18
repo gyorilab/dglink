@@ -321,6 +321,16 @@
     .bench-legend .swatch.api { background: var(--stripe-gray); }
     .bench-legend .swatch.kg { background: var(--teal); }
     .bench-sub { font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-top: 1.1rem; }
+
+    /* Phones: tighten padding and let wide tables and code scroll in place */
+    @media (max-width: 720px) {
+      .container { padding: 1rem .75rem 2rem; }
+      .hero { padding: 1.4rem 1.1rem; }
+      .hero .page-title { font-size: 1.6rem; line-height: 1.25; }
+      .prov-table, .bench-compare, .md-body table { display: block; overflow-x: auto; }
+      .cypher { overflow-x: auto; max-width: 100%; }
+      .browser-row > div, .figure-img, .figure-caption { min-width: 0; }
+    }
   </style>
 </head>
 <body>
