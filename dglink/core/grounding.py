@@ -29,23 +29,16 @@ DEFAULT_BIOLINK_CATEGORY = "biolink:NamedThing"
 ## (least recently used texts are dropped, and re-grounded if seen again)
 ANNOTATE_CACHE_SIZE = 2**20
 
-## Grounder used by this module, None means Gilda's default grounder
-_grounder = None
+## Each function below takes an optional Gilda `grounder`, None means Gilda's
+## default grounder
 
 
-def set_grounder(grounder: gilda.Grounder | None) -> None:
-    """Set the Gilda grounder used for grounding, None restores Gilda's default."""
-    global _grounder
-    _grounder = grounder
-    annotate_text.cache_clear()
+def _ground(text: str, context: str | None = None, grounder=None):
+    return (grounder or gilda.get_grounder()).ground(text, context=context)
 
 
-def _ground(text: str, context: str | None = None):
-    return (_grounder or gilda.get_grounder()).ground(text, context=context)
-
-
-def _annotate(text: str, context: str | None = None):
-    return gilda.ner.annotate(text, grounder=_grounder, context_text=context)
+def _annotate(text: str, context: str | None = None, grounder=None):
+    return gilda.ner.annotate(text, grounder=grounder, context_text=context)
 
 
 def slugify(name: str) -> str:
@@ -56,7 +49,8 @@ def slugify(name: str) -> str:
     )
 
 
-def _best_match(text: str, score_threshold: float, min_span_fraction: float, context: str | None = None):
+def _best_match(text: str, score_threshold: float, min_span_fraction: float, context: str | None = None,
+                grounder: gilda.Grounder | None = None):
     """Best gilda match for `text`, or None.
 
     First tries to ground the whole string with `gilda.ground` (the most specific match);
@@ -72,14 +66,14 @@ def _best_match(text: str, score_threshold: float, min_span_fraction: float, con
         return None
 
     ## 1) prefer a grounding of the entire string
-    full = _ground(text, context=context)
+    full = _ground(text, context=context, grounder=grounder)
     if full and full[0].score >= score_threshold:
         return full[0]
 
     ## 2) fall back to the longest grounded span within the string. Without a context,
     ## gilda.annotate uses `text` itself as the context
     best_match, best_span = None, -1
-    for annotation in _annotate(text, context=context):
+    for annotation in _annotate(text, context=context, grounder=grounder):
         if not annotation.matches:
             continue
         top = annotation.matches[0]  # gilda returns matches best-score-first
@@ -91,13 +85,14 @@ def _best_match(text: str, score_threshold: float, min_span_fraction: float, con
     return best_match
 
 
-def ground_term(text: str, score_threshold: float = GROUNDING_SCORE_THRESHOLD) -> tuple:
+def ground_term(text: str, score_threshold: float = GROUNDING_SCORE_THRESHOLD,
+                grounder: gilda.Grounder | None = None) -> tuple:
     """Return a (normalized_name, curie, iri) triple for `text`.
 
     curie/iri are None when `text` is empty or nothing grounds, so callers can detect
     failure and fall back to a portal-local id. See `_best_match` for the matching rules.
     """
-    match = _best_match(text, score_threshold, min_span_fraction=0.0)
+    match = _best_match(text, score_threshold, min_span_fraction=0.0, grounder=grounder)
     if match is None:
         return text, None, None
     term = match.term
@@ -119,15 +114,15 @@ class TextGrounding(NamedTuple):
 
 
 @lru_cache(maxsize=ANNOTATE_CACHE_SIZE)
-def annotate_text(text: str) -> TextGrounding | None:
+def annotate_text(text: str, grounder: gilda.Grounder | None = None) -> TextGrounding | None:
     """Top match of the first span `gilda.annotate` finds in `text`, or None.
 
     The tabular grounding strategy: unlike `ground_entity` there is no score threshold and
-    no whole-string match first. A pure function of the text, so it is cached across
-    columns, tables and portals; callers apply their own exclusions (e.g. a table's
-    terms_to_exclude) to the result.
+    no whole-string match first. A pure function of the text and the grounder, so it is
+    cached across columns, tables and portals; callers apply their own exclusions (e.g. a
+    table's terms_to_exclude) to the result.
     """
-    ans = _annotate(text)
+    ans = _annotate(text, grounder=grounder)
     if not ans:
         return None
     term = ans[0].matches[0].term
@@ -145,6 +140,7 @@ def ground_entity(
     score_threshold: float = GROUNDING_SCORE_THRESHOLD,
     min_span_fraction: float = 0.0,
     context: str | None = None,
+    grounder: gilda.Grounder | None = None,
 ) -> tuple:
     """Return a (normalized_name, curie, iri, biolink_category) tuple for `text`.
 
@@ -153,7 +149,7 @@ def ground_entity(
     the text, and can take a `context` to disambiguate with (see `_best_match`).
     curie/iri/category are None when nothing grounds.
     """
-    match = _best_match(text, score_threshold, min_span_fraction, context=context)
+    match = _best_match(text, score_threshold, min_span_fraction, context=context, grounder=grounder)
     if match is None:
         return text, None, None, None
     term = match.term
