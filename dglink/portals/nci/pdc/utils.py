@@ -22,7 +22,10 @@ lazzy_get = lambda d, x: f"{d.get(x, f'{x}_missing')}"
 
 
 def _disease_curie(name: str) -> str:
-    """Mint a stable `pdc:` CURIE for a disease/site name (names are not UUIDs)."""
+    """Mint a stable `pdc:` CURIE for a disease/site name.
+
+    Names are not UUIDs.
+    """
     slug = re.sub(r"[^a-z0-9]+", "_", name.strip().lower()).strip("_")
     return pdc_curie(f"disease_{slug}")
 
@@ -35,10 +38,13 @@ def _add_disease(
     primary_site: str = "",
     source: str = "structural_information",
 ):
-    """Add a grounded biolink:Disease *concept* node for `disease_type` and link
-    `parent` -> disease. The disease name is grounded to an ontology curie (shared with
-    GC/PDC so the concept merges across portals); the node holds only identity, while
-    disease_type / primary_site ride on the parent -> disease edge."""
+    """Add a grounded biolink:Disease concept node for `disease_type`.
+
+    Links `parent` -> disease. The disease name is grounded to an ontology
+    curie (shared with GC/PDC so the concept merges across portals). The node
+    holds only identity, while disease_type / primary_site are stored on the
+    parent -> disease edge.
+    """
     if not disease_type:
         return
     name, disease_curie, iri = ground_term(disease_type)
@@ -77,11 +83,14 @@ def get_program_hierarchy(
     """Build the program -> project -> study structural subgraph.
 
     Every node carries a valid Biolink category in :LABEL (with the PDC-native
-    type kept in raw_label) and a `pdc:`-prefixed CURIE id. Study-level disease
-    types are emitted as biolink:Disease nodes linked to the study.
+    type kept in raw_label) and a `pdc:`-prefixed CURIE id. Study-level
+    disease types are emitted as biolink:Disease nodes linked to the study.
 
-    Returns the list of study UUIDs discovered, so the caller can pull each
-    study's biospecimen hierarchy without re-fetching the program tree.
+    Returns
+    -------
+    list[str]
+        The list of study UUIDs discovered, so the caller can pull each
+        study's biospecimen hierarchy without re-fetching the program tree.
     """
     study_ids: list[str] = []
     for program in client.get_program_hierarchy():
@@ -172,14 +181,16 @@ def get_biospecimen_hierarchy(
 ):
     """Build the study -> case -> sample -> aliquot biospecimen subgraph.
 
-    For each study we pull `biospecimenPerStudy` and emit: the case (linked to its
-    study via has_part), the sample (derives_from the case) and the aliquot
-    (derives_from the sample). Disease/site/sample-type metadata is attached to the
-    relevant nodes; the human-readable submitter ids are kept as aliases, not nodes.
+    For each study we pull `biospecimenPerStudy` and emit: the case (linked to
+    its study via has_part), the sample (derives_from the case) and the
+    aliquot (derives_from the sample). Disease/site/sample-type metadata is
+    attached to the relevant nodes, and the human-readable submitter ids are
+    kept as aliases, not nodes.
 
-    When `include_biospecimen` is False the sample and aliquot (biolink:MaterialSample)
-    nodes/edges are skipped; the case nodes and their disease links are still emitted,
-    since those are the meaningful clinical metadata (and the extraction anchor).
+    When `include_biospecimen` is False the sample and aliquot
+    (biolink:MaterialSample) nodes/edges are skipped. The case nodes and their
+    disease links are still emitted, since those are the meaningful clinical
+    metadata (and the extraction anchor).
     """
     for study_id in study_ids:
         study_curie = pdc_curie(study_id)
@@ -278,14 +289,17 @@ def get_metadata_graph(
     edge_set: EdgeSet,
     include_biospecimen: bool = True,
 ):
-    """Build the full PDC structural/metadata subgraph (program -> project -> study
-    -> case -> sample -> aliquot, plus disease nodes) into the node/edge sets.
-    Analogous to GDC's get_case_hierarchy and GC's get_metadata_graph.
+    """Build the full PDC structural/metadata subgraph.
 
-    Set `include_biospecimen=False` to omit the sample/aliquot (biolink:MaterialSample)
-    scaffolding while keeping the program/project/study tree, the cases and all disease
-    links. No content is extracted from specimen nodes, so this is a lossless prune for
-    the extraction / cross-portal-integration story.
+    The subgraph is program -> project -> study -> case -> sample -> aliquot,
+    plus disease nodes, added to the node/edge sets. Analogous to GDC's
+    get_case_hierarchy and GC's get_metadata_graph.
+
+    Set `include_biospecimen=False` to omit the sample/aliquot
+    (biolink:MaterialSample) scaffolding while keeping the
+    program/project/study tree, the cases and all disease links. No content is
+    extracted from specimen nodes, so this is a lossless prune for the
+    extraction / cross-portal-integration story.
     """
     study_ids = get_program_hierarchy(client, node_set, edge_set)
     get_biospecimen_hierarchy(
@@ -298,9 +312,9 @@ def download_tabular_files(client: NciProteomicCommonsClient, study_list: list[s
     """Download tabular files for the given studies into the PDC cache.
 
     Ensures each study's files are recorded in the study -> file manifest
-    (study_to_files.tsv) via client.get_study_files (cached, so re-runs are cheap),
-    selects the tabular ones, and hands them to client.download_files, which skips
-    any file already present on disk.
+    (study_to_files.tsv) via client.get_study_files (cached, so re-runs are
+    cheap), selects the tabular ones, and hands them to client.download_files,
+    which skips any file already present on disk.
     """
     file_ids = []
     for study_id in study_list:
@@ -321,12 +335,20 @@ def download_tabular_files(client: NciProteomicCommonsClient, study_list: list[s
 
 
 def get_tabular_iterator(study_list: list[str] | None = None) -> tuple[list, Iterator]:
-    """Return (group_ids, iterator) over downloaded tabular files, grouped by study.
+    """Return group ids and an iterator over downloaded tabular files.
 
-    The group id is the pdc: CURIE of the study so grounded-entity edges attach to the
-    study node. The iterator yields (study_curie, file_paths, file_ids) tuples, matching
-    the shape get_tabular_data expects. Only downloaded files (non-null manifest `path`)
+    The files are grouped by study. The group id is the pdc: CURIE of the
+    study so grounded-entity edges attach to the study node. The iterator
+    yields (study_curie, file_paths, file_ids) tuples, matching the shape
+    get_tabular_data expects. Only downloaded files (non-null manifest `path`)
     of a tabular format are included.
+
+    Returns
+    -------
+    group_ids : list
+        The group ids.
+    iterator : Iterator
+        The iterator over (study_curie, file_paths, file_ids) tuples.
     """
     manifest = NCI_PDC_CACHE_DIR.joinpath("study_to_files.tsv")
     files_df = pl.read_csv(manifest, separator="\t").cast({"study_id": pl.String})

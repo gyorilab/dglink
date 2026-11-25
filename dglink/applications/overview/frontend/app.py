@@ -1,4 +1,4 @@
-"""DGLink Overview — a landing page for the DGLink tool suite.
+"""Serve DGLink Overview, a landing page for the DGLink tool suite.
 
 Serves a single info page that describes DGLink, shows summary statistics for
 the active knowledge graph (by default the merged CRDC graph mounted at
@@ -189,7 +189,17 @@ EXAMPLE_ANSWERS = _load_example_answers()
 
 
 def _read_tsv_header_and_rows(path):
-    """Yield (header list, row iterator) for a large TSV without loading it all."""
+    """Open a large TSV without loading it all.
+
+    Returns
+    -------
+    header : list
+        The column names.
+    reader : csv.reader
+        An iterator over the remaining rows.
+    f : file
+        The open file, to be closed by the caller.
+    """
     csv.field_size_limit(10 ** 7)  # graph cells (descriptions) can be long
     f = open(path, newline='')
     reader = csv.reader(f, delimiter='\t')
@@ -198,7 +208,10 @@ def _read_tsv_header_and_rows(path):
 
 
 def _expand_portals(cell):
-    """Portal cells look like ``"gc;gdc;pdc"`` (quoted, semicolon-joined)."""
+    """Split a portal cell into a list of portals.
+
+    Portal cells look like ``"gc;gdc;pdc"`` (quoted, semicolon-joined).
+    """
     cell = (cell or '').strip().strip('"')
     return [p for p in cell.split(';') if p]
 
@@ -211,8 +224,11 @@ _split_list = _expand_portals
 def compute_stats(graph_dir=GRAPH_DIR):
     """Summarize the graph TSVs into the numbers the landing page renders.
 
-    Returns None if the graph files are not present, so the page can degrade
-    gracefully rather than crash.
+    Returns
+    -------
+    dict | None
+        The summary numbers, or None if the graph files are not present, so
+        the page can degrade gracefully rather than crash.
     """
     nodes_path = os.path.join(graph_dir, 'nodes.tsv')
     edges_path = os.path.join(graph_dir, 'edges.tsv')
@@ -477,7 +493,10 @@ def index():
 
 @bp.route('/run', methods=['POST'])
 def run():
-    """Proxy a natural-language MCP query to the backend and stream the reply."""
+    """Proxy a natural-language MCP query to the backend.
+
+    The reply is streamed back.
+    """
     try:
         data = request.json or {}
         response = requests.post(

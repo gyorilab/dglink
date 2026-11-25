@@ -3,17 +3,20 @@ Score the benchmark.
 
 Two layers, kept deliberately separate:
 
-1. OBJECTIVE metrics (no ground truth needed) — turns, tokens, latency, cost per arm.
-   These directly substantiate "the API-only agent is slower and does more work".
+1. OBJECTIVE metrics (no ground truth needed): turns, tokens, latency, cost
+   per arm. These directly substantiate "the API-only agent is slower and
+   does more work".
 
-2. CORRECTNESS (needs human labels in labels_to_fill.csv) — per-arm accuracy against a
-   *curated* verdict. We report this as the primary correctness number.
+2. CORRECTNESS (needs human labels in labels_to_fill.csv): per-arm accuracy
+   against a *curated* verdict. We report this as the primary correctness
+   number.
 
-   We also compute the "agreement analysis" the benchmark notes described (things one arm
-   found that the other didn't). IMPORTANT: that analysis treats the union of the two
-   agents as ground truth, so it silently ignores anything BOTH miss — it inflates recall
-   and is circular for the headline claim. It is reported as a clearly-labelled SECONDARY
-   view only. Prefer the curated accuracy for any claim you put in front of your PI.
+   We also compute the "agreement analysis" the benchmark notes described
+   (things one arm found that the other didn't). IMPORTANT: that analysis
+   treats the union of the two agents as ground truth, so it silently ignores
+   anything BOTH miss. It inflates recall and is circular for the headline
+   claim. It is reported as a clearly-labeled SECONDARY view only. Prefer the
+   curated accuracy for any claim you put in front of your PI.
 
 Usage:
     python scripts/benchmark/score.py
@@ -40,7 +43,11 @@ def load_gold() -> dict:
 
 
 def load_panel_questions() -> dict:
-    """id -> {gold_field, panel}, from questions_panel.jsonl (if present)."""
+    """Return the gold field and panel of each panel question.
+
+    The questions are read from questions_panel.jsonl, if present, into a dict
+    from question id to {gold_field, panel}.
+    """
     p = HERE / "questions_panel.jsonl"
     if not p.exists():
         return {}
@@ -54,7 +61,7 @@ def load_panel_questions() -> dict:
 
 
 def gold_positive_set(gold: dict, panel: list, field: str) -> set:
-    """Genes in the panel whose gold label for `field` is True."""
+    """Return the genes in the panel whose gold label for `field` is True."""
     pos = set()
     for g in panel:
         cana = (gold.get(g, {}).get("cananolab") or {}).get("present")
@@ -118,7 +125,10 @@ def panel_scoring(results: list[dict]) -> None:
 
 
 def load_labels() -> dict:
-    """(id, arm) -> verdict, from the human-filled sheet (blank rows ignored)."""
+    """Return the verdict for each (id, arm) in the human-filled sheet.
+
+    Blank rows are ignored.
+    """
     p = HERE / "labels_to_fill.csv"
     if not p.exists():
         return {}

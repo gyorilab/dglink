@@ -3,7 +3,8 @@ Base class and shared helpers for column selectors.
 
 A column selector decides which grounded columns of a TabularDataset contain
 biomedical entities. Selectors mutate the table in place: grounding columns of
-rejected columns are dropped and `table.entity_columns` is set to the kept columns.
+rejected columns are dropped and `table.entity_columns` is set to the kept
+columns.
 """
 from abc import ABC, abstractmethod
 import logging
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def grounding_columns(col: str) -> list[str]:
-    """All grounding-derived column names for an original column."""
+    """Return all grounding-derived column names for an original column."""
     return [f"{col}_{suffix}" for suffix in GROUNDING_SUFFIXES]
 
 
@@ -25,15 +26,20 @@ class ColumnSelector(ABC):
     def execute(self, table: TabularDataset, verbose: bool = False, columns: list | None = None) -> None:
         """Select entity columns, mutating `table` in place.
 
-        Parameters:
-            table: table to process
-            verbose: if to show log info
-            columns (optional): list of columns to check. If not given will use original columns
+        Parameters
+        ----------
+        table : TabularDataset
+            The table to process.
+        verbose : bool
+            If True, log information about the selection.
+        columns : list | None
+            The columns to check. If not given, the original columns are
+            used.
         """
 
     @abstractmethod
     def check_column(self, table: TabularDataset, col: str, verbose: bool = False) -> bool:
-        """Check if a single column contains entities"""
+        """Check if a single column contains entities."""
 
     @staticmethod
     def _resolve_columns(table: TabularDataset, columns: list | None) -> list:
@@ -41,7 +47,7 @@ class ColumnSelector(ABC):
 
     @staticmethod
     def _apply_selection(table: TabularDataset, keep: list[str], drop: list[str]) -> None:
-        """Drop grounding columns of rejected columns and record the kept entity columns."""
+        """Drop grounding columns of rejected columns and record kept ones."""
         cols_to_drop = [c for col in drop for c in grounding_columns(col)]
         table.table.drop(columns=cols_to_drop, inplace=True)
         table.entity_columns = keep

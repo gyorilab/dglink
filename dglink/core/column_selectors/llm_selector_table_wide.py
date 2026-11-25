@@ -1,5 +1,5 @@
 """
-Select entity columns using a single LLM call over the whole table
+Select entity columns using a single LLM call over the whole table.
 """
 
 from dglink.core.tabular_dataset import TabularDataset
@@ -46,8 +46,10 @@ class LLMSelectorTableWide(ColumnSelector):
         self.llm_client: LLMClient = make_llm_client(self.provider, self.model)
 
     def check_column(self, table: TabularDataset, col: str, verbose: bool = False) -> bool:
-        """
-        Does not really make sense to just do one column so this is run with the column-wise llm selector
+        """Check if a single column contains entities.
+
+        Checking one column at a time does not fit a table-wide call, so this
+        is run with the column-wise LLM selector.
         """
         selector = LLMSelector(
             provider=self.provider,
@@ -82,9 +84,10 @@ class LLMSelectorTableWide(ColumnSelector):
             self._log_selection(starting_cols, table)
 
     def process_response(self, matching_cols: dict, table: TabularDataset):
-        """
-        use the schema match to:
-            1. drop cols if not matched
+        """Apply the schema match to the table.
+
+        The schema match is used to:
+            1. drop columns that were not matched
             2. set values grounded to any other entity type to NA
         """
         keep, drop = [], []
@@ -99,7 +102,10 @@ class LLMSelectorTableWide(ColumnSelector):
         self._apply_selection(table, keep=keep, drop=drop)
 
     def get_llm_prompt_batch(self, table: TabularDataset, columns: list | None = None) -> tuple[str, str]:
-        """Build (context, prompt). The prompt is "" if no column qualifies for evaluation."""
+        """Build the context and prompt for evaluating columns in one call.
+
+        The prompt is "" if no column qualifies for evaluation.
+        """
         df = table.table
         table_len = len(df)
         column_infos = []
@@ -174,11 +180,18 @@ class LLMSelectorTableWide(ColumnSelector):
         return model_context, model_prompt
 
     def call_llm_batch(self, llm_prompt: tuple[str, str]) -> dict[str, dict[str, float]]:
-        """
-        Call LLM to evaluate multiple columns at once.
+        """Call the LLM to evaluate multiple columns at once.
 
-        Returns:
-            dict mapping column_name -> {entity_type: probability}, normalized to sum to 1
+        Parameters
+        ----------
+        llm_prompt : tuple[str, str]
+            The context and prompt of the call.
+
+        Returns
+        -------
+        dict[str, dict[str, float]]
+            A dict mapping each column name to a dict of entity type
+            probabilities, normalized to sum to 1.
         """
         call_context, call_prompt = llm_prompt
         if call_prompt == "":

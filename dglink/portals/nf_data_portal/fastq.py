@@ -30,8 +30,18 @@ def _add_edge(edge_set: EdgeSet, start_id: str, end_id: str, edge_type: str) -> 
 def _ground_and_add_node(raw_text: str, node_set: NodeSet) -> Tuple[str, str] | None:
     """Ground a free-text term with gilda and add the resulting node.
 
-    Returns the grounded ``(curie, label)`` pair, or ``None`` if the text could
-    not be grounded to an ontology term.
+    Parameters
+    ----------
+    raw_text : str
+        The free text to ground.
+    node_set : NodeSet
+        The node set to add the grounded node to.
+
+    Returns
+    -------
+    Tuple[str, str] | None
+        The grounded ``(curie, label)`` pair, or ``None`` if the text could not
+        be grounded to an ontology term.
     """
     ann = gilda.annotate(raw_text)
     if not ann or not ann[0].matches:
@@ -57,15 +67,15 @@ def _ground_and_add_node(raw_text: str, node_set: NodeSet) -> Tuple[str, str] | 
 def get_fastq_metadata(project_list:list[str], node_set:NodeSet, edge_set:EdgeSet, write_set:bool = False) -> Tuple[NodeSet, EdgeSet]:
     """Extract knowledge-graph nodes and edges from fastq file annotations.
 
-    Crawls the given projects for ``.fastq.gz`` files, pulls each file's Synapse
-    annotations, and populates ``node_set``/``edge_set`` in place with the
-    sequencing-experiment subgraph. For every annotated file this produces:
+    Crawls the given projects for ``.fastq.gz`` files, pulls each file's
+    Synapse annotations, and populates ``node_set``/``edge_set`` in place with
+    the sequencing-experiment subgraph. For every annotated file this produces:
 
     - a ``sequencing_experiment`` node keyed by the file's syn id, carrying the
-      :data:`~.constants.EXPERIMENT_FIELDS`;
+      :data:`~.constants.EXPERIMENT_FIELDS`,
     - a ``specimen`` node (when ``specimenID`` is present) carrying the
       :data:`~.constants.SPECIMEN_FIELDS`, linked to its file via
-      ``has_sequencing_experiment`` and to its project via ``has_specimen``;
+      ``has_sequencing_experiment`` and to its project via ``has_specimen``,
     - organism and organ nodes grounded from the free-text ``species`` and
       ``organ`` annotations via gilda, linked back to the specimen/file and
       project (``has_organism`` / ``has_<organ-type>``).
@@ -73,13 +83,23 @@ def get_fastq_metadata(project_list:list[str], node_set:NodeSet, edge_set:EdgeSe
     Edges to the project are only added when the annotation has a ``studyId``.
     Terms that cannot be grounded are skipped.
 
-    Args:
-        project_list: Synapse project ids to crawl (e.g. ``['syn12345678']``).
-        node_set: NodeSet to accumulate nodes into; mutated in place.
-        edge_set: EdgeSet to accumulate edges into; mutated in place.
-        write_set: If to write an intermediate result
-    Returns:
-        Updated NodeSet and EdgeSet.
+    Parameters
+    ----------
+    project_list : list[str]
+        Synapse project ids to crawl (e.g. ``['syn12345678']``).
+    node_set : NodeSet
+        NodeSet to accumulate nodes into, mutated in place.
+    edge_set : EdgeSet
+        EdgeSet to accumulate edges into, mutated in place.
+    write_set : bool
+        If True, write an intermediate result.
+
+    Returns
+    -------
+    node_set : NodeSet
+        The updated NodeSet.
+    edge_set : EdgeSet
+        The updated EdgeSet.
     """
     pf = get_projects_files(project_ids=project_list)
     genomic_files = pf.filter(pl.col('file_name').str.ends_with('.fastq.gz'))

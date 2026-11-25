@@ -22,7 +22,7 @@ NS_PATTERNS = {
 }
 
 def _normalize_publication_id(id, namespace = 'pmid')->Tuple[str|None, str|None]:
-    """normalize a curie for either pubmed or DOI, and return the corresponding IRI if possible ."""
+    """Normalize a PubMed or DOI curie and return its IRI if possible."""
     namespace_pattern = NS_PATTERNS.get(namespace, None)
     if namespace_pattern is None:
         raise ValueError(f"{namespace} is invalid try {list(NS_PATTERNS)}")
@@ -39,14 +39,14 @@ def _normalize_publication_id(id, namespace = 'pmid')->Tuple[str|None, str|None]
 
 
 def publication_curie(pub: dict) -> str | None:
-    """the id a publication node gets: its PMID, with its DOI as fallback."""
+    """Return the id of a publication node, its PMID or else its DOI."""
     pmid_curie, _ = _normalize_publication_id(pub.get("pmid", ''), 'pmid')
     doi_curie, _ = _normalize_publication_id(pub.get("doi", ''), 'doi')
     return pmid_curie or doi_curie
 
 
 def _tools_publication_to_portal(pub: dict) -> dict:
-    """rename a tools db publication row to the portal table's field names."""
+    """Rename a tools db publication row to the portal table's field names."""
     year = pub.get("year")
     date = pub.get("publicationDate")
     ## the tools db year column is almost always empty, the date is usually filled
@@ -62,7 +62,9 @@ def _tools_publication_to_portal(pub: dict) -> dict:
 
 
 def parse_publication_nodes(pub:dict, node_set: NodeSet, source = ("publications",))->Tuple[NodeSet, str|None]:
-    """Extract publication node and attributes. `pub` uses the portal table's field names.
+    """Extract a publication node and its attributes.
+
+    `pub` uses the portal table's field names.
     """
     _, doi_iri = _normalize_publication_id(pub.get("doi", ''), 'doi')
     _, pmid_iri = _normalize_publication_id(pub.get("pmid", ''), 'pmid')
@@ -94,27 +96,46 @@ def parse_publication_nodes(pub:dict, node_set: NodeSet, source = ("publications
     return node_set, curie
 
 def get_publications(node_set: NodeSet, edge_set: EdgeSet, project_ids: list | None = None, write_set:bool = True):
-    """Extracts publication nodes and associated edges (also adds nodes if does not exist).
-    Every publication in the portal publications table and the NF tools db publications table
-    is added; a paper in both is one node, with the portal record filling fields first.
-    Study links come only from the portal table; if `project_ids` is given, only links to
-    those studies are kept (otherwise a stub Study is made for each studyId).
-    Tools db papers are tagged with both the `publications` and `tools` source, and add no
-    author nodes: their names are abbreviated ("Harada M") so would not merge with portal
-    authors, and the authors can be recovered from the PMID.
-    For publication node extracts the following features
+    """Extract publication nodes and associated edges.
+
+    Also adds the nodes at the end of the edges if they do not exist.
+
+    Every publication in the portal publications table and the NF tools db
+    publications table is added, and a paper in both is one node, with the
+    portal record filling fields first. Study links come only from the portal
+    table. If `project_ids` is given, only links to those studies are kept
+    (otherwise a stub Study is made for each studyId).
+
+    Tools db papers are tagged with both the `publications` and `tools`
+    source, and add no author nodes: their names are abbreviated ("Harada M")
+    so would not merge with portal authors, and the authors can be recovered
+    from the PMID.
+
+    For a publication node, extracts the following features
+
         - curie: PMID with DOI as fallback
         - name: publication title
         - doi: resolved DOI IRI
         - pmid: resolved PMID IRI
-        - year: publication year (from the publication date for tools db papers).
+        - year: publication year (from the publication date for tools db
+          papers).
         - journal: journal name.
-        - diseaseFocus + manifestation: taken as lists of raw (ungrounded) texts (portal only).
-    Adds the following edges (and nodes if the end of the edge does not yet exist)
-        - publication (biolink:Publication) - (biolink:has_author) -> author (biolink:Agent) (portal only)
-        - publication (biolink:Publication) - (biolink:related_to_at_instance_level) -> funding agency (biolink:Agent)
-        - study (biolink:Study) - (biolink:has_part) -> publication (biolink:Publication)
-        - publication (biolink:Publication) - (biolink:has_part) -> manifestation/disease focus (biolink:Disease, biolink:BiologicalProcess ...) see grounding logic
+        - diseaseFocus + manifestation: taken as lists of raw (ungrounded)
+          texts (portal only).
+
+    Adds the following edges (and nodes if the end of the edge does not yet
+    exist)
+
+        - publication (biolink:Publication) - (biolink:has_author) -> author
+          (biolink:Agent) (portal only)
+        - publication (biolink:Publication) -
+          (biolink:related_to_at_instance_level) -> funding agency
+          (biolink:Agent)
+        - study (biolink:Study) - (biolink:has_part) -> publication
+          (biolink:Publication)
+        - publication (biolink:Publication) - (biolink:has_part) ->
+          manifestation/disease focus (biolink:Disease,
+          biolink:BiologicalProcess ...) see grounding logic
     """
     ## portal publications first, so their fields win on papers in both tables ##
     portal_curies = set()

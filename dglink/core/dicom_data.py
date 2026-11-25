@@ -1,9 +1,10 @@
 """
 Extract knowledge graph information from DICOM files.
 
-This module processes DICOM (Digital Imaging and Communications in Medicine) files
-from Synapse projects to extract medical imaging metadata and extract biomedical
-entities from unstructured text fields into a knowledge graph structure.
+This module processes DICOM (Digital Imaging and Communications in Medicine)
+files from Synapse projects to extract medical imaging metadata and extract
+biomedical entities from unstructured text fields into a knowledge graph
+structure.
 """
 
 from .constants import RESOURCE_PATH, REPORT_PATH, UNSTRUCTURED_DICOM_FIELDS
@@ -34,27 +35,48 @@ def process_dicom(
     dicom_identifiers: set,
     project_granularity: bool = False,
 ) -> tuple[NodeSet, EdgeSet, set, dict]:
-    """Process a single DICOM file and extract metadata into the knowledge graph.
+    """Process a single DICOM file from Synapse into the knowledge graph.
 
-    Reads DICOM headers to extract structured metadata (patient info, series details,
-    modality, etc.) and uses Gilda to ground unstructured text fields to biomedical
-    ontology terms. Supports processing at either series-level or project-level granularity.
+    Reads DICOM headers to extract structured metadata (patient info, series
+    details, modality, etc.) and uses Gilda to ground unstructured text fields
+    to biomedical ontology terms. Uses the file's Synapse annotations to
+    identify its series, and skips files whose series has already been
+    processed. Supports processing at either series-level or project-level
+    granularity.
 
-    Args:
-        file_id: Synapse file ID for the DICOM file (e.g., 'syn12345678')
-        node_set: Existing set of nodes to update
-        edge_set: Existing set of edges to update
-        dicom_identifiers: Set of already-processed series/project identifiers to avoid duplicates
-        project_granularity: If True, process one DICOM per project; if False, process all
-            unique series (identified by studyId, assay, specimenID, individualID, timepoint)
+    Parameters
+    ----------
+    file_id : str
+        Synapse file ID for the DICOM file (e.g., 'syn12345678').
+    node_set : NodeSet
+        Existing set of nodes to update.
+    edge_set : EdgeSet
+        Existing set of edges to update.
+    dicom_identifiers : set
+        Set of already-processed series/project identifiers to avoid
+        duplicates.
+    project_granularity : bool
+        If True, process one DICOM per project. If False, process all unique
+        series (identified by studyId, assay, specimenID, individualID,
+        timepoint).
 
-    Returns:
-        Tuple of (updated node_set, updated edge_set, updated dicom_identifiers, status dict)
-        Status dict contains: project_id, file_id, and able_to_process flag
+    Returns
+    -------
+    node_set : NodeSet
+        The updated node set.
+    edge_set : EdgeSet
+        The updated edge set.
+    dicom_identifiers : set
+        The updated set of processed identifiers.
+    status : dict
+        Status dict containing project_id, file_id, and the able_to_process
+        flag.
 
-    Note:
-        Creates DICOM_series nodes with structured metadata fields and uses entity grounding
-        via Gilda to extract biomedical concepts from unstructured DICOM header fields.
+    Notes
+    -----
+    Creates DICOM_series nodes with structured metadata fields and uses entity
+    grounding via Gilda to extract biomedical concepts from unstructured DICOM
+    header fields.
     """
     source = set(["dicom_data", "experimental_data"])
     able_to_process = True
@@ -166,46 +188,63 @@ def get_dicom_data(
     write_intermediate: bool = True,
     write_reports: bool = True,
 ) -> tuple[NodeSet, EdgeSet, list[pl.DataFrame]]:
-    """Process DICOM files from multiple Synapse projects and build knowledge graph.
+    """Process DICOM files from Synapse projects and build a knowledge graph.
 
-    Main orchestration function that discovers DICOM files (.dcm) in specified projects,
-    extracts medical imaging metadata and grounded biomedical entities, and constructs
-    a knowledge graph. Supports both series-level and project-level processing granularity.
+    Main orchestration function that discovers DICOM files (.dcm) in specified
+    projects, extracts medical imaging metadata and grounded biomedical
+    entities, and constructs a knowledge graph. Supports both series-level and
+    project-level processing granularity.
 
-    Args:
-        project_ids: List of Synapse project IDs to process
-        node_set: Existing set of nodes to update
-        edge_set: Existing set of edges to update
-        write_set: If True, write final knowledge graph to disk
-        project_granularity: If True, process one DICOM per project; if False, process
-            all unique series per project
-        write_intermediate: If True, write graph after each project
-        write_reports: If True, generate TSV reports of processing status
+    Parameters
+    ----------
+    project_ids : list
+        List of Synapse project IDs to process.
+    node_set : NodeSet
+        Existing set of nodes to update.
+    edge_set : EdgeSet
+        Existing set of edges to update.
+    write_set : bool
+        If True, write final knowledge graph to disk.
+    project_granularity : bool
+        If True, process one DICOM per project. If False, process all unique
+        series per project.
+    write_intermediate : bool
+        If True, write graph after each project.
+    write_reports : bool
+        If True, generate TSV reports of processing status.
 
-    Returns:
-        Tuple of (updated node_set, updated edge_set, list of processing report DataFrames)
+    Returns
+    -------
+    node_set : NodeSet
+        The updated node set.
+    edge_set : EdgeSet
+        The updated edge set.
+    reports : list[pl.DataFrame]
+        List of processing report DataFrames.
 
-    Note:
-        Uses Gilda for entity grounding of unstructured DICOM text fields to biomedical
-        ontology terms. Intermediate graphs and reports are written to RESOURCE_PATH/artifacts
-        and REPORT_PATH respectively.
+    Notes
+    -----
+    Uses Gilda for entity grounding of unstructured DICOM text fields to
+    biomedical ontology terms. Intermediate graphs and reports are written to
+    RESOURCE_PATH/artifacts and REPORT_PATH respectively.
 
-    Examples:
-        >>> # Process all series from projects
-        >>> nodes, edges, reports = get_dicom_data(
-        ...     project_ids=['syn12345', 'syn67890'],
-        ...     node_set=NodeSet(),
-        ...     edge_set=EdgeSet(),
-        ...     project_granularity=False
-        ... )
-        >>>
-        >>> # Process one DICOM per project for quick overview
-        >>> nodes, edges, reports = get_dicom_data(
-        ...     project_ids=['syn12345'],
-        ...     node_set=NodeSet(),
-        ...     edge_set=EdgeSet(),
-        ...     project_granularity=True
-        ... )
+    Examples
+    --------
+    >>> # Process all series from projects
+    >>> nodes, edges, reports = get_dicom_data(
+    ...     project_ids=['syn12345', 'syn67890'],
+    ...     node_set=NodeSet(),
+    ...     edge_set=EdgeSet(),
+    ...     project_granularity=False
+    ... )
+    >>>
+    >>> # Process one DICOM per project for quick overview
+    >>> nodes, edges, reports = get_dicom_data(
+    ...     project_ids=['syn12345'],
+    ...     node_set=NodeSet(),
+    ...     edge_set=EdgeSet(),
+    ...     project_granularity=True
+    ... )
     """
     logger.info(f"Adding tabular experimental data for {len(project_ids)} projects")
     process_files = []

@@ -1,10 +1,11 @@
 """
 Claude on Amazon Bedrock adapter implementation.
 
-Calls Bedrock's runtime ``InvokeModel`` API through boto3 with structured outputs
-(``output_config.format`` = the pydantic schema as JSON schema), then validates the
-reply against the schema. AWS credentials come from the normal chain (env vars,
-~/.aws config/SSO/login); region from $AWS_REGION, default us-east-1.
+Calls Bedrock's runtime ``InvokeModel`` API through boto3 with structured
+outputs (``output_config.format`` = the pydantic schema as JSON schema), then
+validates the reply against the schema. AWS credentials come from the normal
+chain (env vars, ~/.aws config/SSO/login), and the region from $AWS_REGION,
+default us-east-1.
 """
 
 import json
@@ -30,7 +31,7 @@ NON_RETRYABLE_ERRORS = {
 
 
 def json_schema_for(schema: Type[BaseModel]) -> dict:
-    """The pydantic model as a JSON schema that structured outputs accepts."""
+    """Return the pydantic model as a JSON schema for structured outputs."""
     sc = schema.model_json_schema()
     ## structured outputs require it on every object, including nested ones in $defs
     for obj in [sc, *sc.get("$defs", {}).values()]:
@@ -51,14 +52,20 @@ class AnthropicClient(LLMClient):
         max_tokens: int = 16000,
         read_timeout: float = 120.0,
     ):
-        """
-        Args:
-            model: Bedrock model or inference-profile ID.
-            effort: optional ``output_config.effort`` (low|medium|high|xhigh|max);
-                None uses the model's default.
-            max_tokens: per-response output cap. Thinking counts toward it, so keep
-                it well above the size of the JSON answer.
-            read_timeout: seconds to wait for a reply before failing the request.
+        """Initialize a Bedrock runtime client for a Claude model.
+
+        Parameters
+        ----------
+        model : str
+            Bedrock model or inference-profile ID.
+        effort : str | None
+            Optional ``output_config.effort`` (low|medium|high|xhigh|max).
+            None uses the model's default.
+        max_tokens : int
+            Per-response output cap. Thinking counts toward it, so keep it
+            well above the size of the JSON answer.
+        read_timeout : float
+            Seconds to wait for a reply before failing the request.
         """
         boto3 = import_optional("boto3", "bedrock")
         botocore_config = import_optional("botocore.config", "bedrock")
@@ -114,13 +121,12 @@ class AnthropicClient(LLMClient):
         retry_delay: float = 1.0,
         temperature: float | None = 0.0,
     ) -> BaseModel:
-        """
-        Make an LLM API call with structured pydantic response format.
+        """Make an LLM API call with structured pydantic response format.
 
-        ``temperature`` is accepted for interface compatibility but not sent: current
-        Claude models reject non-default sampling parameters. boto3 retries throttling
-        and server errors; this loop also retries refusals, truncated replies and
-        replies that fail schema validation.
+        ``temperature`` is accepted for interface compatibility but not sent:
+        current Claude models reject non-default sampling parameters. boto3
+        retries throttling and server errors, and this loop also retries
+        refusals, truncated replies and replies that fail schema validation.
         """
         body = json.dumps(self._request_body(context, user_prompt, schema))
         last_error = None

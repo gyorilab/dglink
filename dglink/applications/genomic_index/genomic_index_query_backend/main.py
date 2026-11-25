@@ -75,12 +75,17 @@ def get_gene_url(emedbl_id: str) -> str | None:
     return None
 
 def parse_res(raw: str, queries:list[SequenceQuery],  threshold: float = 0.0) -> list[QueryResult]:
-    """
-    Parse a Mantis .res file into a list of QueryResult objects.
+    """Parse a Mantis .res file into a list of QueryResult objects.
 
-    Args:
-        raw:       Raw string content of the .res file.
-        threshold: Minimum hit_fraction to include a sample (0.0 = keep all).
+    Parameters
+    ----------
+    raw : str
+        Raw string content of the .res file.
+    queries : list[SequenceQuery]
+        The sequence queries, one per entry of the .res file and in the same
+        order.
+    threshold : float
+        Minimum hit_fraction to include a sample (0.0 = keep all).
     """
 
     clean = re.sub(r",\s*([}\]])", r"\1", raw)
@@ -129,15 +134,21 @@ def parse_res(raw: str, queries:list[SequenceQuery],  threshold: float = 0.0) ->
 
 
 def write_fasta(queries: list[SequenceQuery], output_path: str | Path, line_width: int = 0) -> Path:
-    """
-    Write a list of SequenceQuery objects to a FASTA file suitable for Mantis input.
+    """Write sequence queries to a FASTA file suitable for Mantis input.
 
-    Args:
-        queries:     Parsed sequence queries from parse_fasta().
-        output_path: Destination .fa / .fasta path.
-        line_width:  Wrap sequence lines at this width (60 is NCBI standard). 0 = no wrapping.
+    Parameters
+    ----------
+    queries : list[SequenceQuery]
+        Parsed sequence queries from parse_fasta().
+    output_path : str | Path
+        Destination .fa / .fasta path.
+    line_width : int
+        Wrap sequence lines at this width (60 is NCBI standard). 0 = no
+        wrapping.
 
-    Returns:
+    Returns
+    -------
+    Path
         The resolved output path.
     """
     output_path = Path(output_path)

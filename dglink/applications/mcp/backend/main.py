@@ -64,9 +64,12 @@ def _load_file_index() -> dict:
 def read_entity_file(file_id: str, max_chars: int = MAX_FILE_CHARS) -> str:
     """Read the downloaded source file for a given entity.
 
-    Args:
-        file_id: The entity's file identifier (CURIE) as it appears in the graph.
-        max_chars: Maximum number of characters to return from the file.
+    Parameters
+    ----------
+    file_id : str
+        The entity's file identifier (CURIE) as it appears in the graph.
+    max_chars : int
+        Maximum number of characters to return from the file.
     """
     path = _load_file_index().get(file_id)
     if not path:
@@ -142,7 +145,7 @@ def get_base_prompt():
 
 
 async def initialize_openai():
-    """Initialize OpenAI agent with MCP"""
+    """Initialize the OpenAI agent with MCP."""
     global openai_mcp, openai_agent
 
     if not OPENAI_API_KEY:
@@ -189,7 +192,7 @@ async def initialize_openai():
 
 
 async def initialize_anthropic():
-    """Initialize Anthropic client with MCP"""
+    """Initialize the Anthropic client with MCP."""
     global anthropic_client, anthropic_session, anthropic_exit_stack
 
     if not ANTHROPIC_API_KEY:
@@ -232,7 +235,7 @@ async def initialize_anthropic():
 
 
 async def initialize():
-    """Initialize both OpenAI and Anthropic integrations"""
+    """Initialize both the OpenAI and Anthropic integrations."""
     print("=" * 60)
     print("Initializing MCP integrations...")
     print("=" * 60)
@@ -248,7 +251,7 @@ async def initialize():
 
 
 async def stream_anthropic_query(query: str):
-    """Process and stream a query using Anthropic Claude with MCP tools"""
+    """Process and stream a query using Anthropic Claude with MCP tools."""
     if not anthropic_client or not anthropic_session:
         raise HTTPException(
             status_code=503,
@@ -357,7 +360,7 @@ async def stream_anthropic_query(query: str):
 
 
 async def cleanup():
-    """Cleanup on shutdown"""
+    """Clean up on shutdown."""
     global openai_mcp, anthropic_exit_stack
 
     # Cleanup OpenAI MCP
@@ -401,7 +404,7 @@ async def shutdown_event():
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
-    """Handle chat requests - routes to appropriate provider"""
+    """Handle chat requests by routing them to the appropriate provider."""
     try:
         user_query = request.message.strip()
 

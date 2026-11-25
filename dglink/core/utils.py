@@ -1,5 +1,5 @@
 """
-Utility functions for core DGLink functionality
+Utility functions for core DGLink functionality.
 """
 
 from .nodes import NodeSet
@@ -19,7 +19,7 @@ def load_graph(
     node_name="nodes.tsv",
 ):
     """
-    read in a knowledge graph as a Node and Edge set.
+    Read in a knowledge graph as a Node and Edge set.
     """
     node_set = NodeSet(attributes=node_attributes)
     edge_set = EdgeSet(attributes=edge_attributes)
@@ -42,7 +42,7 @@ def write_graph(
     mixed: bool = False,
 ):
     """
-    Write a graph represented as a Node and Edge set to Neo4j compatible tsv files.
+    Write a graph as a Node and Edge set to Neo4j compatible TSV files.
     """
     os.makedirs(resource_path, exist_ok=True)
     if source_filter:
@@ -66,7 +66,7 @@ def write_graph(
 
 
 def filter_edge_set(edge_set: EdgeSet, filter_for: str, pascalify:bool = False,):
-    """filter out edges of a certain type"""
+    """Filter out edges of a certain type."""
     filtered_edge_set = EdgeSet()
     for edge_id in edge_set.edges:
         edge = edge_set.edges[edge_id]
@@ -124,7 +124,10 @@ def write_artifacts(
     resource_types: list = RESOURCE_TYPES,
     resource_path: str = RESOURCE_PATH,
 ):
-    """get artifacts (ie the resource sets for each resource type) from a graph for a given set of resource types"""
+    """Write the artifacts of a graph for a given set of resource types.
+
+    The artifacts are the resource sets for each resource type.
+    """
     ## get the strict version of each resource type
     for resource_type in resource_types:
         write_graph(
@@ -152,7 +155,7 @@ def write_graph_and_artifacts_default(
     node_name: str = "nodes.tsv",
     edge_name: str = "edges.tsv",
 ):
-    """default way to write graph and and sub-graphs split by source type"""
+    """Write a graph and its sub-graphs split by source type."""
     write_graph(
         node_set=node_set,
         edge_set=edge_set,
@@ -172,7 +175,7 @@ def merge_resource_sets(
     artifacts_path: str = os.path.join(RESOURCE_PATH, "artifacts"),
     write_resource: bool = True,
 ):
-    """merges all resource sets saved at a given path"""
+    """Merge all resource sets saved at a given path."""
     resource_files = os.listdir(artifacts_path)
     node_sets = filter(lambda x: x.startswith("nodes"), resource_files)
     edge_sets = filter(lambda x: x.startswith("edges"), resource_files)

@@ -1,5 +1,5 @@
 """
-Class for holding a tabular dataset and meta information during processing
+Class for holding a tabular dataset and meta information during processing.
 """
 
 from dglink.core.constants import map_biolink_category
@@ -21,7 +21,10 @@ _SPACE_SUBSTITUTE_RE = re.compile(r"[_~]+")
 
 
 def normalize_for_grounding(text: str) -> str:
-    """Undo VCF/ClinVar-style space substitution so Gilda can tokenize values  e.g. 'Raine~syndrome' -> 'Raine syndrome'."""
+    """Undo VCF/ClinVar-style space substitution so Gilda can tokenize values.
+
+    For example, 'Raine~syndrome' becomes 'Raine syndrome'.
+    """
     text = _HEX_ESCAPE_RE.sub(lambda m: chr(int(m.group(1), 16)), text)
     text = _SPACE_SUBSTITUTE_RE.sub(" ", text)
     return text.strip()
@@ -55,7 +58,10 @@ class TabularDataset:
         self._precomputed_sample: list[tuple[Any, float]] | None = None
 
     def _check_column_names(self):
-        """checks a tables column values and drops any in the self.columns_to_exclude stores the rest in a list"""
+        """Drop the table's columns that are in `columns_to_exclude`.
+
+        The names of the remaining columns are stored in a list.
+        """
         original_cols, dropped_columns = [], []
         for col in self.table.columns:
             if col.lower() in self.columns_to_exclude:
@@ -70,7 +76,7 @@ class TabularDataset:
         return original_cols, dropped_columns
 
     def _build_table_frequencies(self):
-        """Pre-compute frequency of each value across entire table - upfront"""
+        """Pre-compute the frequency of each value across the entire table."""
         self._table_frequencies = {}
         for col in self.table.columns:
             for val, count in self.table[col].value_counts().items():
@@ -79,7 +85,7 @@ class TabularDataset:
                 )
 
     def _build_priority_weights(self):
-        """Assign random weights to each unique value"""
+        """Assign random weights to each unique value."""
         if self._table_frequencies is None:
             self._build_table_frequencies()
         assert isinstance(self._table_frequencies, dict)
@@ -95,21 +101,23 @@ class TabularDataset:
         self._precomputed_sample.sort(key=lambda x: x[1], reverse=True)
 
     def get_priority_sample(self, col: str, target_size: int) -> list[Any]:
-        """Returns a priority sample of a columns records weighted by frequency across the table.
-        Adapted form Magneto by Liu et al https://arxiv.org/pdf/2412.08194
-        Pre-computes sample across entire table for efficiency
+        """Return a priority sample of a column's records.
 
+        The records are weighted by frequency across the table. Adapted from
+        Magneto by Liu et al https://arxiv.org/pdf/2412.08194. Pre-computes
+        the sample across the entire table for efficiency.
 
         Parameters
         ----------
-        col :str
-            column name in the table
-        target_size: int
-            goal size of sample, Note: Will return the minimum of the target size and the number of unique column entries.
+        col : str
+            Column name in the table.
+        target_size : int
+            Goal size of the sample. Will return the minimum of the target
+            size and the number of unique column entries.
 
         Returns
-        --------
-        col_sample: list
+        -------
+        col_sample : list
             List of entity names to use for sample rows.
         """
         if self._precomputed_sample is None:
@@ -128,10 +136,11 @@ class TabularDataset:
     def ground_table(self, biolink_entity_types: bool = False, grounder=None):
         """Ground the table using gilda.
 
-        Replaces each column `col` with six columns (GROUNDING_SUFFIXES): `col_entity`,
-        `col_type`, `col_name`, `col_raw_text`, `col_column_name` and `col_iri`. Each
-        distinct value of a column is grounded once (`_ground_value`), and the gilda lookup
-        itself is cached across columns and tables (`annotate_text`). `grounder` is a Gilda
+        Replaces each column `col` with six columns (GROUNDING_SUFFIXES):
+        `col_entity`, `col_type`, `col_name`, `col_raw_text`,
+        `col_column_name` and `col_iri`. Each distinct value of a column is
+        grounded once (`_ground_value`), and the gilda lookup itself is cached
+        across columns and tables (`annotate_text`). `grounder` is a Gilda
         grounder to use instead of Gilda's default.
         """
         grounded = {}
@@ -167,9 +176,19 @@ class TabularDataset:
     def _ground_value(self, text: str, grounder=None) -> tuple:
         """Ground a (non-missing) cell's text with Gilda (see `annotate_text`).
 
-        Returns:
-            Tuple of (curie, entity_type, name, iri); all pandas.NA if the text does not
-            ground or its match is one of this table's `terms_to_exclude`.
+        Parameters
+        ----------
+        text : str
+            The cell's text.
+        grounder
+            Gilda grounder to use instead of Gilda's default.
+
+        Returns
+        -------
+        tuple
+            Tuple of (curie, entity_type, name, iri), all pandas.NA if the
+            text does not ground or its match is one of this table's
+            `terms_to_exclude`.
         """
         grounding = annotate_text(normalize_for_grounding(text), grounder)
         if grounding is None or grounding.norm_text in self.terms_to_exclude:

@@ -1,5 +1,7 @@
 """
-this is a complete restructure of the assemble NF KG Method
+Assemble the NF Data Portal knowledge graph.
+
+This is a complete restructure of the assemble NF KG method.
 """
 
 from dglink import NodeSet, EdgeSet, get_projects, write_graph, load_graph

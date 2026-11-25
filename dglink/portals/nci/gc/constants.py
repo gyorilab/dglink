@@ -121,5 +121,8 @@ GC_EDGE_TO_BIOLINK = {
 
 
 def gc_curie(value: str) -> str:
-    """Prefix a raw NCI GC id as an `ncigc:` CURIE (Biolink requires CURIE ids)."""
+    """Prefix a raw NCI GC id as an `ncigc:` CURIE.
+
+    Biolink requires CURIE ids.
+    """
     return f"{NCI_GC_CURIE_PREFIX}:{value}"

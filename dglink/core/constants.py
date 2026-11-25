@@ -81,11 +81,12 @@ def map_biolink_category(indra_type, curie=None):
     """Map an INDRA/Gilda entity type to a concrete Biolink category.
 
     Gene/protein-ambiguous types are disambiguated using the grounded CURIE's
-    namespace (e.g. hgnc -> biolink:Gene, uniprot -> biolink:Protein). Falls back
-    to biolink:Gene when the namespace is unknown. HPO terms are biolink:PhenotypicFeature
-    and terms from disease vocabularies are biolink:Disease whatever their INDRA type.
-    Any non-ambiguous type is looked up in INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP;
-    unknown types are returned as-is.
+    namespace (e.g. hgnc -> biolink:Gene, uniprot -> biolink:Protein). Falls
+    back to biolink:Gene when the namespace is unknown. HPO terms are
+    biolink:PhenotypicFeature and terms from disease vocabularies are
+    biolink:Disease whatever their INDRA type. Any non-ambiguous type is
+    looked up in INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP, and unknown types
+    are returned as-is.
     """
     prefix = curie.split(":")[0].lower() if isinstance(curie, str) and curie else ""
     if prefix in PHENOTYPE_CURIE_PREFIXES:

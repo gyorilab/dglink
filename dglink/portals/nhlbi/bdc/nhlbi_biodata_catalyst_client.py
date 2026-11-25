@@ -21,15 +21,18 @@ class NhlbiBioDataCatalystClient:
         self,
         credential_file: str | None = None,
     ):
-        """
-        Args:
-            credential_file: path to a Gen3 API key/credentials.json (see
-                https://gen3.biodatacatalyst.nhlbi.nih.gov/identity)
+        """Initialize the client.
+
+        Parameters
+        ----------
+        credential_file : str | None
+            Path to a Gen3 API key/credentials.json (see
+            https://gen3.biodatacatalyst.nhlbi.nih.gov/identity).
         """
         self.gen3_client = Gen3Client(BDC_GEN3_ENDPOINT, credential_file=credential_file)
 
     def get_program_hierarchy(self) -> list[dict]:
-        """Get every program with its nested project -> study structure."""
+        """Return every program with its nested project -> study structure."""
         query = """
         {
             program {
@@ -64,7 +67,7 @@ class NhlbiBioDataCatalystClient:
         return response["data"]["program"]
 
     def get_subjects_for_project(self, project_id: str, first: int = DEFAULT_FIRST) -> list[dict]:
-        """Get subjects belonging to a project, with the parent studies each belongs to."""
+        """Return the subjects of a project, with their parent studies."""
         query = f"""
         {{
             subject(project_id: "{project_id}", first: {first}) {{
@@ -81,7 +84,7 @@ class NhlbiBioDataCatalystClient:
         return response["data"]["subject"]
 
     def get_publications_for_project(self, project_id: str, first: int = DEFAULT_FIRST) -> list[dict]:
-        """Get publications associated with a project."""
+        """Return the publications associated with a project."""
         query = f"""
         {{
             publication(project_id: "{project_id}", first: {first}) {{
@@ -95,8 +98,10 @@ class NhlbiBioDataCatalystClient:
         return response["data"]["publication"]
 
     def get_core_metadata_for_project(self, project_id: str, first: int = DEFAULT_FIRST) -> list[dict]:
-        """Get core_metadata_collection records (Dublin-Core-style dataset descriptions)
-        associated with a project."""
+        """Return the core_metadata_collection records of a project.
+
+        The records are Dublin-Core-style dataset descriptions.
+        """
         query = f"""
         {{
             core_metadata_collection(project_id: "{project_id}", first: {first}) {{
@@ -146,8 +151,9 @@ class NhlbiBioDataCatalystClient:
     def _read_manifest(self):
         """Read the study -> file manifest, or None if it does not exist yet.
 
-        Guarantees a String `path` column (null where a file has not been downloaded)
-        so callers can rely on it regardless of how the on-disk manifest was written.
+        Guarantees a String `path` column (null where a file has not been
+        downloaded) so callers can rely on it regardless of how the on-disk
+        manifest was written.
         """
         files_df_path = NHLBI_BDC_CACHE_DIR.joinpath("project_to_files.tsv")
                 
@@ -163,7 +169,7 @@ class NhlbiBioDataCatalystClient:
         return files_df
 
     def _get_files_for_a_project(self, project_id:str):
-        """pull files for a single project."""
+        """Pull the files of a single project."""
         files_df_path = NHLBI_BDC_CACHE_DIR.joinpath("project_to_files.tsv")
         project_files_df = self._read_manifest()
         if project_files_df is not None:
@@ -189,7 +195,7 @@ class NhlbiBioDataCatalystClient:
             )
         return all_files
     def get_project_files(self, project_ids:list[str]):
-        """get tabular files over a list or projects"""
+        """Return the tabular files of a list of projects."""
         all_files = []
         for project_id in project_ids:
             all_files += self._get_files_for_a_project(project_id)
@@ -201,8 +207,11 @@ class NhlbiBioDataCatalystClient:
         show_progress: bool = True,
         process_zip_files : bool = True,
     ):
-        """Download a list of files (by object_id/GUID) from BDC and record their
-        on-disk paths in the manifest so future calls treat them as already downloaded."""
+        """Download a list of files (by object_id/GUID) from BDC.
+
+        Records their on-disk paths in the manifest so future calls treat them
+        as already downloaded.
+        """
         files_df = self._read_manifest()
         if files_df is None:
             return
@@ -259,7 +268,7 @@ class NhlbiBioDataCatalystClient:
             )
             self._process_zip_files(unprocessed_zip_files)
     def _process_zip_files(self, unprocessed_zip_files:pl.DataFrame):
-        """helper function to extract the contents of zip files and add them to the manifest"""
+        """Extract the contents of zip files and add them to the manifest."""
         import zipfile
         from pathlib import Path
         manifest = self._read_manifest()
@@ -303,7 +312,7 @@ class NhlbiBioDataCatalystClient:
                 files_df_path, separator="\t"
             )
     def get_all_projects(self):
-        """helper function to get a list of all projects"""
+        """Return a list of all projects."""
         res = self.get_program_hierarchy()
 
         all_projects = []

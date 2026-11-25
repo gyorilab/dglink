@@ -1,9 +1,10 @@
 """
 Extract knowledge graph information from tabular data files.
 
-This module processes structured tabular files (CSV, TSV, Excel) from Synapse projects
-to extract biomedical entities through text grounding and construct a knowledge graph.
-Uses Gilda for entity recognition and INDRA for ontology typing.
+This module processes local structured tabular files (CSV, TSV, Excel),
+grouped by a portal-specific iterator, to extract biomedical entities through
+text grounding and construct a knowledge graph. Uses Gilda for entity
+recognition and INDRA for ontology typing.
 """
 
 from .constants import (
@@ -33,13 +34,14 @@ logger = logging.getLogger(__name__)
 
 
 def _is_utf8(pth: Path, sample_size: int = 1_000_000) -> bool:
-    """Best-effort check for whether a file decodes cleanly as UTF-8.
+    """Check, on a best-effort basis, whether a file decodes cleanly as UTF-8.
 
-    Frictionless's encoding auto-detection has a known false-positive on UTF-7 for
-    plain ASCII/UTF-8 files whose content contains runs of '+' (a UTF-7 shift-sequence
-    marker) - e.g. genomic annotation columns like 'GERP++_RS'. Forcing UTF-8 for files
-    that genuinely are UTF-8 avoids that misdetection without touching files that are
-    actually encoded some other way (those still fall back to Frictionless's detector).
+    Frictionless's encoding auto-detection has a known false-positive on UTF-7
+    for plain ASCII/UTF-8 files whose content contains runs of '+' (a UTF-7
+    shift-sequence marker), e.g. genomic annotation columns like 'GERP++_RS'.
+    Forcing UTF-8 for files that genuinely are UTF-8 avoids that misdetection
+    without touching files that are actually encoded some other way (those
+    still fall back to Frictionless's detector).
     """
     try:
         with open(pth, "rb") as f:
@@ -50,26 +52,32 @@ def _is_utf8(pth: Path, sample_size: int = 1_000_000) -> bool:
 
 
 def get_frictionless_package(pth):
-    """Load a tabular file into a Frictionless Package for robust multi-format parsing.
+    """Load a tabular file into a Frictionless Package.
 
     Handles various file formats (CSV, TSV, Excel) with fallback strategies for
     problematic Excel files. Creates a Package with Resources that have schemas
     containing only string-type fields for text analysis.
 
-    Args:
-        pth: Path object pointing to the tabular file
+    Parameters
+    ----------
+    pth : Path
+        Path object pointing to the tabular file.
 
-    Returns:
-        Frictionless Package containing one or more Resources (one per sheet for Excel)
+    Returns
+    -------
+    Package
+        Frictionless Package containing one or more Resources (one per sheet
+        for Excel).
 
-    Note:
-        For Excel files, attempts three strategies in order:
-        1. Direct Package loading
-        2. Loading each sheet as separate Resource
-        3. Fallback to TSV format if Excel parsing fails
+    Notes
+    -----
+    For Excel files, attempts three strategies in order:
+    1. Direct Package loading
+    2. Loading each sheet as separate Resource
+    3. Fallback to TSV format if Excel parsing fails
 
-        Non-string columns are removed from schemas since entity grounding only
-        operates on text data.
+    Non-string columns are removed from schemas since entity grounding only
+    operates on text data.
     """
     pac = Package()
     format = pth.suffix
@@ -137,24 +145,30 @@ def get_frictionless_package(pth):
 
 
 def frictionless_file_reader(pth: str, max_size_bytes=100 * 1024 * 1024):
-    """Read tabular files from Synapse file objects using Frictionless framework.
+    """Read a local tabular file using the Frictionless framework.
 
-    Downloads and parses various tabular formats (CSV, TSV, Excel) into a dictionary
-    of pandas DataFrames, with one DataFrame per sheet for multi-sheet files.
+    Parses various tabular formats (CSV, TSV, Excel) into a dictionary of
+    pandas DataFrames, with one DataFrame per sheet for multi-sheet files.
 
-    Args:
-        pth: path to tabular file to read.
-        max_size_bytes: Maximum file size to process in bytes (default: 100MB)
+    Parameters
+    ----------
+    pth : str
+        Path to the tabular file to read.
+    max_size_bytes : int
+        Maximum file size to process in bytes (default: 100MB).
 
-    Returns:
-        Dictionary mapping sheet names to pandas DataFrames. Returns empty dict if:
-        - File object is None or has no path
-        - File exceeds size limit
-        - Parsing fails
+    Returns
+    -------
+    dict
+        Dictionary mapping sheet names to pandas DataFrames. If the file
+        exceeds the size limit, returns {"all": "to_large"}, and if a sheet
+        cannot be read, returns {"all": "unable_to_read"}.
 
-    Note:
-        Uses frictionless for robust parsing with fallback strategies for problematic
-        Excel files. All sheets from multi-sheet files are returned separately.
+    Notes
+    -----
+    Uses frictionless for robust parsing with fallback strategies for
+    problematic Excel files. All sheets from multi-sheet files are returned
+    separately.
     """
     ## issues with pull
     fp = Path(pth)
@@ -188,26 +202,42 @@ def extract_df_graph(
     edge_set: EdgeSet,
     pascalify_types: bool = False,
 ) -> tuple[NodeSet, EdgeSet]:
-    """Extract nodes and edges from grounded entity DataFrame into knowledge graph.
+    """Add the grounded entities of a table to a knowledge graph.
 
     Iterates through grounded entities and creates:
-    - Nodes for each unique entity with ontology metadata (CURIE, type, name, IRI)
-    - Edges connecting the project to each entity type (e.g., "has_gene", "has_disease")
+    - Nodes for each unique entity with ontology metadata (CURIE, type, name,
+      IRI)
+    - Edges connecting the group to each entity (e.g., "has_gene",
+      "has_disease")
 
-    Args:
-        df: DataFrame with grounded entity columns (entity, type, name, raw_text, etc.)
-        cols: List of base column names to extract entities from
-        group_identifier: group ID for edge creation
-        file_id: Synapse file ID for provenance tracking
-        node_set: Existing set of nodes to update
-        edge_set: Existing set of edges to update
+    Parameters
+    ----------
+    table : TabularDataset
+        Table with grounded entity columns (entity, type, name, raw_text,
+        etc.) for each of its `entity_columns`.
+    group_identifier
+        Group ID for edge creation.
+    file_id
+        File identifier for provenance tracking.
+    node_set : NodeSet
+        Existing set of nodes to update.
+    edge_set : EdgeSet
+        Existing set of edges to update.
+    pascalify_types : bool
+        Not currently used.
 
-    Returns:
-        Tuple of (updated node_set, updated edge_set)
+    Returns
+    -------
+    node_set : NodeSet
+        The updated node set.
+    edge_set : EdgeSet
+        The updated edge set.
 
-    Note:
-        Tracks provenance by storing raw text, column names, and file IDs in node attributes.
-        Edge types are dynamically created based on entity type (e.g., "has_protein").
+    Notes
+    -----
+    Tracks provenance by storing raw text, column names, and file IDs in edge
+    attributes. Edge types are dynamically created based on entity type
+    (e.g., "has_protein"), unless the table uses Biolink entity types.
     """
     pascalify = lambda x: "".join(
         w.capitalize() for w in x.removeprefix("biolink:").split("_")
@@ -256,7 +286,7 @@ def extract_df_graph(
 
 
 def get_dtype_counts(df: pandas.DataFrame) -> pandas.DataFrame:
-    """get the count of data types in each col of a data frame"""
+    """Return the count of each data type in each column of a data frame."""
     records = {}
     for col in df.columns:
         string_count = df[col].apply(lambda x: isinstance(x, str)).sum()
@@ -270,23 +300,32 @@ def get_dtype_counts(df: pandas.DataFrame) -> pandas.DataFrame:
 
 
 def check_df_readable(df, max_unnamed=2):
-    """Validate that a DataFrame was correctly parsed and is suitable for processing.
+    """Validate that a DataFrame was parsed correctly and can be processed.
 
-    Checks for parsing issues like excessive unnamed columns and filters to only
-    string/object columns suitable for entity grounding.
+    Checks for parsing issues like excessive unnamed columns and filters to
+    only the mostly string-valued columns suitable for entity grounding.
 
-    Args:
-        df: pandas DataFrame to validate
-        max_unnamed: Maximum number of "Unnamed" columns allowed (default: 2)
+    Parameters
+    ----------
+    df : pandas.DataFrame | str
+        DataFrame to validate, or the error string returned by the reader.
+    max_unnamed : int
+        Maximum number of "Unnamed" columns allowed (default: 2).
 
-    Returns:
-        Tuple of (can_read: bool, filtered_df or None)
-        - can_read is True if DataFrame is valid for processing
-        - filtered_df contains only string/object columns, or None if validation fails
+    Returns
+    -------
+    reason : str
+        "good" if the DataFrame is valid for processing, "look_into" if
+        not, or the reader's error string.
+    df : pandas.DataFrame | None
+        The DataFrame with only its mostly string-valued columns, or None if
+        validation fails.
 
-    Note:
-        DataFrames with no columns or too many unnamed columns are considered unreadable,
-        indicating parsing errors or improperly formatted source files.
+    Notes
+    -----
+    DataFrames with no columns or too many unnamed columns are considered
+    unreadable, indicating parsing errors or improperly formatted source
+    files.
     """
     ## check for error in reading
     if type(df) == str:
@@ -313,21 +352,29 @@ def check_df_readable(df, max_unnamed=2):
 def load_file(group_identifier: str, fp: str):
     """Load a tabular file and validate readability of all sheets.
 
-    Parses with frictionless framework, and validates
-    each sheet (for multi-sheet files like Excel) for entity grounding.
+    Parses with the frictionless framework, and validates each sheet (for
+    multi-sheet files like Excel) for entity grounding.
 
-    Args:
-        group_identifier: identifier for group of files (project_id in NF data portal and case_id in gdc)
-        fp: local path to the file
+    Parameters
+    ----------
+    group_identifier : str
+        Identifier for the group of files (project_id in the NF data portal
+        and case_id in GDC).
+    fp : str
+        Local path to the file.
 
-    Returns:
-        Tuple of (list of DataFrames, list of read status dicts)
-        - DataFrames: One per sheet, or None if sheet unreadable
-        - Status dicts contain: project_id, file_id, file_path, can_read, reason, sheet
+    Returns
+    -------
+    dfs : list
+        One DataFrame per sheet, or None if the sheet is unreadable.
+    read_states : list[dict]
+        One status dict per sheet, with keys group_identifier, fp, can_read,
+        reason and sheet.
 
-    Note:
-        Handles locked files and parsing failures gracefully by returning empty lists
-        and status dicts indicating the failure reason.
+    Notes
+    -----
+    Handles files that are too large or cannot be parsed gracefully, by
+    returning a None DataFrame and a status dict with the failure reason.
     """
     df_dict = frictionless_file_reader(fp)
     dfs = []
@@ -371,11 +418,12 @@ def get_tabular_data(
     quality_check_method: str|None = "heuristic",
     **kwargs,
 ) -> list[pandas.DataFrame]:
-    """Process tabular data files from multiple groups and build knowledge graph.
+    """Process tabular files from multiple groups and build a knowledge graph.
 
-    Main orchestration function that discovers tabular files (CSV, TSV, Excel) in specified
-    projects, extracts biomedical entities through text grounding with Gilda, and constructs
-    a knowledge graph. Supports multi-sheet Excel files and various CSV/TSV dialects.
+    Main orchestration function that reads the tabular files (CSV, TSV,
+    Excel) that `tabular_iterator` yields for each group, extracts biomedical
+    entities through text grounding with Gilda, and constructs a knowledge
+    graph. Supports multi-sheet Excel files and various CSV/TSV dialects.
     """
     logger.info(f"Adding tabular experimental data for {len(group_identifiers)} groups")
     files_read = []

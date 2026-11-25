@@ -1,22 +1,26 @@
 """
 Merge multiple single-portal knowledge graphs into one, tagging provenance.
 
-Within a single-portal graph the portal is constant, so it is *not* stored on the
-nodes/edges -- it would be pure redundancy. Portal provenance only becomes
-informative once graphs are merged, so it is added here at merge time:
+Within a single-portal graph the portal is constant, so it is *not* stored on
+the nodes/edges, as it would be pure redundancy. Portal provenance only
+becomes informative once graphs are merged, so it is added here at merge
+time:
 
   * every node/edge gains a ``portal:string[]`` attribute recording which
-    portal(s) it came from. Because it is a multivalued (``string[]``) attribute
-    it set-unions across inputs, so a shared entity (e.g. an ``hgnc:`` gene found
-    in both portals) ends up tagged with *every* portal that contributed it.
-  * every ``file_id`` is prefixed with its portal (e.g. ``gdc:<uuid>``) so that a
-    node reached through many files keeps an unambiguous file -> portal mapping
-    even after the multivalued ``file_id`` sets are unioned together.
+    portal(s) it came from. Because it is a multivalued (``string[]``)
+    attribute it set-unions across inputs, so a shared entity (e.g. an
+    ``hgnc:`` gene found in both portals) ends up tagged with *every* portal
+    that contributed it.
+  * every ``file_id`` is prefixed with its portal (e.g. ``gdc:<uuid>``) so
+    that a node reached through many files keeps an unambiguous file ->
+    portal mapping even after the multivalued ``file_id`` sets are unioned
+    together.
 
 Shared nodes/edges merge with the NodeSet/EdgeSet set-union semantics
 (``update_nodes`` / ``update_edges`` union the ``string[]`` columns). Scalar
-attributes are first-writer-wins -- so graphs are folded in the order given -- and
-any disagreement on a shared id (notably ``:LABEL`` / ``:TYPE``) is logged.
+attributes are first-writer-wins, so graphs are folded in the order given,
+and any disagreement on a shared id (notably ``:LABEL`` / ``:TYPE``) is
+logged.
 
 Usage:
     python -m scripts.merge_graphs           # merges the default NCI graphs
@@ -35,7 +39,7 @@ FILE_ID_ATTR = "file_id:string[]"
 
 
 def _ordered_union(attribute_lists: list) -> list:
-    """merges set of attrs maintaining order"""
+    """Return the union of attribute lists, keeping the order of attributes."""
     merged = []
     for attrs in attribute_lists:
         for a in attrs:
@@ -45,7 +49,7 @@ def _ordered_union(attribute_lists: list) -> list:
 
 
 def _tag_provenance(rep: dict, portal: str) -> dict:
-    """stamp portal + portal-prefix the file ids on a (copied) node/edge rep."""
+    """Return a node or edge copy with its portal and prefixed file ids."""
     rep = dict(rep)
     rep[PORTAL_ATTR] = {portal}
     if FILE_ID_ATTR in rep:
@@ -59,7 +63,7 @@ def _tag_provenance(rep: dict, portal: str) -> dict:
 def _log_scalar_conflicts(
     existing: dict, incoming: dict, item_id: str, scalar_attrs: list, kind: str
 ) -> None:
-    """warn when two portals disagree on a scalar attribute of the same id."""
+    """Warn when two portals disagree on a scalar attribute of the same id."""
     for attr in scalar_attrs:
         old = existing.get(attr, "")
         new = incoming.get(attr, "")
@@ -75,15 +79,30 @@ def _log_scalar_conflicts(
 
 
 def merge_graphs(inputs: dict, output_path: str = "merged_graph", write: bool = True):
-    """
-    Merge single-portal graphs into one portal-tagged graph.
+    """Merge single-portal graphs into one portal-tagged graph.
 
-    inputs: mapping of graph directory -> portal label, e.g.
-        {"nci_gc_graph": "gc", "nci_gdc_graph": "gdc"}
-    Graphs are folded in ``inputs`` order; on a scalar conflict the earlier
-    graph wins (the conflict is logged). Each graph's schema is inferred from
-    its own ``nodes.tsv`` / ``edges.tsv`` header, so heterogeneous schemas
-    (e.g. GC's 41 columns vs GDC's 15) merge without extra configuration.
+    Graphs are folded in ``inputs`` order, and on a scalar conflict the
+    earlier graph wins (the conflict is logged). Each graph's schema is
+    inferred from its own ``nodes.tsv`` / ``edges.tsv`` header, so
+    heterogeneous schemas (e.g. GC's 41 columns vs GDC's 15) merge without
+    extra configuration.
+
+    Parameters
+    ----------
+    inputs : dict
+        Mapping of graph directory to portal label, e.g.
+        ``{"nci_gc_graph": "gc", "nci_gdc_graph": "gdc"}``.
+    output_path : str
+        Directory the merged graph is written to.
+    write : bool
+        If True, write the merged graph to ``output_path``.
+
+    Returns
+    -------
+    merged_nodes : NodeSet
+        The merged nodes, tagged with their portals.
+    merged_edges : EdgeSet
+        The merged edges, tagged with their portals.
     """
     loaded = []
     for resource_path, portal in inputs.items():

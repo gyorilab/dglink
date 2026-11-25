@@ -1,6 +1,8 @@
 """
-Select entity columns in two stages: a cheap heuristic filter, then an LLM check
-on only the columns that survive the heuristic.
+Select entity columns with a heuristic filter, then an LLM check.
+
+The LLM check is only run on the columns that survive the cheap heuristic
+filter.
 """
 from typing import Type
 
@@ -56,7 +58,10 @@ class HierarchicalSelector(ColumnSelector):
             self.llm.execute(table, verbose=verbose, columns=table.entity_columns)
 
     def check_column(self, table: TabularDataset, col: str, verbose: bool = False) -> bool:
-        """Check if a single column contains entities (LLM only consulted if heuristic passes)."""
+        """Check if a single column contains entities.
+
+        The LLM is only consulted if the heuristic passes.
+        """
         return self.heuristic.check_column(table, col, verbose) and self.llm.check_column(
             table, col, verbose
         )

@@ -1,10 +1,11 @@
 """
 Stage timing for graph construction.
 
-A process-wide registry that accumulates wall time, call counts, and arbitrary
-counters (bytes downloaded, LLM tokens, ...) per named stage, so that network-bound
-stages (metadata API queries, file download, LLM calls) can be reported separately
-from local processing (parsing, grounding, graph extraction).
+A process-wide registry that accumulates wall time, call counts, and
+arbitrary counters (bytes downloaded, LLM tokens, ...) per named stage, so
+that network-bound stages (metadata API queries, file download, LLM calls)
+can be reported separately from local processing (parsing, grounding, graph
+extraction).
 
 Usage::
 
@@ -16,8 +17,8 @@ Usage::
 
     TIMER.write_report("timing.json")
 
-Stages nest freely; each stage records its own wall time, so a parent stage's time
-includes its children (e.g. ``tabular`` includes ``tabular.grounding``).
+Stages nest freely. Each stage records its own wall time, so a parent stage's
+time includes its children (e.g. ``tabular`` includes ``tabular.grounding``).
 """
 
 from collections import defaultdict
@@ -62,7 +63,10 @@ class StageTimer:
         self.durations[name].append(seconds)
 
     def add(self, name: str, **counts: float) -> None:
-        """Increment counters for ``name``, e.g. ``add("download", bytes=n, files=1)``."""
+        """Increment counters for ``name``.
+
+        For example, ``add("download", bytes=n, files=1)``.
+        """
         for key, val in counts.items():
             if val is not None:
                 self.counters[name][key] += val

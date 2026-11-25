@@ -1,5 +1,7 @@
 """
-Gets a list of all files from the NF data portal and their extensions and saves it in a cached location
+List all files of the NF Data Portal with their extensions.
+
+The list is saved in a cached location.
 """
 
 from dglink.core.utils import get_projects_files

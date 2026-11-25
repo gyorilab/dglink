@@ -1,5 +1,5 @@
 """
-extract KG information from the uncompressed VCF files.
+Extract KG information from the uncompressed VCF files.
 """
 
 from dglink import load_graph

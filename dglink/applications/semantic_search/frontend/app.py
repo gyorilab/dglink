@@ -127,7 +127,7 @@ def autocomplete():
 
 @bp.route("/api/health", methods=["GET"])
 def get_health():
-    """Get health status from backend"""
+    """Get the health status from the backend."""
     try:
         base = SEMANTIC_SEARCH_BACKEND_URL.rstrip("/")
         response = requests.get(f"{base}/health")

@@ -1,7 +1,9 @@
 """
-NF research tools (cell lines, animal models, antibodies, genetic reagents, ...) from the NF
-tools db, as Biolink nodes linked to their diseases, species, genes, investigators, and to
-the studies and publications that use them.
+NF research tools from the NF tools db, as Biolink nodes.
+
+The tools (cell lines, animal models, antibodies, genetic reagents, ...)
+are linked to their diseases, species, genes, investigators, and to the
+studies and publications that use them.
 """
 
 from dglink import NodeSet, EdgeSet, write_graph
@@ -37,9 +39,12 @@ HUMAN_TAXON = "9606"
 def get_tools(
     node_set: NodeSet, edge_set: EdgeSet, project_ids: list, write_set: bool = False
 ):
-    """add every NF tool and its edges (see get_tool_nodes, get_tool_edges and
-    get_tool_publication_edges). Run after get_projects and get_publications, whose study
-    and publication nodes the tool edges point at."""
+    """Add every NF tool and its edges.
+
+    See get_tool_nodes, get_tool_edges and get_tool_publication_edges. Run
+    after get_projects and get_publications, whose study and publication nodes
+    the tool edges point at.
+    """
     logger.info("Getting nodes for NF Data Portal tools")
     node_set, edge_set, name_to_curie, resource_to_curie = get_tool_nodes(node_set=node_set, edge_set=edge_set)
     logger.info("Linking studies to the tools named in their file annotations")
@@ -65,8 +70,11 @@ def get_tools(
 ## --- tool nodes -------------------------------------------------------------------
 
 def tool_curie(row: dict) -> str:
-    """the id a tool node gets: its normalized RRID (e.g. rrid:CVCL_1150), else its tools db
-    resourceId under the nfdataportal prefix."""
+    """Return the id of a tool node.
+
+    The id is its normalized RRID (e.g. rrid:CVCL_1150), else its tools db
+    resourceId under the nfdataportal prefix.
+    """
     rrid = row.get("rrid")
     if not _is_empty(rrid):
         curie = normalize_curie(str(rrid).strip())
@@ -77,8 +85,11 @@ def tool_curie(row: dict) -> str:
 
 
 def _tool_property(value, attribute: str):
-    """a tools view value as a node attribute value: a set for string[] columns, and whole
-    numbers (e.g. an age of 56.0) without the trailing .0."""
+    """Return a tools view value as a node attribute value.
+
+    The value is a set for string[] columns, and whole numbers (e.g. an age of
+    56.0) are given without the trailing .0.
+    """
     if attribute.endswith(":string[]"):
         values = value if isinstance(value, list) else [value]
         return {str(v) for v in values if not _is_empty(v)}
@@ -90,13 +101,20 @@ def _tool_property(value, attribute: str):
 
 
 def get_tool_nodes(node_set: NodeSet, edge_set: EdgeSet):
-    """returns the node and edge sets with all tools added, a mapping from any name (or
-    synonym) to its curie, and a mapping from the tools db `resourceId` to its curie.
+    """Add all tools to the node and edge sets.
+
+    Returns the node and edge sets with all tools added, a mapping from any
+    name (or synonym) to its curie, and a mapping from the tools db
+    `resourceId` to its curie.
+
     Each tool is a node with
+
         - curie: normalized RRID, else nfdataportal:tool_<resourceId>
-        - category: from its resourceType (NF_TOOL_TYPE_TO_BIOLINK), NamedThing otherwise
+        - category: from its resourceType (NF_TOOL_TYPE_TO_BIOLINK),
+          NamedThing otherwise
         - tool_type: the raw resourceType
         - the NF_TOOL_PROPERTIES columns as attributes
+
     and the edges from its own fields (see parse_tool_fields).
     """
     ## this table has all NF data portal tool meta data, it was generated from the programmatic export on the nf data portal website.
@@ -142,16 +160,22 @@ def get_tool_nodes(node_set: NodeSet, edge_set: EdgeSet):
 ## --- edges from a tool's own fields ---------------------------------------------------
 
 def parse_tool_fields(tool: str, category: str, row: dict, node_set: NodeSet, edge_set: EdgeSet):
-    """add the edges (and target nodes) from one tools view row:
-        - model (biolink:CellLine, biolink:OrganismTaxon ...) - (biolink:model_of) -> disease
-          (biolink:Disease ...) for geneticDisorder, manifestation and tumorType; other tools
-          are related_to_at_instance_level their diseases
+    """Add the edges (and target nodes) from one tools view row.
+
+    The edges are
+
+        - model (biolink:CellLine, biolink:OrganismTaxon ...) -
+          (biolink:model_of) -> disease (biolink:Disease ...) for
+          geneticDisorder, manifestation and tumorType, other tools are
+          related_to_at_instance_level their diseases
         - cell line - (biolink:in_taxon) -> species (biolink:OrganismTaxon)
-        - animal model (biolink:OrganismTaxon) - (biolink:subclass_of) -> species
-        - antibody / genetic reagent - (biolink:related_to_at_instance_level) -> gene
-          (biolink:Gene, or biolink:Protein for non-human genes)
-        - tool - (biolink:related_to_at_instance_level) -> investigator / institution
-          (biolink:Agent); investigators get their ORCID id, shared with publication authors
+        - animal model (biolink:OrganismTaxon) - (biolink:subclass_of) ->
+          species
+        - antibody / genetic reagent - (biolink:related_to_at_instance_level)
+          -> gene (biolink:Gene, or biolink:Protein for non-human genes)
+        - tool - (biolink:related_to_at_instance_level) -> investigator /
+          institution (biolink:Agent), investigators get their ORCID id,
+          shared with publication authors
     """
     node_set, edge_set = parse_dict_fields(
         meta_curie=tool,
@@ -176,7 +200,10 @@ def parse_tool_fields(tool: str, category: str, row: dict, node_set: NodeSet, ed
 
 
 def _add_tool_edge(node_set: NodeSet, edge_set: EdgeSet, tool: str, head: str, field: str, raw: str, target: dict):
-    """add a grounded node (`target`, without the shared fields) and the tool -> node edge."""
+    """Add a grounded node and the tool -> node edge.
+
+    The node is `target`, without the shared fields.
+    """
     node_set.update_nodes(
         {**target, "raw_label": field, "raw_texts:string[]": raw, "source:string[]": "tools"},
         fill_empty=True,
@@ -194,8 +221,11 @@ def _add_tool_edge(node_set: NodeSet, edge_set: EdgeSet, tool: str, head: str, f
 
 
 def parse_tool_species(tool: str, category: str, row: dict, node_set: NodeSet, edge_set: EdgeSet):
-    """link a tool to its species (NCBI taxon): cell lines with in_taxon, animal model strains
-    with subclass_of, anything else with related_to_at_instance_level."""
+    """Link a tool to its species (NCBI taxon).
+
+    Cell lines are linked with in_taxon, animal model strains with
+    subclass_of, anything else with related_to_at_instance_level.
+    """
     head = NF_TOOL_SPECIES_HEAD.get(category, "tool")
     for species in _unpack_dict_list(row, "species"):
         if species not in NF_SPECIES_TO_TAXON:
@@ -214,16 +244,23 @@ def parse_tool_species(tool: str, category: str, row: dict, node_set: NodeSet, e
 
 
 def _taxon_id(species: str) -> str:
-    """NCBI taxon id (e.g. "10090") for a tools view species, human if it is not mapped."""
+    """Return the NCBI taxon id (e.g. "10090") of a tools view species.
+
+    The id is human if the species is not mapped.
+    """
     taxon = NF_SPECIES_TO_TAXON.get(species)
     return taxon[0].split(":", 1)[1] if taxon else HUMAN_TAXON
 
 
 @lru_cache(maxsize=None)
 def _ground_gene(text: str, taxon: str):
-    """(name, curie, iri, category) of the first token of `text` that grounds to a gene or
-    gene product of `taxon` (an NCBI taxon id), or None. Token by token, since the values
-    wrap a symbol in notes ("NF1 (aa 2760 C-term)", "phospho-NF1", "sh1miR targeting NF1")."""
+    """Return the grounding of the first token of `text` to a gene of a taxon.
+
+    Returns (name, curie, iri, category) of the first token of `text` that
+    grounds to a gene or gene product of `taxon` (an NCBI taxon id), or None.
+    Grounds token by token, since the values wrap a symbol in notes
+    ("NF1 (aa 2760 C-term)", "phospho-NF1", "sh1miR targeting NF1").
+    """
     for token in GENE_TOKEN.findall(text):
         matches = gilda.ground(token, organisms=[taxon], namespaces=GENE_NAMESPACES)
         if not matches or matches[0].score < 0.5:
@@ -237,8 +274,11 @@ def _ground_gene(text: str, taxon: str):
 
 
 def parse_tool_genes(tool: str, row: dict, node_set: NodeSet, edge_set: EdgeSet):
-    """link a tool to the genes in NF_TOOL_GENE_FIELDS (antibody targets, plasmid inserts),
-    grounded for the species the field names (human if none)."""
+    """Link a tool to the genes in NF_TOOL_GENE_FIELDS.
+
+    The fields are antibody targets and plasmid inserts, grounded for the
+    species the field names (human if none).
+    """
     for field, species_field in NF_TOOL_GENE_FIELDS.items():
         taxa = [_taxon_id(s) for s in _unpack_dict_list(row, species_field)] if species_field else [HUMAN_TAXON]
         for value in _unpack_dict_list(row, field):
@@ -263,8 +303,11 @@ def parse_tool_genes(tool: str, row: dict, node_set: NodeSet, edge_set: EdgeSet)
 ## --- study -> tool edges --------------------------------------------------------------
 
 def _file_values(value) -> list:
-    """the values of a file annotation: a list as is, a string split on commas (e.g.
-    modelSystemName "90-8TL,S462"), anything else none."""
+    """Return the values of a file annotation.
+
+    A list is returned as is, a string split on commas (e.g. modelSystemName
+    "90-8TL,S462"), anything else as none.
+    """
     if isinstance(value, list):
         return [str(v).strip() for v in value if not _is_empty(v)]
     if isinstance(value, str):
@@ -273,11 +316,15 @@ def _file_values(value) -> list:
 
 
 def get_tool_edges(project_ids: list, name_to_curie: dict, edge_set: EdgeSet):
-    """link studies to the tools their files come from: a file whose modelSystemName,
-    specimenID or individualID is exactly the name (or a synonym) of a single tool. One
-    grouped query over the portal file view, keeping only studies in `project_ids`.
-    Adds: study (biolink:Study) - (biolink:related_to_at_instance_level) -> tool, with the
-    matching annotation field(s) as raw_type.
+    """Link studies to the tools their files come from.
+
+    A file comes from a tool if its modelSystemName, specimenID or
+    individualID is exactly the name (or a synonym) of a single tool. One
+    grouped query over the portal file view, keeping only studies in
+    `project_ids`.
+
+    Adds: study (biolink:Study) - (biolink:related_to_at_instance_level) ->
+    tool, with the matching annotation field(s) as raw_type.
     """
     fields = ", ".join(NF_TOOL_STUDY_FIELDS)
     query = syn.tableQuery(f"SELECT studyId, {fields} FROM {NF_FILES_VIEW} GROUP BY studyId, {fields}")
@@ -307,9 +354,12 @@ def get_tool_edges(project_ids: list, name_to_curie: dict, edge_set: EdgeSet):
 ## --- publication -> tool edges --------------------------------------------------------
 
 def get_tool_publication_edges(node_set: NodeSet, edge_set: EdgeSet, resource_to_curie: dict):
-    """link tools to the publications that used or developed them, from the tools db Usage and
-    Development tables. Only publications already in `node_set` are linked, so run
-    `get_publications` first (it adds every tools db publication).
+    """Link tools to the publications that used or developed them.
+
+    The links come from the tools db Usage and Development tables. Only
+    publications already in `node_set` are linked, so run `get_publications`
+    first (it adds every tools db publication).
+
     Adds: publication (biolink:Publication) - (biolink:mentions) -> tool
     """
     pubs = syn.tableQuery(f"SELECT publicationId, pmid, doi FROM {TOOLS_PUBLICATIONS_TABLE}").asDataFrame()

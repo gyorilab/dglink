@@ -1,6 +1,4 @@
-"""
-goal is to train an embedding model and use that as a proxy for related study prediction.
-"""
+"""Train an embedding model as a proxy for related study prediction."""
 
 from pykeen.triples import TriplesFactory
 from pykeen.triples.utils import load_triples
@@ -44,7 +42,15 @@ def train_embedding_model(
     save=True,
     save_path="dglink/applications/project_similarity/embedding_test",
 ):
-    """Trains a network embedding model with the PyKEEN pipeline. Return the model and entity_to_id mapping"""
+    """Train a network embedding model with the PyKEEN pipeline.
+
+    Returns
+    -------
+    model
+        The trained model.
+    entity_to_id : dict
+        The mapping from entity to id used in training.
+    """
     ## split the dataset
     # tf = TriplesFactory.from_path(edge_path)
     edge_path = f"{resource_dir}/non_related_projects_edges.tsv"
@@ -65,7 +71,7 @@ def train_embedding_model(
 
 
 def load_entity_to_id(save_path="dglink/applications/project_similarity/embedding_test"):
-    """reads in entity to id mapping as dictionary"""
+    """Read the entity to id mapping as a dictionary."""
     id_path = f"{save_path}/training_triples/entity_to_id.tsv.gz"
     entity_to_id = {}
     with gzip.open(id_path, "rt", encoding="utf-8") as f:
@@ -77,7 +83,7 @@ def load_entity_to_id(save_path="dglink/applications/project_similarity/embeddin
 
 
 def load_embedding_model(save_path="dglink/applications/project_similarity/embedding_test"):
-    """loads embedding model and entity_to_id mapping"""
+    """Load the embedding model and the entity_to_id mapping."""
     model = torch.load(f"{save_path}/trained_model.pkl", weights_only=False)
     entity_to_id = load_entity_to_id(save_path=save_path)
     return model, entity_to_id
@@ -92,7 +98,7 @@ def id_to_embedding(entity_to_id, model, id_1, id_2):
 
 
 def l2(a, b):
-    """simple l2 distance metric"""
+    """Return the L2 distance between two vectors."""
 
     return np.linalg.norm(a - b)
 

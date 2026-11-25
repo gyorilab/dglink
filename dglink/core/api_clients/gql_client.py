@@ -1,5 +1,5 @@
 """
-Helper client for interfacing with GraphQL APIs
+Helper client for interfacing with GraphQL APIs.
 """
 
 from ..optional_deps import import_optional
@@ -31,7 +31,7 @@ class GqlClient:
     def execute(
         self, query: str, variable_values: dict, max_retries: int = 3
     ):
-        """Run a query with some set of parameters"""
+        """Run a query with some set of parameters."""
         gql = import_optional("gql", "gql")
         if not isinstance(query, gql.GraphQLRequest):
             try:
@@ -53,7 +53,7 @@ class GqlClient:
         page_size: int = 1000,
         key: str = None,
     ):
-        """Run a query with some set of parameters"""
+        """Run a paginated query with some set of parameters."""
         results = []
         variable_values["offset"] = 0
         variable_values["first"] = page_size

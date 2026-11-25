@@ -1,5 +1,5 @@
 """
-Constants specific to the NCI genomic Data Commons portal
+Constants specific to the NCI Genomic Data Commons portal.
 """
 
 from pystow import module

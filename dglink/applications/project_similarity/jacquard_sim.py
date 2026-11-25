@@ -13,7 +13,7 @@ RESOURCE_DIR = "dglink/applications/project_similarity/resources"
 
 
 def check_related_study_exists(edges_df, id_1, id_2):
-    """checks if a pair of studies has a related edge"""
+    """Check if a pair of studies has a related edge."""
     df = edges_df[edges_df[":TYPE"] == "has_relatedStudies"]
     forward_df = df[(df[":START_ID"] == id_1) & (df[":END_ID"] == id_2)]
     backward_df = df[(df[":START_ID"] == id_2) & (df[":END_ID"] == id_1)]
@@ -21,7 +21,10 @@ def check_related_study_exists(edges_df, id_1, id_2):
 
 
 def get_projects_to_edges(edges_df):
-    """get mapping project_id -> entity -> edge_type, which is used for calculating jacquard sim"""
+    """Get the mapping project_id -> entity -> edge_type.
+
+    The mapping is used for calculating Jaccard similarity.
+    """
     all_project_ids = set(
         filter(
             lambda x: re.match(r"^syn\d*$", str(x)) is not None,

@@ -78,9 +78,12 @@ class NodeSet:
         return rep
 
     def update_nodes(self, new_node: dict, new_node_id=None, fill_empty: bool = False):
-        """Add a node, or merge into an existing one. string[] attributes are unioned;
-        other attributes keep their first value unless `fill_empty`, in which case an
-        empty value is filled in (an existing value is never overwritten)."""
+        """Add a node, or merge it into an existing one.
+
+        string[] attributes are unioned. Other attributes keep their first
+        value unless `fill_empty`, in which case an empty value is filled in
+        (an existing value is never overwritten).
+        """
         self.set_attributes = [x for x in self.attributes if "string[]" in x]
         new_node_id = new_node_id or new_node.get("curie:ID", "no_id")
         if new_node_id in self.nodes:

@@ -1,5 +1,7 @@
 """
-Select entity columns by asking an LLM to classify each column against a schema
+Select entity columns by asking an LLM to classify each column.
+
+Each column is classified against a schema of entity types.
 """
 from .column_selector import ColumnSelector
 from .schemas import BiologicalEntity
@@ -44,9 +46,12 @@ class LLMSelector(ColumnSelector):
         use_gilda_info: bool = False,
         priority_sample: bool = False,
     ) -> None:
-        """
-        Note: min_ground_percentage is accepted for interface compatibility but is not
-        currently used by the column-wise LLM selector.
+        """Initialize the column-wise LLM selector.
+
+        Notes
+        -----
+        min_ground_percentage is accepted for interface compatibility but is
+        not currently used by the column-wise LLM selector.
         """
         super().__init__()
         self.model = model
@@ -84,7 +89,10 @@ class LLMSelector(ColumnSelector):
         return is_entity
 
     def _classify_column(self, table: TabularDataset, col: str, verbose: bool = False) -> str | None:
-        """Return the most likely schema entity type for a column, or None if no confident match."""
+        """Return the most likely schema entity type of a column, or None.
+
+        None is returned if there is no confident match.
+        """
         sample = self._get_samples(table, col)
         system_prompt, user_prompt = self._get_prompts(col, sample)
         llm_resp: dict = self.llm_client.structured_call(
@@ -104,9 +112,7 @@ class LLMSelector(ColumnSelector):
         return most_likely_entity_type
 
     def _get_prompts(self, col: str, sample: DataFrame):
-        """
-        helper function for defining the prompt
-        """
+        """Return the system and user prompts for classifying a column."""
         system_prompt = textwrap.dedent(f"""
             You are a scientist looking at columns from experimental datasets.
             Predict the likelihood that this column represents one of the classes in the schema below,

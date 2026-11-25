@@ -1,26 +1,32 @@
 """
-Run the DGLink benchmark: the SAME Claude Code harness against each question, once per
-arm, changing only the toolset (the single controlled variable).
+Run the DGLink benchmark, once per arm for each question.
+
+The SAME Claude Code harness runs against each question, once per arm,
+changing only the toolset (the single controlled variable).
 
   * arm "dglink"  -> the DGLink knowledge graph via the neo4j MCP server
   * arm "pdc_api" -> the raw PDC GraphQL + file-download MCP server (control)
 
-Both run headless (`claude -p ... --output-format json`), which reports tokens, turns,
-duration and cost — the objective "slower / more effort" metrics that need no ground
-truth. Answer correctness is scored separately (see score.py) after human labelling.
+Both run headless (`claude -p ... --output-format json`), which reports
+tokens, turns, duration and cost, the objective "slower / more effort"
+metrics that need no ground truth. Answer correctness is scored separately
+(see score.py) after human labeling.
 
 Usage:
-    python scripts/benchmark/run_benchmark.py                 # all questions, both arms
-    python scripts/benchmark/run_benchmark.py --arms pdc_api  # one arm
+    # all questions, both arms
+    python scripts/benchmark/run_benchmark.py
+    # one arm
+    python scripts/benchmark/run_benchmark.py --arms pdc_api
     python scripts/benchmark/run_benchmark.py --model opus --max-turns 40
 
-Both arms run with all built-in Claude Code tools (Bash/Read/Grep/...) DISALLOWED, so the
-only capability that differs between arms is the MCP server. This is essential: otherwise
-the API-only baseline can just read the graph TSVs or run Cypher and cheat (see
-DISALLOWED_BUILTINS below).
+Both arms run with all built-in Claude Code tools (Bash/Read/Grep/...)
+DISALLOWED, so the only capability that differs between arms is the MCP
+server. This is essential: otherwise the API-only baseline can just read the
+graph TSVs or run Cypher and cheat (see DISALLOWED_BUILTINS below).
 
 Prereqs:
-  * `claude` CLI on PATH; neo4j running with the merged graph loaded (for the dglink arm)
+  * `claude` CLI on PATH, neo4j running with the merged graph loaded (for the
+    dglink arm)
   * Verify the CLI flags below against your version: `claude --help`
 """
 

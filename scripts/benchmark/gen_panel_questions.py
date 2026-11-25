@@ -2,15 +2,17 @@
 """
 Generate the per-gene "membership" benchmark questions from the gold panel.
 
-Instead of open-ended "list some shared genes" (which lets the arms answer at wildly
-different scope — the graph dumps thousands, the API samples a handful — and can't be
-graded), we ask a yes/no over a FIXED panel. Both arms answer over the same candidates and
-emit a machine-checkable `PRESENT:` line, so score.py can compute precision/recall/F1
-against the independent gold in gold_gene_panel.json.
+Instead of open-ended "list some shared genes", which lets the arms answer at
+wildly different scope (the graph dumps thousands, the API samples a handful)
+and can't be graded, we ask a yes/no over a FIXED panel. Both arms answer over
+the same candidates and emit a machine-checkable `PRESENT:` line, so score.py
+can compute precision/recall/F1 against the independent gold in
+gold_gene_panel.json.
 
 Writes scripts/benchmark/questions_panel.jsonl (two questions):
-  * panel_cananolab      — present in a caNanoLab data file?          (gold: cananolab)
-  * panel_cana_pdc       — present in BOTH caNanoLab file AND a PDC study? (gold: cananolab_and_pdc)
+  * panel_cananolab: present in a caNanoLab data file? (gold: cananolab)
+  * panel_cana_pdc: present in BOTH a caNanoLab file AND a PDC study?
+    (gold: cananolab_and_pdc)
 
 Usage: python scripts/benchmark/gen_panel_questions.py
 """

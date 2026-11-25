@@ -30,8 +30,9 @@ MANIFEST_PATH = NCI_GDC_CACHE_DIR.joinpath("case_to_files.tsv")
 def connect_cases_to_files(
     hits, file_to_cases: pl.DataFrame | None = None
 ) -> pl.DataFrame:
-    """
-    connects all files from a case API call to their associated case id. Updates the data frame.
+    """Connect all files from a case API call to their associated case id.
+
+    Updates the data frame.
     """
     records = []
     for hit in hits:
@@ -57,23 +58,30 @@ def connect_cases_to_files(
 
 
 def gdc_curie(uuid: str) -> str:
-    """Prefix a raw GDC UUID as a `gdc:` CURIE (Biolink requires CURIE node ids)."""
+    """Prefix a raw GDC UUID as a `gdc:` CURIE.
+
+    Biolink requires CURIE node ids.
+    """
     return f"{GDC_CURIE_PREFIX}:{uuid}"
 
 
 def _flatten(value) -> str:
-    """Flatten a GDC value that may be a list (e.g. project.disease_type) or scalar
-    into a single '; '-joined string, so it fits a scalar node attribute."""
+    """Flatten a GDC value that may be a list or a scalar into a string.
+
+    The value (e.g. project.disease_type) is joined into a single '; '-joined
+    string, so it fits a scalar node attribute.
+    """
     if isinstance(value, (list, tuple, set)):
         return "; ".join(str(v) for v in value if v)
     return "" if value is None else str(value)
 
 
 def get_sample_metadata(hits: list, node_set: NodeSet):
-    """
-    Manually pulls all metadata field for a sample from the cases end point. Could be better done with existing GDC graph.
-    Samples are typed as biolink:MaterialSample with the GDC-native type in raw_label
-    and the human-readable submitter barcode kept as an alias.
+    """Pull all metadata fields for a sample from the cases endpoint.
+
+    Could be better done with the existing GDC graph. Samples are typed as
+    biolink:MaterialSample with the GDC-native type in raw_label and the
+    human-readable submitter barcode kept as an alias.
     """
     for hit in hits:
         for sample in hit.get("samples", []):
@@ -100,15 +108,17 @@ def get_sample_metadata(hits: list, node_set: NodeSet):
 
 
 def get_diagnosis_metadata(hits: list, node_set: NodeSet, edge_set: EdgeSet):
-    """Add diagnoses as grounded biolink:Disease *concept* nodes + case -> disease edges.
+    """Add diagnoses as grounded biolink:Disease concept nodes with edges.
 
-    The primary_diagnosis is grounded to an ontology curie (shared with GC/PDC so the same
-    disease merges across portals); the Disease node holds only concept identity
-    (name / curie / iri). The per-patient diagnosis-event fields (stage, morphology, site,
-    age, ...) ride on the case --associated_with--> disease edge, so they never collide on
-    the shared concept node. (Patient demographics incl. vital_status live on the Case,
-    attached in process_case_hierarchy.) Because this owns the diagnosis fully, the generic
-    case-hierarchy loop skips native_type == "diagnosis".
+    Adds case -> disease edges. The primary_diagnosis is grounded to an
+    ontology curie (shared with GC/PDC so the same disease merges across
+    portals), and the Disease node holds only concept identity (name / curie /
+    iri). The per-patient diagnosis-event fields (stage, morphology, site, age,
+    ...) are stored on the case --associated_with--> disease edge, so they
+    never collide on the shared concept node. (Patient demographics incl.
+    vital_status are on the Case, attached in process_case_hierarchy.) Because
+    this owns the diagnosis fully, the generic case-hierarchy loop skips
+    native_type == "diagnosis".
     """
     for hit in hits:
         case_id = gdc_curie(hit.get("id", "case_id_missing"))
@@ -172,21 +182,23 @@ def get_diagnosis_metadata(hits: list, node_set: NodeSet, edge_set: EdgeSet):
 
 
 def process_case_hierarchy(hits, node_set, edge_set, include_biospecimen: bool = True):
-    """Extract the case hierarchy and add it to the graph as a Biolink-conformant subgraph.
+    """Add the case hierarchy to the graph as a Biolink-conformant subgraph.
 
-    When `include_biospecimen` is False the specimen scaffolding (sample / aliquot /
-    analyte / portion / slide -> biolink:MaterialSample) is skipped, so only the case,
-    its owning project/study and its (grounded) diagnoses are emitted. Nothing is
-    extracted from these specimen nodes, so dropping them shrinks the graph
-    dramatically without touching the content or cross-portal integration story.
+    When `include_biospecimen` is False the specimen scaffolding (sample /
+    aliquot / analyte / portion / slide -> biolink:MaterialSample) is skipped,
+    so only the case, its owning project/study and its (grounded) diagnoses are
+    emitted. Nothing is extracted from these specimen nodes, so dropping them
+    shrinks the graph dramatically without touching the content or
+    cross-portal integration story.
 
-    Every node carries a valid Biolink category in :LABEL (with the GDC-native type kept
-    in raw_label) and a `gdc:`-prefixed CURIE id. Edges use Biolink predicates (with the
-    GDC-native relation kept in raw_type). The `submitter_*` barcode fields are alternate
-    identifiers, not entities, so they never become nodes; the authoritative barcodes are
-    attached as the submitter_id alias from the case scalar and the nested samples object
-    (the top-level submitter_<type>_ids arrays are not positionally aligned with the UUIDs,
-    so specimen barcodes below the sample level are not reattached).
+    Every node carries a valid Biolink category in :LABEL (with the GDC-native
+    type kept in raw_label) and a `gdc:`-prefixed CURIE id. Edges use Biolink
+    predicates (with the GDC-native relation kept in raw_type). The
+    `submitter_*` barcode fields are alternate identifiers, not entities, so
+    they never become nodes. The authoritative barcodes are attached as the
+    submitter_id alias from the case scalar and the nested samples object (the
+    top-level submitter_<type>_ids arrays are not positionally aligned with the
+    UUIDs, so specimen barcodes below the sample level are not reattached).
     """
     for hit in hits:
         case_uuid = hit.get("id", "case_id_missing")
@@ -302,7 +314,7 @@ def process_case_hierarchy(hits, node_set, edge_set, include_biospecimen: bool =
 
 
 def max_call_size(end_point):
-    """small helper function to get max size for an api call"""
+    """Return the maximum size for an API call to an endpoint."""
     params = {"format": "JSON", "size": 0}
     response = requests.get(end_point, params=params)
     return response.json()["data"]["pagination"]["total"]
@@ -316,12 +328,18 @@ def get_case_hierarchy(
     batch_length: int = 500,
     include_biospecimen: bool = True,
 ):
-    """connect cases to all down stream objects. Saves files as a tsv in `dglink/resources/reports/cases_to_files.tsv` , and connects all meta objects (samples, studies, projects, etc.) to case in the graph.
+    """Connect cases to all downstream objects.
 
-    Set `include_biospecimen=False` to omit the sample/aliquot/analyte/portion/slide
-    (biolink:MaterialSample) scaffolding, keeping only cases, projects/studies and
-    diagnoses. No content is extracted from specimen nodes, so this is a lossless prune
-    for the extraction / cross-portal-integration story."""
+    Saves files as a tsv in `dglink/resources/reports/cases_to_files.tsv`, and
+    connects all meta objects (samples, studies, projects, etc.) to the case in
+    the graph.
+
+    Set `include_biospecimen=False` to omit the
+    sample/aliquot/analyte/portion/slide (biolink:MaterialSample) scaffolding,
+    keeping only cases, projects/studies and diagnoses. No content is extracted
+    from specimen nodes, so this is a lossless prune for the extraction /
+    cross-portal-integration story.
+    """
     ## Filter for a specific list of cases
     if case_list is not None:
         number_cases: int = len(case_list)
@@ -373,7 +391,10 @@ def get_case_hierarchy(
 
 
 def download_tabular_files(case_list: list, verbose: bool = False):
-    """download tabular files associated with a case list and save in `~/.data/gdc/files`"""
+    """Download the tabular files of a list of cases.
+
+    The files are saved in `~/.data/gdc/files`.
+    """
     files_df = pl.read_csv(MANIFEST_PATH, separator="\t")
     files_dir = NCI_GDC_CACHE_DIR.joinpath("files")
     ## filter for available files and also those that are tsv
@@ -432,9 +453,7 @@ def download_tabular_files(case_list: list, verbose: bool = False):
 
 
 def get_tabular_iterator(case_list: list) -> Iterator:
-    """
-    returns a 2d iterator of case_ids and associated file_paths
-    """
+    """Return a 2D iterator of case ids and their associated file paths."""
     files_df = pl.read_csv(MANIFEST_PATH, separator="\t")
     ## get only tabular files
     project_files = files_df.filter(

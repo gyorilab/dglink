@@ -1,5 +1,5 @@
 """
-Assemble DGLink KG over NHLBI BioData Catalyst data portal 
+Assemble the DGLink KG of the NHLBI BioData Catalyst data portal.
 """
 from dglink import NodeSet, EdgeSet, write_graph
 from dglink.portals.nhlbi.bdc import NhlbiBioDataCatalystClient ,get_metadata_graph, NODE_ATTRIBUTES, EDGE_ATTRIBUTES, download_tabular_files, get_tabular_iterator

@@ -1,5 +1,5 @@
 """
-randomly sample columns for a schema matching benchmark dataset
+Randomly sample columns for a schema matching benchmark dataset.
 """
 
 import polars as pl

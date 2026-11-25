@@ -1,5 +1,5 @@
 """
-Helper client for interfacing with Gen3 APIs
+Helper client for interfacing with Gen3 APIs.
 """
 
 from ..optional_deps import import_optional
@@ -24,7 +24,7 @@ class Gen3Client:
         save_directory="./Downloads",
         show_progress: bool = True,
     ):
-        """Download a list of files from Gen3"""
+        """Download a list of files from Gen3."""
         drs = import_optional("gen3.tools.download.drs_download", "gen3")
         download_list = [drs.Downloadable(object_id=f) for f in file_ids]
         manager = drs.DownloadManager(

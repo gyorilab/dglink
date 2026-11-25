@@ -22,11 +22,15 @@ def get_program_hierarchy(
 ) -> list[str]:
     """Build the program -> project -> study structural subgraph.
 
-    Every node carries a valid Biolink category in :LABEL (with the BDC-native type
-    kept in raw_label) and a `nhlbibdc:`-prefixed CURIE id.
+    Every node carries a valid Biolink category in :LABEL (with the BDC-native
+    type kept in raw_label) and a `nhlbibdc:`-prefixed CURIE id.
 
-    Returns the list of project_ids discovered, so the caller can pull each project's
-    subjects/publications/core metadata without re-fetching the program tree.
+    Returns
+    -------
+    list[str]
+        The list of project_ids discovered, so the caller can pull each
+        project's subjects/publications/core metadata without re-fetching the
+        program tree.
     """
     project_ids: list[str] = []
     for program in client.get_program_hierarchy():
@@ -116,9 +120,9 @@ def get_subject_hierarchy(
 ):
     """Build the study -> subject subgraph for every project.
 
-    Subjects carry `project_id` directly, so they're paged per project; the `studies`
-    sub-selection on each subject links it back to its parent study/studies (a subject
-    can belong to more than one study).
+    Subjects carry `project_id` directly, so they're paged per project. The
+    `studies` sub-selection on each subject links it back to its parent
+    study/studies (a subject can belong to more than one study).
     """
     for project_id in project_ids:
         for subject in client.get_subjects_for_project(project_id):
@@ -192,11 +196,12 @@ def get_core_metadata_hierarchy(
     edge_set: EdgeSet,
     project_ids: list[str],
 ):
-    """Build the project -> core_metadata_collection subgraph for every project.
+    """Build the project -> core_metadata_collection subgraph for each project.
 
-    core_metadata_collection is BDC's dataset-level descriptive record (Dublin-Core
-    style: title/description/creator/publisher/...) - useful as searchable dataset
-    metadata distinct from the structural program/project/study nodes.
+    core_metadata_collection is BDC's dataset-level descriptive record
+    (Dublin-Core style: title/description/creator/publisher/...), useful as
+    searchable dataset metadata distinct from the structural
+    program/project/study nodes.
     """
     for project_id in project_ids:
         project_curie = bdc_curie(project_id)
@@ -237,10 +242,12 @@ def get_metadata_graph(
     node_set: NodeSet,
     edge_set: EdgeSet,
 ):
-    """Build the full BDC structural/metadata subgraph (program -> project -> study,
-    plus project -> subject via study, project -> publication, and project ->
-    core_metadata_collection) into the node/edge sets. Analogous to PDC's
-    get_metadata_graph and GC's get_metadata_graph.
+    """Build the full BDC structural/metadata subgraph.
+
+    The subgraph is program -> project -> study, plus project -> subject via
+    study, project -> publication, and project -> core_metadata_collection,
+    added to the node/edge sets. Analogous to PDC's get_metadata_graph and
+    GC's get_metadata_graph.
     """
     project_ids = get_program_hierarchy(client, node_set, edge_set)
     get_subject_hierarchy(client, node_set, edge_set, project_ids)
