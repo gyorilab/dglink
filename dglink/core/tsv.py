@@ -3,8 +3,8 @@
 import math
 import re
 
-## tabs / newlines would split a row or a column, other control and invisible characters
-## (NUL, zero-width spaces, BOMs, unicode line separators) corrupt or hide text
+# Tabs / newlines would split a row or a column, other control and invisible characters
+# (NUL, zero-width spaces, BOMs, unicode line separators) corrupt or hide text
 _UNSAFE_CHARS = re.compile(r"[\x00-\x1f\x7f-\x9f ​-‍  ﻿]")
 _WHITESPACE = re.compile(r"\s+")
 

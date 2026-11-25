@@ -63,7 +63,7 @@ with open(out, "w") as f:
     for q in QUESTIONS:
         f.write(json.dumps(q) + "\n")
 
-# print the gold positives for each question so you can eyeball what "correct" means
+# Print the gold positives for each question so you can eyeball what "correct" means
 def positive(field):
     pos = []
     for g in PANEL:

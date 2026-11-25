@@ -36,7 +36,7 @@ import requests
 import polars as pl
 from mcp.server.fastmcp import FastMCP
 
-## make `dglink` importable no matter what cwd Claude Code launches us from
+# Make `dglink` importable no matter what cwd Claude Code launches us from
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from dglink.portals.nci.gc.constants import (  # noqa: E402
     NCI_GQL_ENDPOINT,
@@ -53,7 +53,7 @@ _ALLOWED_HOST_SUFFIXES = (
     "amazonaws.com",
 )
 _MAX_CHARS = 20000
-_GEN3_CREDENTIAL_FILE = 'nci_general_commons_credentials'  # optional; needed for downloads
+_GEN3_CREDENTIAL_FILE = 'nci_general_commons_credentials'  # Optional; needed for downloads
 
 
 def _host_ok(url: str) -> bool:

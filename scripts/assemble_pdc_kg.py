@@ -17,7 +17,7 @@ from dglink.core.tabular_data import get_tabular_data
 RESOURCE_PATH = "nci_pdc_graph"
 
 
-## determines if want to keep biological samples, which creates a large number of nodes ##
+# Determines if want to keep biological samples, which creates a large number of nodes
 INCLUDE_BIOSPECIMEN = 0
 EX_STUDIES = [
     "b91a12b7-f3a0-11ea-b1fd-0aad30af8a83",
@@ -31,8 +31,8 @@ if __name__ == "__main__":
     edge_set = EdgeSet(attributes=EDGE_ATTRIBUTES)
     client = NciProteomicCommonsClient()
 
-    ## structural / metadata subgraph
-    ## (program -> project -> study -> case -> sample -> aliquot, plus disease nodes)
+    # Structural / metadata subgraph
+    # (program -> project -> study -> case -> sample -> aliquot, plus disease nodes)
     get_metadata_graph(
         client,
         node_set=node_set,

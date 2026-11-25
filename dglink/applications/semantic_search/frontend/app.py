@@ -56,14 +56,14 @@ def process_results(raw_results):
                             {
                                 "text": f"{val}",
                                 "field": key,
-                                "url": val,  # store the actual url
+                                "url": val,  # Store the actual url
                             }
                         )
                     else:
                         processed_row.append(
                             {
                                 "text": f"{key}: {val}",
-                                "url": None,  # store the actual url
+                                "url": None,  # Store the actual url
                             }
                         )
             except:
@@ -79,7 +79,7 @@ def index():
         "Agent": "",
         "Relation": "",
         "OtherAgent": "",
-        "QueryType": "Subject",  # default selection
+        "QueryType": "Subject",  # Default selection
     }
     if request.method == "POST":
         form_data["Agent"] = request.form.get("Agent", "")

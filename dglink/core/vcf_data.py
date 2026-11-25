@@ -174,7 +174,7 @@ def extract_vcf_metadata(
             "source:string[]": data_source,
         }
     )
-    ## extract the sources
+    # Extract the sources
     for source in vcf_cmnds:
         node_set.update_nodes(
             {
@@ -185,8 +185,8 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-    ## source and commands are similar so merge to one node type
-    ## extract the commands
+    # Source and commands are similar so merge to one node type
+    # extract the commands
     cmnds = meta.get("GATKCommandLine", [])
     for cmnd in cmnds:
         cmnd_id = cmnd.get("ID", "missing_command")
@@ -200,9 +200,9 @@ def extract_vcf_metadata(
             }
         )
         vcf_cmnds.append(cmnd_id)
-    ## go through all possible samples
+    # Go through all possible samples
     for sample in vcf_reader.samples:
-        ## add sample as node
+        # Add sample as node
         node_set.update_nodes(
             {
                 "curie:ID": sample,
@@ -212,7 +212,7 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-        ## add edge between sample and project
+        # Add edge between sample and project
         edge_set.update_edges(
             {
                 ":START_ID": study_id,
@@ -221,7 +221,7 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-        ## add edges from each sample to the file format and reference
+        # Add edges from each sample to the file format and reference
         edge_set.update_edges(
             {
                 ":START_ID": sample,
@@ -238,7 +238,7 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-        ## add each of the command ids to the sample
+        # Add each of the command ids to the sample
         for vcf_cmnd in vcf_cmnds:
             edge_set.update_edges(
                 {
@@ -295,12 +295,12 @@ def parse_vcf_file(
     if file_path is None:
         able_to_process = False
     else:
-        ## extract the variants
+        # Extract the variants
         if process_variants:
             node_set, edge_set, able_to_process = extract_variants(
                 obj=obj, node_set=node_set, edge_set=edge_set
             )
-        ## extract the meta data
+        # Extract the meta data
         node_set, edge_set = extract_vcf_metadata(
             obj=obj, node_set=node_set, edge_set=edge_set
         )
@@ -404,7 +404,7 @@ def get_vcf_data(
                 resource_path=os.path.join(RESOURCE_PATH, "artifacts"),
             )
 
-    ## write a sub-graph with just vcf experimental data
+    # Write a sub-graph with just vcf experimental data
     if write_set:
         write_graph(
             node_set=node_set,

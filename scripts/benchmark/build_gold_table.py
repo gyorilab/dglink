@@ -58,7 +58,7 @@ MAX_BYTES = 25 * 1024 * 1024
 PDC_GQL = "https://proteomic.datacommons.cancer.gov/graphql"
 GDC_SSMS = "https://api.gdc.cancer.gov/ssms"
 
-# canonical gene -> match tokens (symbol + mouse form + aliases). Matching is CASE-INSENSITIVE
+# Canonical gene -> match tokens (symbol + mouse form + aliases). Matching is CASE-INSENSITIVE
 # (so "KRas" in a protein description counts, which a case-sensitive scan misses). Symbols that
 # collide with common lab/English words even case-insensitively (APC=allophycocyanin,
 # MET=metastasis, KIT=reagent, ATM=atmosphere) are DELIBERATELY EXCLUDED from the panel — they
@@ -83,11 +83,11 @@ PANEL = {
     "IDH1":   {"tokens": ["IDH1", "Idh1"]},
     "MAPK3":  {"tokens": ["MAPK3", "Mapk3", "ERK1"]},
     "IGF1R":  {"tokens": ["IGF1R", "Igf1r"]},
-    # deliberate decoys — genes not expected in a nanomedicine characterization corpus:
+    # Deliberate decoys — genes not expected in a nanomedicine characterization corpus:
     "HBB":    {"tokens": ["HBB", "Hbb"], "decoy": True},
     "OR4F5":  {"tokens": ["OR4F5"], "decoy": True},
 }
-# uppercased token -> canonical gene, for O(1) case-insensitive lookup against a file's tokens
+# Uppercased token -> canonical gene, for O(1) case-insensitive lookup against a file's tokens
 TOKEN_TO_GENE = {t.upper(): g for g, spec in PANEL.items() for t in spec["tokens"]}
 ALL_TOKENS = set(TOKEN_TO_GENE)
 
@@ -97,12 +97,12 @@ ALL_TOKENS = set(TOKEN_TO_GENE)
 # across species), so neither is a superset — these overrides reconcile the two into a
 # defensible truth. Each override records the evidence.
 ADJUDICATED = {
-    # graph-correct, scan false-negative (scan only matches symbols, not full names / odd casing):
+    # Graph-correct, scan false-negative (scan only matches symbols, not full names / odd casing):
     "KRAS":  {"present": True, "reason": "graph grounded 'GTPase KRas isoform X1 [Mus musculus]' "
                                          "(Description col) — real gene; scan's tabular scope missed that file"},
     "BRCA2": {"present": True, "reason": "graph grounded 'breast cancer type 2 susceptibility protein "
                                          "homolog [Mus musculus]' (full name) — real; symbol scan can't catch full names"},
-    # scan-correct, graph false-negative (real symbol hits in files the graph never ingested):
+    # Scan-correct, graph false-negative (real symbol hits in files the graph never ingested):
     "TP53":  {"present": True, "reason": "scan found Trp53/TP53/p53 in 12 files (real); graph missed (uningested files)"},
     "IDH1":  {"present": True, "reason": "scan found Idh1 (real gene table); graph missed"},
 }
@@ -129,7 +129,7 @@ def _tokens_from_bytes(content: bytes, name: str) -> set:
                 str(v) for row in df.iter_rows() for v in row if v is not None
             )
         except Exception:
-            return set()  # unparseable binary — skip (logged by caller as parsed=False)
+            return set()  # Unparseable binary — skip (logged by caller as parsed=False)
     else:
         text = content.decode("utf-8", errors="replace")
     return set(re.split(r"[^A-Za-z0-9]+", text))
@@ -162,10 +162,10 @@ def scan_one(f: dict) -> dict:
         toks = _tokens_from_bytes(content, name)
         if not toks:
             rec["parsed"] = False
-        hit_tokens = {t.upper() for t in toks} & ALL_TOKENS  # case-insensitive match
+        hit_tokens = {t.upper() for t in toks} & ALL_TOKENS  # Case-insensitive match
         genes = sorted({TOKEN_TO_GENE[t] for t in hit_tokens})
         rec["matched"] = genes
-        rec["hits"] = {TOKEN_TO_GENE[t]: t for t in hit_tokens}  # gene -> which token matched
+        rec["hits"] = {TOKEN_TO_GENE[t]: t for t in hit_tokens}  # Gene -> which token matched
     except Exception as e:  # noqa: BLE001
         rec.update(parsed=False, error=f"{type(e).__name__}:{e}")
     return rec
@@ -196,7 +196,7 @@ def scan_cananolab(limit, workers):
             if i % 100 == 0 or i == len(todo):
                 rate = i / max(1e-9, time.time() - t0)
                 print(f"  scanned {i}/{len(todo)}  ({rate:.1f}/s)", flush=True)
-    # aggregate per gene
+    # Aggregate per gene
     recs = [done[f["file_id"]] for f in files if f["file_id"] in done]
     parsed = [r for r in recs if r.get("parsed")]
     per_gene = {g: {"present": False, "n_files": 0, "examples": []} for g in PANEL}
@@ -257,7 +257,7 @@ def main():
     else:
         print("== caNanoLab file scan (graph-free) ==", flush=True)
         cana, coverage = scan_cananolab(args.limit, args.workers)
-        # apply hand-adjudicated overrides for genes where scan and graph disagreed
+        # Apply hand-adjudicated overrides for genes where scan and graph disagreed
         for g, ov in ADJUDICATED.items():
             if cana.get(g) is not None:
                 cana[g]["present"] = ov["present"]
@@ -282,7 +282,7 @@ def main():
     with open(os.path.join(HERE, "gold_gene_panel.json"), "w") as fh:
         json.dump(gold, fh, indent=2)
 
-    # human-readable table
+    # Human-readable table
     lines = ["gene\tcaNanoLab\tPDC\tGDC\tcana_files\tflag"]
     def mark(x):
         p = (x or {}).get("present")

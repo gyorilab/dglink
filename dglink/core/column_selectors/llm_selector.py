@@ -75,7 +75,7 @@ class LLMSelector(ColumnSelector):
             if e_type is None:
                 drop.append(col)
             else:
-                ## TODO: use the type labels for some type of value selection
+                # TODO: use the type labels for some type of value selection
                 keep.append(col)
                 logger.info(f"{col}->{e_type}")
         self._apply_selection(table, keep=keep, drop=drop)
@@ -144,17 +144,17 @@ class LLMSelector(ColumnSelector):
         raw_col = f"{col}_raw_text"
         cols = [raw_col] if not self.use_gilda_info else [raw_col, f"{col}_name", f"{col}_type"]
         view: DataFrame = table.table[cols]
-        ## take a random sample ##
+        # Take a random sample
         if not self.priority_sample:
             max_samples = max(view[raw_col].count(), 1)
             return (
                 view.dropna(subset=[raw_col])
-                ## seeded per table so the same table/column always gets the same sample
+                # Seeded per table so the same table/column always gets the same sample
                 .sample(min(self.target_records_for_call, max_samples), random_state=table.seed)
                 .fillna(value="not found", axis=1)
             )
         priority_sample = table.get_priority_sample(col=col, target_size=self.target_records_for_call)
-        ## first row for each sampled value
+        # First row for each sampled value
         return (
             view[view[raw_col].isin(priority_sample)]
             .drop_duplicates(subset=[raw_col])

@@ -143,7 +143,7 @@ class EdgeSet:
                 for col in self.attributes:
                     val = self.edges[curie][col]
                     if type(val) == set:
-                        ## sort for deterministic output, then take max of 20
+                        # Sort for deterministic output, then take max of 20
                         val = sorted(val, key=str)[:20]
                         items = (clean_tsv_text(v, array_item=True) for v in val)
                         joined = ";".join(v for v in items if v)

@@ -20,17 +20,17 @@ if __name__ == "__main__":
     result_path = os.path.join(
         os.path.join(REPORT_PATH), "benchmarking_columns_diverse.tsv"
     )
-    ## get a list of tabular files and download if need be
+    # Get a list of tabular files and download if need be
     project_ids = get_all_nf_studies()
     tabular_files_queue: deque[tuple[str, deque]] = deque()
     tabular_iterator = get_tabular_iterator(project_list=project_ids)
-    ## build the queue
+    # Build the queue
     for group_identifier, file_paths, file_ids in tabular_iterator:
         records: deque = deque()
         for fp in file_paths:
             records.append(fp)
         tabular_files_queue.append((group_identifier, records))
-    ## construct the benchmark
+    # Construct the benchmark
     benchmark = []
     pbar = tqdm.tqdm(total=TARGET_LENGTH)
     print(len(tabular_files_queue))
@@ -49,7 +49,7 @@ if __name__ == "__main__":
                     if len(df.columns) < 1:
                         continue
                     else:
-                        ## sample just one col ##
+                        # Sample just one col
                         col_idx = rng.integers(low=0, high=len(df.columns))
                         col = df.columns[col_idx]
                         benchmark.append(
@@ -65,7 +65,7 @@ if __name__ == "__main__":
                         break
         if len(fps) > 0:
             tabular_files_queue.append((group_id, fps))
-            ## incrementally write the report
+            # Incrementally write the report
             write_df = pl.from_dicts(benchmark)
             write_df.write_csv(
                 result_path,

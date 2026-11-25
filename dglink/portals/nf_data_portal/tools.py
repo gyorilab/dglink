@@ -30,7 +30,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-## gene grounding: gene / protein namespaces only, so "NF1" never grounds to the disease
+# Gene grounding: gene / protein namespaces only, so "NF1" never grounds to the disease
 GENE_NAMESPACES = ["HGNC", "UP", "MGI", "RGD"]
 GENE_TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9]*")
 HUMAN_TAXON = "9606"
@@ -67,7 +67,7 @@ def get_tools(
     return node_set, edge_set
 
 
-## --- tool nodes -------------------------------------------------------------------
+# --- tool nodes -------------------------------------------------------------------
 
 def tool_curie(row: dict) -> str:
     """Return the id of a tool node.
@@ -117,15 +117,15 @@ def get_tool_nodes(node_set: NodeSet, edge_set: EdgeSet):
 
     and the edges from its own fields (see parse_tool_fields).
     """
-    ## this table has all NF data portal tool meta data, it was generated from the programmatic export on the nf data portal website.
+    # This table has all NF data portal tool meta data, it was generated from the programmatic export on the nf data portal website.
     query = syn.tableQuery(f"SELECT * FROM {NF_TOOLS_TABLE}")
     df = query.asDataFrame()
-    ## flag view columns we do not know how to handle, so upstream schema changes are noticed
+    # Flag view columns we do not know how to handle, so upstream schema changes are noticed
     known = set(NF_TOOL_PROPERTIES) | NF_TOOL_ID_COLUMNS | NF_TOOL_EDGE_COLUMNS | NF_TOOL_DROPPED_COLUMNS
     unknown = sorted(set(df.columns) - known)
     if unknown:
         logger.warning(f"tools view has columns that are not handled, skipping them: {unknown}")
-    ## mapping from names (and synonyms) and resourceIds back to identifiers
+    # Mapping from names (and synonyms) and resourceIds back to identifiers
     name_to_curies = dict()
     resource_to_curie = dict()
     for row in tqdm.tqdm(df.to_dict("records")):
@@ -150,14 +150,14 @@ def get_tool_nodes(node_set: NodeSet, edge_set: EdgeSet):
         for name in {str(row["resourceName"]).strip()} | _tool_property(row.get("synonyms"), "synonyms:string[]"):
             name_to_curies.setdefault(name, set()).add(curie)
         resource_to_curie[row["resourceId"]] = curie
-    ## a name shared by several tools (e.g. "NF1" is a synonym of many antibodies) says
-    ## nothing about which one was used, so only names of a single tool are matched
+    # A name shared by several tools (e.g. "NF1" is a synonym of many antibodies) says
+    # nothing about which one was used, so only names of a single tool are matched
     name_to_curie = {name: next(iter(c)) for name, c in name_to_curies.items() if len(c) == 1}
     logger.info(f"{len(name_to_curies) - len(name_to_curie)} tool names are shared by several tools and not matched")
     return node_set, edge_set, name_to_curie, resource_to_curie
 
 
-## --- edges from a tool's own fields ---------------------------------------------------
+# --- edges from a tool's own fields ---------------------------------------------------
 
 def parse_tool_fields(tool: str, category: str, row: dict, node_set: NodeSet, edge_set: EdgeSet):
     """Add the edges (and target nodes) from one tools view row.
@@ -300,7 +300,7 @@ def parse_tool_genes(tool: str, row: dict, node_set: NodeSet, edge_set: EdgeSet)
     return node_set, edge_set
 
 
-## --- study -> tool edges --------------------------------------------------------------
+# --- study -> tool edges --------------------------------------------------------------
 
 def _file_values(value) -> list:
     """Return the values of a file annotation.
@@ -351,7 +351,7 @@ def get_tool_edges(project_ids: list, name_to_curie: dict, edge_set: EdgeSet):
     return edge_set
 
 
-## --- publication -> tool edges --------------------------------------------------------
+# --- publication -> tool edges --------------------------------------------------------
 
 def get_tool_publication_edges(node_set: NodeSet, edge_set: EdgeSet, resource_to_curie: dict):
     """Link tools to the publications that used or developed them.

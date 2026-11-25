@@ -1,24 +1,24 @@
 from pystow import module
 
-## module store info ##
+# Module store info
 NHLBI_BDC_CACHE_DIR = module("nhlbi_bio_data_catalyst").base
 
-## API END POINTS ##
+# API END POINTS
 BDC_GEN3_ENDPOINT = "https://gen3.biodatacatalyst.nhlbi.nih.gov"
 
 
-## portal specific tabular file CHOICES ##
+# Portal specific tabular file CHOICES
 BDC_TABULAR_FILE_TYPES = ["csv", "xls", "xlsx", "ods", "txt", "tsv"]
 
 NODE_ATTRIBUTES = [
-    ## core fields 
+    # Core fields
     "curie:ID",
     ":LABEL",
-    "raw_label",  ## BDC-native type kept alongside the Biolink category
+    "raw_label",  # BDC-native type kept alongside the Biolink category
     "name",
     "iri",
     "source:string[]",
-    ## program / project fields
+    # Program / project fields
     "dbgap_accession_number",
     "code",
     "availability_type",
@@ -28,19 +28,19 @@ NODE_ATTRIBUTES = [
     "released:boolean",
     "investigator_name",
     "investigator_affiliation",
-    ## study fields
+    # Study fields
     "short_name",
     "study_description",
     "dbgap_phs",
     "dbgap_consent",
     "type_of_data:string[]",
-    ## subject fields
+    # Subject fields
     "participant_id",
     "consent_codes:string[]",
-    ## publication fields
+    # Publication fields
     "doi",
     "pmid",
-    ## core_metadata_collection fields 
+    # core_metadata_collection fields
     "title",
     "description",
     "data_type",
@@ -51,13 +51,13 @@ NODE_ATTRIBUTES = [
     "date",
 ]
 EDGE_ATTRIBUTES = [
-    ## core fields
+    # Core fields
     ":START_ID",
     ":END_ID",
     ":TYPE",
     "raw_type", 
     "source:string[]",
-    ## tabular provenance — which file / column / raw text an extracted entity was found in
+    # Tabular provenance — which file / column / raw text an extracted entity was found in
     "raw_texts:string[]",
     "columns:string[]",
     "file_id:string[]",
@@ -87,14 +87,14 @@ BDC_LABEL_TO_BIOLINK = {
 BDC_DEFAULT_BIOLINK_CATEGORY = "biolink:NamedThing"
 
 BDC_EDGE_TO_BIOLINK = {
-    "Has_Project": "biolink:has_part",  ## program -> project
-    "Has_Study": "biolink:has_part",  ## project -> study
-    "Has_Subject": "biolink:has_part",  ## study -> subject
-    "Has_Publication": "biolink:has_part",  ## project -> publication
-    "Has_Core_Metadata_Collection": "biolink:has_part",  ## project -> core_metadata_collection
+    "Has_Project": "biolink:has_part",  # Program -> project
+    "Has_Study": "biolink:has_part",  # Project -> study
+    "Has_Subject": "biolink:has_part",  # Study -> subject
+    "Has_Publication": "biolink:has_part",  # Project -> publication
+    "Has_Core_Metadata_Collection": "biolink:has_part",  # Project -> core_metadata_collection
 }
 
-## List of file node types to process ##
+# List of file node types to process
 BDC_FILE_NODE_TYPES = [
             'aligned_reads',
             'imaging_file',

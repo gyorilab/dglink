@@ -36,10 +36,10 @@ def get_projects_to_edges(edges_df):
             edges_df[":END_ID"].unique(),
         )
     )
-    ## mapping project_id -> entity -> edge_type
+    # Mapping project_id -> entity -> edge_type
     project_to_edges_map = {project_id: dict() for project_id in all_project_ids}
     for project_id in all_project_ids:
-        # get edges where that project (or its wiki ) is the hed node
+        # Get edges where that project (or its wiki ) is the hed node
         head_edges = edges_df.loc[
             edges_df[":START_ID"].isin([project_id, f"{project_id}:Wiki"]),
         ]
@@ -52,7 +52,7 @@ def get_projects_to_edges(edges_df):
             if x[1] not in project_to_edges_map[project_id]:
                 project_to_edges_map[project_id][x[1]] = set()
             project_to_edges_map[project_id][x[1]].add(x[0])
-        # get edges where that project (or its wiki) is the tail node
+        # Get edges where that project (or its wiki) is the tail node
         tail_edges = edges_df.loc[
             edges_df[":END_ID"].isin([project_id, f"{project_id}:Wiki"]),
         ]
@@ -70,14 +70,14 @@ def get_projects_to_edges(edges_df):
 
 def get_entity_names():
     with open(f"{RESOURCE_DIR}/entity_names.json", mode="r") as f:
-        name_maps = json.load(f)  # indent for pretty-printing
+        name_maps = json.load(f)  # Indent for pretty-printing
     return name_maps
 
 
 def get_edge_weights():
-    ## get a dictionary weight mapping for each edge type
+    # Get a dictionary weight mapping for each edge type
     edge_weights = {e_type: 1 for e_type in edges_df[":TYPE"].unique()}
-    ## for now just re-weighting a few node-types
+    # For now just re-weighting a few node-types
     edge_weights["mentions"] = 0.5
     edge_weights["has_fundingAgency"] = 2
     edge_weights["has_institutions"] = 2
@@ -176,7 +176,7 @@ if __name__ == "__main__":
     )
     sorted_df.to_csv("jac.csv")
 
-    ## cutoff analysis
+    # Cutoff analysis
     cutoff = 0.15
     count_known_edges = lambda x: sum(x["has_related_study"])
     total = count_known_edges(df)

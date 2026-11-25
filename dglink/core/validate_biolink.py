@@ -20,8 +20,8 @@ from dglink.core.optional_deps import import_optional
 
 bmt = import_optional("bmt", "validate_kg")
 
-## pinned in pyproject.toml; the schema is read from the installed biolink-model
-## package rather than bmt's default (an older release fetched from GitHub)
+# Pinned in pyproject.toml; the schema is read from the installed biolink-model
+# package rather than bmt's default (an older release fetched from GitHub)
 BIOLINK_MODEL_VERSION = "4.4.3"
 BIOLINK_PREDICATE_MAP_URL = (
     "https://raw.githubusercontent.com/biolink/biolink-model/"
@@ -69,7 +69,7 @@ def is_valid_category(label: str) -> bool:
         el = t.get_element(cand)
         if el is None:
             continue
-        # a category must exist, be a class category, and not be a mixin/abstract
+        # A category must exist, be a class category, and not be a mixin/abstract
         if (
             t.is_category(cand)
             and not getattr(el, "mixin", False)

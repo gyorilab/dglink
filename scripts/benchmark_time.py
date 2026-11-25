@@ -45,7 +45,7 @@ def run_benchmark(
             table = TabularDataset(
                 dataset_path=Path(fp), sheet_name=sheet_name, table=df
             )
-            ## try to ground everything in the dataframe
+            # Try to ground everything in the dataframe
             table.ground_table()
             llm_times = []
             hierarchal_times = []

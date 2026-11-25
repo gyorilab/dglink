@@ -58,7 +58,7 @@ def run_benchmark(
         df = dfs[sheet_idx]
         record["column"] = column
         table = TabularDataset(dataset_path=Path(fp), sheet_name=target_sheet, table=df)
-        ## try to ground everything in the dataframe
+        # Try to ground everything in the dataframe
         table.ground_table()
         selector = HeuristicSelector(max_entity_types=3)
         selector = LLMSelectorTableWide()
@@ -77,7 +77,7 @@ def run_benchmark(
     return write_df
 
 
-## metrics for benchmarking
+# Metrics for benchmarking
 def accuracy(col_name: str, evaluated_df: pl.DataFrame) -> float:
     """Return the accuracy of the predictions in a column of a data frame."""
     correct_pred = evaluated_df.filter(pl.col(col_name).eq(pl.col("is_entity_col")))
@@ -105,7 +105,7 @@ def f1_score(col_name: str, evaluated_df: pl.DataFrame) -> float:
     return 2 * ((col_precision * col_recall) / (col_precision + col_recall))
 
 
-## methods for evaluating results
+# Methods for evaluating results
 def evaluate_col(col_name: str, evaluated_df: pl.DataFrame) -> dict[str, float | str]:
     return {
         "method_name": col_name,
@@ -145,7 +145,7 @@ def get_benchmark_summary(
         methods_summary.append(
             evaluate_col(col_name=method, evaluated_df=evaluated_benchmark_df)
         )
-        ## check the intersection/union of other methods with heuristic method if desired ##
+        # Check the intersection/union of other methods with heuristic method if desired
         if "heuristic_vote" in method_cols and method != "heuristic_vote":
             if union:
                 methods_summary.append(

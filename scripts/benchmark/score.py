@@ -81,8 +81,8 @@ def parse_present(answer: str, panel: list) -> set:
     upper = {g.upper(): g for g in panel}
     line = None
     for m in re.finditer(r"(?im)^\s*PRESENT:\s*(.*)$", answer):
-        line = m.group(1)  # keep the LAST PRESENT: line
-    if line is None:  # fall back to scanning the whole answer for panel symbols
+        line = m.group(1)  # Keep the LAST PRESENT: line
+    if line is None:  # Fall back to scanning the whole answer for panel symbols
         line = answer
     toks = re.split(r"[^A-Za-z0-9]+", line)
     return {upper[t.upper()] for t in toks if t.upper() in upper}

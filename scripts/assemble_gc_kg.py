@@ -14,7 +14,7 @@ from dglink.portals.nci.gc.utils import (
 )
 from dglink.core.tabular_data import get_tabular_data
 
-RESOURCE_PATH = "nci_gc_graph"  ## where the assembled GC graph is written
+RESOURCE_PATH = "nci_gc_graph"  # Where the assembled GC graph is written
 
 if __name__ == "__main__":
     node_set = NodeSet(attributes=NODE_ATTRIBUTES)
@@ -23,13 +23,13 @@ if __name__ == "__main__":
         gen3_credential_file="nci_general_commons_credentials"
     )
 
-    ## structural / metadata subgraph (programs, publications, investigators, diagnoses)
+    # Structural / metadata subgraph (programs, publications, investigators, diagnoses)
     get_metadata_graph(client, node_set=node_set, edge_set=edge_set)
 
-    ## download open-access tabular files (skips already-cached files)
+    # Download open-access tabular files (skips already-cached files)
     download_tabular_files(client)
 
-    ## ground the tabular data and attach entities to their study nodes
+    # Ground the tabular data and attach entities to their study nodes
     study_ids, tabular_iterator = get_tabular_iterator()
     get_tabular_data(
         group_identifiers=study_ids,

@@ -46,7 +46,7 @@ def write_graph(
     """
     os.makedirs(resource_path, exist_ok=True)
     if source_filter:
-        ## make input list
+        # Make input list
         source_name = [source_name] if type(source_name) == str else source_name
         write_name = "_".join(source_name)
         ns, es = get_graph_for_source(
@@ -62,7 +62,7 @@ def write_graph(
     else:
         node_set.write_node_set(os.path.join(resource_path, node_name), pascalify=pascalify)
         edge_set.write_edge_set(os.path.join(resource_path, edge_name), pascalify=pascalify)
-    ## save all nodes and edges from multiple sources
+    # Save all nodes and edges from multiple sources
 
 
 def filter_edge_set(edge_set: EdgeSet, filter_for: str, pascalify:bool = False,):
@@ -85,7 +85,7 @@ def get_graph_for_source(
 ):
     filter_node_set = NodeSet()
     filter_edge_set = EdgeSet()
-    ## get resource set for a specific source
+    # Get resource set for a specific source
     if not mixed:
         for node_id in node_set.nodes:
             add = True
@@ -106,7 +106,7 @@ def get_graph_for_source(
             if add:
                 filter_edge_set.edges[edge_id] = edge_set.edges[edge_id]
         return filter_node_set, filter_edge_set
-    ## get resource sets from mixed sources
+    # Get resource sets from mixed sources
     for node_id in node_set.nodes:
         node = node_set.nodes[node_id]
         if len(node["source:string[]"]) > 1:
@@ -128,7 +128,7 @@ def write_artifacts(
 
     The artifacts are the resource sets for each resource type.
     """
-    ## get the strict version of each resource type
+    # Get the strict version of each resource type
     for resource_type in resource_types:
         write_graph(
             node_set=node_set,
@@ -138,7 +138,7 @@ def write_artifacts(
             source_name=resource_type,
             resource_path=os.path.join(resource_path, "artifacts"),
         )
-    ## write out the mixed types
+    # Write out the mixed types
     write_graph(
         node_set=node_set,
         edge_set=edge_set,

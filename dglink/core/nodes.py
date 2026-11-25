@@ -5,7 +5,7 @@ import polars as pl
 from .tsv import clean_tsv_text
 
 def _is_empty(val) -> bool:
-    ## standardize empty data representation (pandas fills missing cells with NaN)
+    # Standardize empty data representation (pandas fills missing cells with NaN)
     if val is None or (isinstance(val, float) and math.isnan(val)):
         return True
     return str(val).replace('"', "").replace("'", "").strip() in ("", "None")
@@ -147,12 +147,12 @@ class NodeSet:
                 for col in self.attributes:
                     val = self.nodes[curie][col]
                     if type(val) == set:
-                        ## sort for deterministic output, then take max of 20
+                        # Sort for deterministic output, then take max of 20
                         val = sorted(val, key=str)[:20]
                         items = (clean_tsv_text(v, array_item=True) for v in val)
                         joined = ";".join(
                             v for v in items if v
-                        )  # also skip empty strings within the set
+                        )  # Also skip empty strings within the set
                         val = f'"{joined}"' if joined else ""
                     elif val is None or val == "None":
                         val = ""
@@ -163,7 +163,7 @@ class NodeSet:
                 f.write(write_str[:-1] + "\n")
 
     def pascalify_nodes(self):
-        ## prevent being called twice in case already done
+        # Prevent being called twice in case already done
         pascalify = lambda x: "".join(
             w.capitalize() for w in x.replace("biolink:", "").split("_")
         )

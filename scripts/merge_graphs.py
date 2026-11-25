@@ -116,7 +116,7 @@ def merge_graphs(inputs: dict, output_path: str = "merged_graph", write: bool = 
         )
         loaded.append((portal, nodes, edges))
 
-    # merged schema = union of every input's columns, plus the portal facet
+    # Merged schema = union of every input's columns, plus the portal facet
     node_attrs = _ordered_union([n.attributes for _, n, _ in loaded] + [[PORTAL_ATTR]])
     edge_attrs = _ordered_union([e.attributes for _, _, e in loaded] + [[PORTAL_ATTR]])
     node_scalars = [a for a in node_attrs if "string[]" not in a]
@@ -132,7 +132,7 @@ def merge_graphs(inputs: dict, output_path: str = "merged_graph", write: bool = 
                 _log_scalar_conflicts(
                     merged_nodes.nodes[node_id], rep, node_id, node_scalars, "node"
                 )
-            # always update (never skip on collision) so provenance -- portal,
+            # Always update (never skip on collision) so provenance -- portal,
             # source, file_id -- set-unions across every graph that has this id
             merged_nodes.update_nodes(rep, node_id)
 

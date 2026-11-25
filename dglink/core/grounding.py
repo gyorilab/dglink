@@ -28,12 +28,12 @@ from dglink.core.constants import map_biolink_category
 
 GROUNDING_SCORE_THRESHOLD = 0.5
 DEFAULT_BIOLINK_CATEGORY = "biolink:NamedThing"
-## distinct texts kept by annotate_text; a full portal run sees millions, so it is bounded
-## (least recently used texts are dropped, and re-grounded if seen again)
+# Distinct texts kept by annotate_text; a full portal run sees millions, so it is bounded
+# (least recently used texts are dropped, and re-grounded if seen again)
 ANNOTATE_CACHE_SIZE = 2**20
 
-## Each function below takes an optional Gilda `grounder`, None means Gilda's
-## default grounder
+# Each function below takes an optional Gilda `grounder`, None means Gilda's
+# default grounder
 
 
 def _ground(text: str, context: str | None = None, grounder=None):
@@ -73,18 +73,18 @@ def _best_match(text: str, score_threshold: float, min_span_fraction: float, con
     if not isinstance(text, str) or not text.strip():
         return None
 
-    ## 1) prefer a grounding of the entire string
+    # 1) prefer a grounding of the entire string
     full = _ground(text, context=context, grounder=grounder)
     if full and full[0].score >= score_threshold:
         return full[0]
 
-    ## 2) fall back to the longest grounded span within the string. Without a context,
-    ## gilda.annotate uses `text` itself as the context
+    # 2) fall back to the longest grounded span within the string. Without a context,
+    # gilda.annotate uses `text` itself as the context
     best_match, best_span = None, -1
     for annotation in _annotate(text, context=context, grounder=grounder):
         if not annotation.matches:
             continue
-        top = annotation.matches[0]  # gilda returns matches best-score-first
+        top = annotation.matches[0]  # Gilda returns matches best-score-first
         span = len(annotation.text)
         if top.score >= score_threshold and span > best_span:
             best_span, best_match = span, top
@@ -116,10 +116,10 @@ class TextGrounding(NamedTuple):
     """A gilda grounding of a piece of text (see annotate_text)."""
 
     curie: str
-    entity_type: str | None  ## raw INDRA type; callers map it to Biolink if they want
+    entity_type: str | None  # Raw INDRA type; callers map it to Biolink if they want
     name: str
     iri: str | None
-    norm_text: str  ## the matched term's normalized text, for caller-side exclusion lists
+    norm_text: str  # The matched term's normalized text, for caller-side exclusion lists
 
 
 @lru_cache(maxsize=ANNOTATE_CACHE_SIZE)
@@ -167,7 +167,7 @@ def ground_entity(
     term = match.term
     curie = normalize_curie(f"{term.db}:{term.id}")
     category = map_biolink_category(bio_ontology.get_type(term.db, term.id), curie)
-    ## INDRA has no type for some terms, and unknown types come back unmapped
+    # INDRA has no type for some terms, and unknown types come back unmapped
     if not category or not category.startswith("biolink:"):
         category = DEFAULT_BIOLINK_CATEGORY
     return term.entry_name, curie, get_bioregistry_iri(term.db, term.id), category

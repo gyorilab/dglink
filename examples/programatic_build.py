@@ -39,7 +39,7 @@ def get_entity_grounder():
 
     The grounder is used for finding columns.
     """
-    ## Name grounder.
+    # Name grounder.
     base_entities = {
         "compound": gilda.Term(
             "chemical compound",
@@ -134,12 +134,12 @@ def read_csv_auto(path, nbytes=100 * 1024 * 1024, **kwargs):
     # Detect encoding
     with open(path, "rb") as f:
         rawdata = f.read(nbytes)
-    ## deal with empty file
+    # Deal with empty file
     if len(rawdata) < 1:
         return None
     result = chardet.detect(rawdata)
     encoding = result["encoding"]
-    ## check if there are comments
+    # Check if there are comments
     comment = None
     with open(path, "rb") as f:
         first_byte = f.read(1)
@@ -219,14 +219,14 @@ def file_reader(obj, max_size_bytes=100 * 1024 * 1024):
         except:
             df = {"Sheet1": read_csv_auto(obj.path, sep="\t")}
     elif ext == ".xlsx":
-        ## reads in all sheets at once
+        # Reads in all sheets at once
         df = read_xlsx_auto(obj.path)
     elif ext == ".xls":
         try:
             df = pandas.read_excel(obj.path, engine="xlrd")
             if type(df) != dict:
                 df = {"Sheet1": df}
-        ## anecdotal there seem to be a lot of these that are just mislabeled tsv
+        # Anecdotal there seem to be a lot of these that are just mislabeled tsv
         except:
             df = {"Sheet1": read_csv_auto(obj.path, sep="\t")}
     return df
@@ -259,40 +259,40 @@ def process_enteries(project_id, entries):
 
 
 if __name__ == "__main__":
-    ## login/validate synapse client
+    # Login/validate synapse client
     syn = synapseclient.login()
 
-    ## projects we are intrested in adding to the graph
+    # Projects we are intrested in adding to the graph
     projects_to_check = [
         "syn2343195",
         "syn5562324",
         "syn27761862",
     ]
 
-    ## could use this function to get all files for each project.
+    # Could use this function to get all files for each project.
     # project_files = get_project_files(syn=syn, project_syn_id=PROJECT_SYN_ID)
 
-    ## for now we are just intrested in adding these three files from those projects
+    # For now we are just intrested in adding these three files from those projects
     selected_files = [
         "syn6138237",
         "syn5562327",
         "syn30384693",
     ]
-    ## get a grounder for col names to entity types
+    # Get a grounder for col names to entity types
     entity_grounder = get_entity_grounder()
-    ## lets focous on one example file from that project
+    # Lets focous on one example file from that project
     # nodes = [["curie:ID", ":LABEL"]]
     # relations = [[":START_ID", ":END_ID", ":TYPE"]]
     nodes = set()
     relations = set()
     for i, project_id in enumerate(projects_to_check):
-        ## when expanding this have another loop here over all the files pulled for each project
+        # When expanding this have another loop here over all the files pulled for each project
         file_id = selected_files[i]
         obj = syn.get(file_id)
         df_dict = file_reader(obj)
-        ## extra loop in case there are multiple sheets
+        # Extra loop in case there are multiple sheets
         for sheet in df_dict:
-            df = df_dict[sheet].fillna("")  ## fill na with '' for now.
+            df = df_dict[sheet].fillna("")  # Fill na with '' for now.
             for col in df.columns:
                 entity_type_match = entity_grounder.ground(gilda.process.normalize(col))
                 if len(entity_type_match) > 0:

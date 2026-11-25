@@ -26,22 +26,22 @@ from urllib.parse import urlparse
 import requests
 import polars as pl
 from mcp.server.fastmcp import FastMCP
-# from fast
+# From fast
 
-## make `dglink` importable no matter what cwd Claude Code launches us from
+# Make `dglink` importable no matter what cwd Claude Code launches us from
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from dglink.portals.nci.pdc.constants import PDC_GQL_ENDPOINT  # noqa: E402
 
 mcp = FastMCP("pdc_api")
 
-## host allowlist so the agent can't wander off CRDC / signed-download hosts
+# Host allowlist so the agent can't wander off CRDC / signed-download hosts
 _ALLOWED_HOST_SUFFIXES = (
     "cancer.gov",
     "datacommons.cancer.gov",
     "cloudfront.net",  # PDC file downloads come back as cloudfront signed urls
     "amazonaws.com",
 )
-_MAX_CHARS = 20000  # bound a single tool result so one call can't blow the context
+_MAX_CHARS = 20000  # Bound a single tool result so one call can't blow the context
 
 
 def _host_ok(url: str) -> bool:

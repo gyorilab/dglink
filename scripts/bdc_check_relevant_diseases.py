@@ -8,7 +8,7 @@ import pyobo
 import polars as pl
 from dglink.core.constants import RESOURCE_PATH
 
-## map NHLBI disease focuses to MESH roots ##
+# Map NHLBI disease focuses to MESH roots
 DISEASE_TO_ROOT = {"heart": "D002318", "lung": "D008171", "blood": "D006402"}
 
 
@@ -23,10 +23,10 @@ def get_disease_nodes(disease_focus: str) -> pl.DataFrame:
 
 
 if __name__ == "__main__":
-    ## load onto and get cardiovascular descendent ##
+    # Load onto and get cardiovascular descendent
     mesh = pyobo.get_ontology("mesh")
-    ## load nodes ##
+    # Load nodes
     nodes_df = pl.read_csv(f"{RESOURCE_PATH}/nodes.tsv", separator="\t")
-    ## find nodes associated with each disease and write them to a tsv ##
+    # Find nodes associated with each disease and write them to a tsv
     for disease_focus in DISEASE_TO_ROOT:
         get_disease_nodes(disease_focus=disease_focus)

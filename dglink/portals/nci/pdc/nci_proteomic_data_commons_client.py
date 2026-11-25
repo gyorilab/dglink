@@ -188,15 +188,15 @@ class NciProteomicCommonsClient:
         for x in all_study_files:
             x["signedUrl"] = x["signedUrl"]["url"]
         if study_files_df is not None:
-            ## coerce new rows to the existing manifest's schema (incl. the null
-            ## `path` column) so vstack aligns
+            # Coerce new rows to the existing manifest's schema (incl. the null
+            # `path` column) so vstack aligns
             df_rep = pl.from_dicts(all_study_files, schema=study_files_df.schema)
             study_files_df.vstack(df_rep).unique().write_csv(
                 files_df_path, separator="\t"
             )
         else:
-            ## first run: no manifest yet, infer the schema from the fetched rows and
-            ## seed an empty `path` column (filled in once a file is downloaded)
+            # First run: no manifest yet, infer the schema from the fetched rows and
+            # seed an empty `path` column (filled in once a file is downloaded)
             df_rep = pl.from_dicts(all_study_files).with_columns(
                 path=pl.lit(None, dtype=pl.String)
             )
@@ -230,7 +230,7 @@ class NciProteomicCommonsClient:
         files_df = self._read_manifest()
         if files_df is None:
             return
-        ## filter the manifest down to the requested files
+        # Filter the manifest down to the requested files
         to_load = files_df.filter(pl.col("file_id").is_in(file_ids))
         downloaded_paths: dict[str, str] = {}
         for file in to_load.iter_rows(named=True):
@@ -241,7 +241,7 @@ class NciProteomicCommonsClient:
             save_path = (
                 NCI_PDC_CACHE_DIR.joinpath("files").joinpath(study_id).joinpath(f_name)
             )
-            ## already in the cache: back-fill the manifest path if it is not recorded
+            # Already in the cache: back-fill the manifest path if it is not recorded
             if save_path.exists():
                 if not file.get("path"):
                     downloaded_paths[file_id] = str(save_path)
@@ -309,7 +309,7 @@ class NciProteomicCommonsClient:
         Also returns True if no md5 is known.
         """
         if not expected_md5:
-            ## nothing to check against; trust the file
+            # Nothing to check against; trust the file
             return True
         digest = hashlib.md5()
         with open(path, "rb") as f:
@@ -367,7 +367,7 @@ class NciProteomicCommonsClient:
                     if chunk:
                         f.write(chunk)
 
-            ## reject a corrupt transfer instead of caching a bad file
+            # Reject a corrupt transfer instead of caching a bad file
             if not self._verify_md5(part_path, expected_md5):
                 print(f"[ERR ] {filename} -> md5 mismatch (discarded)")
                 os.remove(part_path)

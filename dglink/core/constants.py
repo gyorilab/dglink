@@ -34,14 +34,14 @@ UNSTRUCTURED_DICOM_FIELDS = [
     "ImageComments",
 ]
 
-## List of entity types found in experimental data + a null class that are passed as classes to the LLM for schema matching
+# List of entity types found in experimental data + a null class that are passed as classes to the LLM for schema matching
 TABULAR_ENTITY_TYPES_LLM = [
     "human_rna",
     "small_molecule",
     "anatomical_region",
     "cellular_location",
     "human_gene_protein",
-    "experimental_factor",  ## general should not be in experimental data ##
+    "experimental_factor",  # General should not be in experimental data
     "biological_process",
     "organism",
     "nonhuman_gene_protein",
@@ -50,9 +50,9 @@ TABULAR_ENTITY_TYPES_LLM = [
     "human_gene_other",
 ]
 INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP = {
-    "human_gene_protein": "biolink:Gene",  ## set taxon to human
-    "human_gene_other": "biolink:Gene",  ## this one is always a gene but we do not anything else about it
-    "nonhuman_gene_protein": "biolink:Gene",  ## want to try to set taxon with uniprot, set as either human mouse rat or other
+    "human_gene_protein": "biolink:Gene",  # Set taxon to human
+    "human_gene_other": "biolink:Gene",  # This one is always a gene but we do not anything else about it
+    "nonhuman_gene_protein": "biolink:Gene",  # Want to try to set taxon with uniprot, set as either human mouse rat or other
     "small_molecule": "biolink:SmallMolecule",
     "disease": "biolink:Disease",
     "cellular_location": "biolink:CellularComponent",
@@ -61,8 +61,8 @@ INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP = {
     "biological_process": "biolink:BiologicalProcess",
     "small_molecule": "biolink:SmallMolecule",
     "human_rna": "biolink:RNAProduct",
-    "protein_family_complex": "biolink:MacromolecularComplex",  ## this is just generalizing (MacromolecularComplexOrProteinFamily does not exist in Biolink 4.x)
-    ## these two do not map cleanly onto biolink so we are just linking them to named thing
+    "protein_family_complex": "biolink:MacromolecularComplex",  # This is just generalizing (MacromolecularComplexOrProteinFamily does not exist in Biolink 4.x)
+    # These two do not map cleanly onto biolink so we are just linking them to named thing
     "other": "biolink:NamedThing",
     "experimental_factor": "biolink:NamedThing",
 }
@@ -71,9 +71,9 @@ INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP = {
 GENE_OR_PROTEIN_INDRA_TYPES = {"human_gene_protein", "nonhuman_gene_protein"}
 GENE_CURIE_PREFIXES = {"hgnc", "hgnc.symbol", "ncbigene", "ensembl", "ensemblgene"}
 PROTEIN_CURIE_PREFIXES = {"uniprot", "uniprotkb", "pr"}
-## INDRA types HPO terms as "disease"; Biolink models them as phenotypic features
+# INDRA types HPO terms as "disease"; Biolink models them as phenotypic features
 PHENOTYPE_CURIE_PREFIXES = {"hp"}
-## Disease vocabularies that INDRA's ontology may not type
+# Disease vocabularies that INDRA's ontology may not type
 DISEASE_CURIE_PREFIXES = {"mondo", "orpha", "omim", "doid"}
 
 
@@ -100,5 +100,5 @@ def map_biolink_category(indra_type, curie=None):
     return INDRA_BIOLINK_EXPERIMENTAL_DATA_TYPE_MAP.get(indra_type, indra_type)
 
 
-## base edge type for biolink
+# Base edge type for biolink
 GROUP_ENTITY_BIOLINK_PREDICATE = "biolink:related_to"

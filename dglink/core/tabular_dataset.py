@@ -50,7 +50,7 @@ class TabularDataset:
         self.original_columns, self.dropped_columns = self._check_column_names()
         self.seed = seed
         self.biolink_entity_types = (
-            False  ## initialized as false, but set as true if table grounded with this
+            False  # Initialized as false, but set as true if table grounded with this
         )
         self._rng = default_rng(seed=self.seed)
         self._priority_weights: dict[Any, float] | None = None
@@ -95,7 +95,7 @@ class TabularDataset:
             self._priority_weights[val] = self._rng.uniform()
             table_freq = self._table_frequencies.get(
                 val, 1
-            )  ## assign frequency of one for missing values
+            )  # Assign frequency of one for missing values
             score = table_freq / self._priority_weights[val]
             self._precomputed_sample.append((val, score))
         self._precomputed_sample.sort(key=lambda x: x[1], reverse=True)
@@ -146,8 +146,8 @@ class TabularDataset:
         grounded = {}
         for col in self.table.columns:
             values = self.table[col]
-            ## distinct text in this column -> its grounding. Keyed by the text, since
-            ## e.g. 1, 1.0 and True compare equal but are different text.
+            # Distinct text in this column -> its grounding. Keyed by the text, since
+            # e.g. 1, 1.0 and True compare equal but are different text.
             column_groundings = {}
             cells = []
             for val in values:
@@ -163,7 +163,7 @@ class TabularDataset:
             for suffix, field in zip(GROUNDING_SUFFIXES, fields):
                 grounded[f"{col}_{suffix}"] = pandas.Series(field, index=values.index, dtype=object)
         self.table = pandas.DataFrame(grounded, index=self.table.index)
-        ## map back to biolink if desired
+        # Map back to biolink if desired
         if biolink_entity_types:
             self.biolink_entity_types = True
             for col in self.original_columns:
@@ -196,6 +196,6 @@ class TabularDataset:
         return grounding.curie, grounding.entity_type, grounding.name, grounding.iri
 
 
-## suffixes of the columns ground_table makes from each column, in order
+# Suffixes of the columns ground_table makes from each column, in order
 GROUNDING_SUFFIXES = ("entity", "type", "name", "raw_text", "column_name", "iri")
 _MISSING_CELL = (pandas.NA,) * len(GROUNDING_SUFFIXES)

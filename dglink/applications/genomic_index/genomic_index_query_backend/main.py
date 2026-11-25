@@ -194,7 +194,7 @@ def parse_fasta(raw: str) -> list[SequenceQuery]:
             )
     else:
         # Raw nucleotide string
-        ## accommodate cases where transcripts are broken by either new line or a blank line
+        # Accommodate cases where transcripts are broken by either new line or a blank line
         lines = raw.split("\n\n")
         if len(lines)<=1:
             lines = raw.split("\n")
@@ -269,7 +269,7 @@ def query_kg(syn_id: list[str] = None):
         RETURN p, s, e, related
         """
     return neo4j_url(q)
-    # records, _, _ = driver.execute_query(q,
+    # Records, _, _ = driver.execute_query(q,
     #     database_="neo4j",
     # )
     # print(neo4j_url(q,)    )      # loads into editor

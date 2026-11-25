@@ -15,7 +15,7 @@ def parse_project_attrs(project_id:str, project_metadata:dict, node_set:NodeSet)
     project_attrs = {}
     for attr in PROJECT_ATTRS:
         project_attrs[f'{attr}:string[]'] = _unpack_dict_list(project_metadata, attr)
-    # take the name as the curie when no text name is available #
+    # Take the name as the curie when no text name is available #
     project_attrs['name'] = get_project_name(project_id)
     project_attrs['summary'] = get_project_summary(project_id)
     node_set.update_nodes(project_attrs, new_node_id=project_id, fill_empty=True)

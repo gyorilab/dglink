@@ -82,18 +82,18 @@ def get_frictionless_package(pth):
     pac = Package()
     format = pth.suffix
     control_func = lambda x: None
-    ## utf-8 encoding is preferred but can also try to infer it directly ##
+    # utf-8 encoding is preferred but can also try to infer it directly
     encoding = "utf-8" if _is_utf8(pth) else None
     if pth.suffix in [".xlsx", ".xls"]:
-        ## try to directly load as a package
+        # Try to directly load as a package
         try:
             pac = Package(pth)
             control_func = lambda x: formats.ExcelControl(
                 sheet=x.dialect.controls[0].sheet
             )
-        ## this fails for some excel sheets with weird formatting
+        # This fails for some excel sheets with weird formatting
         except:
-            ## try to add each sheet of the file to the package as a resource
+            # Try to add each sheet of the file to the package as a resource
             try:
                 if format == ".xlsx":
                     from openpyxl import load_workbook
@@ -101,7 +101,7 @@ def get_frictionless_package(pth):
                     col_names = load_workbook(pth, read_only=True)
                 else:
                     col_names = pandas.ExcelFile(pth).sheet_names
-                ## This check makes it type safe. I do not think should have any effect remove if does ##
+                # This check makes it type safe. I do not think should have any effect remove if does
                 if not isinstance(col_names, list):
                     raise ValueError(f"col_names of type {type(col_names)} unexpected")
 
@@ -112,7 +112,7 @@ def get_frictionless_package(pth):
                 control_func = lambda x: formats.ExcelControl(
                     sheet=x.dialect.controls[0].sheet
                 )
-            ## if this fails, as a last ditch effort try loading the file as an excel file.
+            # If this fails, as a last ditch effort try loading the file as an excel file.
             except:
                 pac.add_resource(Resource(pth, format="tsv"))
                 format = ".tsv"
@@ -170,21 +170,21 @@ def frictionless_file_reader(pth: str, max_size_bytes=100 * 1024 * 1024):
     problematic Excel files. All sheets from multi-sheet files are returned
     separately.
     """
-    ## issues with pull
+    # Issues with pull
     fp = Path(pth)
     file_size = os.path.getsize(fp)
     if file_size > max_size_bytes:
         logger.info("file to large to read")
         return {"all": "to_large"}
-    ## load file contents into frictionless package
+    # Load file contents into frictionless package
 
     pack = get_frictionless_package(pth=fp)
-    ## load frictionless package into dictionary of pandas data frames
+    # Load frictionless package into dictionary of pandas data frames
     df_dict = {}
     from frictionless.resources import TableResource
 
     for res in pack.resources:
-        ## type check to make things type safe remove is this cause issue
+        # Type check to make things type safe remove is this cause issue
         if not isinstance(res, TableResource):
             continue
         try:
@@ -267,10 +267,10 @@ def extract_df_graph(
                     "source:string[]": source,
                 }
                 node_set.update_nodes(new_node=node_attributes)
-                ## where/how an entity was found (file, raw text, column) is per-occurrence
-                ## provenance, so it lives on the group -> entity edge rather than the entity
-                ## node. Edges are single-portal, so after merging portals the file -> portal
-                ## mapping stays unambiguous (a shared node would conflate them).
+                # Where/how an entity was found (file, raw text, column) is per-occurrence
+                # provenance, so it lives on the group -> entity edge rather than the entity
+                # node. Edges are single-portal, so after merging portals the file -> portal
+                # mapping stays unambiguous (a shared node would conflate them).
                 edge_set.update_edges(
                     {
                         ":START_ID": group_identifier,
@@ -327,7 +327,7 @@ def check_df_readable(df, max_unnamed=2):
     unreadable, indicating parsing errors or improperly formatted source
     files.
     """
-    ## check for error in reading
+    # Check for error in reading
     if type(df) == str:
         return df, None
     if len(df.columns) < 1:
@@ -338,7 +338,7 @@ def check_df_readable(df, max_unnamed=2):
         df = None
     else:
         type_counts = get_dtype_counts(df)
-        ## remove columns that have more columns that are neither string nor missing then columns that are string valued
+        # Remove columns that have more columns that are neither string nor missing then columns that are string valued
         good_cols = type_counts[
             (type_counts["string"] > type_counts["other"])
         ].index.tolist()
@@ -381,9 +381,9 @@ def load_file(group_identifier: str, fp: str):
     read_states = []
     for sheet in df_dict:
         df = df_dict[sheet]
-        ## determine if the file was read in correctly
+        # Determine if the file was read in correctly
         reason, df = check_df_readable(df)
-        ## adding to a list of what files can actually be read
+        # Adding to a list of what files can actually be read
         read_states.append(
             {
                 "group_identifier": group_identifier,
@@ -451,11 +451,11 @@ def get_tabular_data(
                         sheet_name=read_state.get("sheet"),
                         table=df,
                     )
-                    ## try to ground everything in the dataframe
+                    # Try to ground everything in the dataframe
                     t0 = time.perf_counter()
                     tabular_dataset.ground_table(biolink_entity_types=True)
                     t1 = time.perf_counter()
-                    ## quality check groundings and only select those that pass ##
+                    # Quality check groundings and only select those that pass
                     quality_check_groundings(
                         qc_method=quality_check_method, table=tabular_dataset, **kwargs
                     )
@@ -484,7 +484,7 @@ def get_tabular_data(
                                 "col": col,
                             }
                         )
-        ## checkpoint the graph after each group (timed separately: it's I/O, not processing)
+        # Checkpoint the graph after each group (timed separately: it's I/O, not processing)
         with TIMER.stage("tabular.checkpoint_write"):
             write_graph(node_set=node_set, edge_set=edge_set)
     files_df = pandas.DataFrame(data=files_read)

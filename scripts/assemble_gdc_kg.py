@@ -16,27 +16,27 @@ from dglink.core.tabular_data import get_tabular_data
 
 import polars as pl
 
-batch_size = 500  ## number of cases to process at one
+batch_size = 500  # Number of cases to process at one
 
-RESOURCE_PATH = "nci_gdc_graph"  ## where the assembled GC graph is written
+RESOURCE_PATH = "nci_gdc_graph"  # Where the assembled GC graph is written
 
 
 N_CASES = 150
 SEED = 10082
 
-## determines if want to keep biological samples, which creates a large number of nodes ##
+# Determines if want to keep biological samples, which creates a large number of nodes
 INCLUDE_BIOSPECIMEN = 0
-## set case list if want specific cases ##
+# Set case list if want specific cases
 case_ids = None
 
 from dglink import load_graph
 
 node_set, edge_set = load_graph(resource_path=RESOURCE_PATH)
 if __name__ == "__main__":
-    # set up a new node and edge set
+    # Set up a new node and edge set
     node_set = NodeSet(attributes=NODE_ATTRIBUTES)
     edge_set = EdgeSet(attributes=EDGE_ATTRIBUTES)
-    ## load all meta data ##
+    # Load all meta data
     get_case_hierarchy(
         node_set=node_set,
         edge_set=edge_set,
