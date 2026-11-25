@@ -1,33 +1,24 @@
 """
 Extract knowledge graph information from VCF (Variant Call Format) files.
 
-This module processes VCF files from Synapse projects to extract genetic
-variants, sample information, and metadata into a knowledge graph
-structure.
+This module reads local VCF files to extract genetic variants, sample
+information, and metadata into a knowledge graph structure.
 """
 
-from .constants import VCF_FILE_TYPES, RESOURCE_PATH, REPORT_PATH
-from dglink.portals.nf_data_portal import syn
 from .nodes import NodeSet
 from .edges import EdgeSet
-from .utils import write_graph
-from dglink.portals.nf_data_portal.utils import get_project_files 
 from .optional_deps import import_optional
 
 vcf = import_optional("vcf", "vcf")
-import os
 from bioregistry import normalize_curie, get_iri, parse_curie
 import logging
-import tqdm
-import polars as pl
 
 logger = logging.getLogger(__name__)
 data_source = set(["vcf_data", "experimental_data"])
 
 
-def extract_variants(
-    obj, node_set: NodeSet, edge_set: EdgeSet
-) -> tuple[NodeSet, EdgeSet]:
+def extract_variants(path: str, file_id: str, node_set: NodeSet,
+                     edge_set: EdgeSet) -> tuple[NodeSet, EdgeSet, bool]:
     """Add the genetic variants of a VCF file to the knowledge graph.
 
     Parses VCF files to extract variant identifiers (dbSNP rs IDs) and
@@ -37,9 +28,10 @@ def extract_variants(
 
     Parameters
     ----------
-    obj : synapseclient.File
-        Downloaded Synapse file object, with the VCF file's local path and its
-        id and annotations.
+    path :
+        Local path of the VCF file, gzip-compressed if it ends in .gz.
+    file_id :
+        Identifier of the file, stored on the variant nodes.
     node_set :
         Existing set of nodes to update.
     edge_set :
@@ -59,12 +51,11 @@ def extract_variants(
     Only processes variants with dbSNP rs identifiers. A file that cannot be
     parsed is logged and reported as not processed.
     """
-    file_id = obj.get("id", "")
-    compressed = obj.path.endswith(".gz")
+    compressed = path.endswith(".gz")
     read_cmd = "rb" if compressed else "r"
     able_to_process = True
     try:
-        with open(obj.path, mode=read_cmd) as f:
+        with open(path, mode=read_cmd) as f:
             vcf_reader = vcf.Reader(f, compressed=compressed)
 
             for record in vcf_reader:
@@ -94,7 +85,8 @@ def extract_variants(
                     for sample in record.samples:
                         genotype = sample["GT"]  # e.g., '0/1', '1/1', '0/0'
                         # Only connect if variant is present (not 0/0)
-                        if genotype and genotype not in ["0/0", "./.", "0|0", ".|."]:
+                        if genotype and genotype not in ["0/0", "./.",
+                                                         "0|0", ".|."]:
                             edge_set.update_edges(
                                 {
                                     ":START_ID": sample.sample,
@@ -106,17 +98,16 @@ def extract_variants(
                                 }
                             )
     except Exception as e:
-        logger.error(
-            f"Error extracting variants from {file_id}, this file may be misformed: {e}"
-        )
+        logger.error(f"Error extracting variants from {file_id}, this "
+                     f"file may be misformed: {e}")
         able_to_process = False
 
     return node_set, edge_set, able_to_process
 
 
-def extract_vcf_metadata(
-    obj, node_set: NodeSet, edge_set: EdgeSet
-) -> tuple[NodeSet, EdgeSet]:
+def extract_vcf_metadata(path: str, file_id: str, study_id: str,
+                         node_set: NodeSet,
+                         edge_set: EdgeSet) -> tuple[NodeSet, EdgeSet]:
     """Extract metadata and sample information from VCF file headers.
 
     Parses VCF metadata to create knowledge graph nodes and relationships for:
@@ -130,9 +121,12 @@ def extract_vcf_metadata(
 
     Parameters
     ----------
-    obj : synapseclient.File
-        Downloaded Synapse file object, with the VCF file's local path and its
-        id and annotations.
+    path :
+        Local path of the VCF file, gzip-compressed if it ends in .gz.
+    file_id :
+        Identifier of the file, stored on the metadata and sample nodes.
+    study_id :
+        Identifier of the study the samples belong to.
     node_set :
         Existing set of nodes to update.
     edge_set :
@@ -145,12 +139,10 @@ def extract_vcf_metadata(
     edge_set : EdgeSet
         The updated edge set.
     """
-    file_id = obj.get("id", "")
-    study_id = obj.get("studyId", ["study_id_missing"])[0]
-    compressed = obj.path.endswith(".gz")
+    compressed = path.endswith(".gz")
     read_cmd = "rb" if compressed else "r"
-    with open(obj.path, mode=read_cmd) as f:
-        compressed = obj.path.endswith(".gz")
+    with open(path, mode=read_cmd) as f:
+        compressed = path.endswith(".gz")
         vcf_reader = vcf.Reader(f, compressed=compressed)
     meta = vcf_reader.metadata
     vcf_format = meta.get("fileformat", "vcf_format_missing")
@@ -249,176 +241,3 @@ def extract_vcf_metadata(
                 }
             )
     return node_set, edge_set
-
-
-def parse_vcf_file(
-    file_id: str,
-    node_set: NodeSet,
-    edge_set: EdgeSet,
-    project_id: str,
-    process_variants: bool = True,
-) -> tuple[NodeSet, EdgeSet, dict]:
-    """Parse a single VCF file and extract its information into the graph.
-
-    Downloads the VCF file from Synapse and extracts both variants and
-    metadata.
-
-    Parameters
-    ----------
-    file_id :
-        Synapse file ID (e.g., 'syn12345678').
-    node_set :
-        Existing set of nodes to update.
-    edge_set :
-        Existing set of edges to update.
-    project_id :
-        Synapse project ID containing the file.
-    process_variants :
-        If True, extract variant information. If False, only extract metadata.
-
-    Returns
-    -------
-    node_set : NodeSet
-        The updated node set.
-    edge_set : EdgeSet
-        The updated edge set.
-    status : dict
-        Status dict containing project_id, file_id, and the able_to_process
-        flag.
-    """
-    able_to_process = True
-    try:
-        obj = syn.get(file_id)
-        file_path = obj.path
-    except:
-        file_path = None
-    if file_path is None:
-        able_to_process = False
-    else:
-        # Extract the variants
-        if process_variants:
-            node_set, edge_set, able_to_process = extract_variants(
-                obj=obj, node_set=node_set, edge_set=edge_set
-            )
-        # Extract the meta data
-        node_set, edge_set = extract_vcf_metadata(
-            obj=obj, node_set=node_set, edge_set=edge_set
-        )
-    return (
-        node_set,
-        edge_set,
-        {
-            "project_id": project_id,
-            "file_id": file_id,
-            "able_to_process": able_to_process,
-        },
-    )
-
-
-def get_vcf_data(
-    project_ids: list,
-    node_set: NodeSet,
-    edge_set: EdgeSet,
-    write_set: bool = False,
-    process_compressed_files: bool = True,
-    process_variants: bool = True,
-    write_intermediate: bool = True,
-    write_reports: bool = True,
-) -> tuple[NodeSet, EdgeSet, list[pl.DataFrame]]:
-    """Process VCF files from Synapse projects and build a knowledge graph.
-
-    Main orchestration function that discovers VCF files in specified
-    projects, processes them to extract variants and metadata, and constructs
-    a knowledge graph. Supports both compressed (.vcf.gz) and uncompressed
-    (.vcf) files.
-
-    Parameters
-    ----------
-    project_ids :
-        List of Synapse project IDs to process.
-    node_set :
-        Existing set of nodes to update.
-    edge_set :
-        Existing set of edges to update.
-    write_set :
-        If True, write final knowledge graph to disk.
-    process_compressed_files :
-        If True, process .vcf.gz files. If False, skip them.
-    process_variants :
-        If True, extract variant data. If False, only extract metadata.
-    write_intermediate :
-        If True, write graph after each project.
-    write_reports :
-        If True, generate TSV reports of processing status.
-
-    Returns
-    -------
-    node_set : NodeSet
-        The updated node set.
-    edge_set : EdgeSet
-        The updated edge set.
-    reports : list[pl.DataFrame]
-        List of processing report DataFrames.
-
-    Notes
-    -----
-    Intermediate graphs and reports are written to RESOURCE_PATH/artifacts and
-    REPORT_PATH.
-    """
-    logger.info(f"Adding tabular experimental data for {len(project_ids)} projects")
-    process_files = []
-    i = 0
-    vcf_formats = (
-        VCF_FILE_TYPES
-        if process_compressed_files
-        else [x for x in VCF_FILE_TYPES if not x.endswith("gz")]
-    )
-    for project_id in tqdm.tqdm(project_ids):
-        i = i + 1
-        project_files = get_project_files(
-            project_syn_id=project_id, file_types=vcf_formats, as_list=True
-        )
-
-        logger.info(
-            f"adding VCF experimental data project {project_id}\n\
-                    This is project {i} out of {len(project_ids)+1} \n\
-                    There are {len(project_files)} total files to parse."
-        )
-        i = i + 1
-        for file_id in tqdm.tqdm(project_files):
-            node_set, edge_set, able_to_process = parse_vcf_file(
-                file_id=file_id,
-                node_set=node_set,
-                edge_set=edge_set,
-                process_variants=process_variants,
-                project_id=project_id,
-            )
-            process_files.append(able_to_process)
-        if write_intermediate:
-            write_graph(
-                node_set=node_set,
-                edge_set=edge_set,
-                source_filter=True,
-                strict=True,
-                source_name=["vcf_data", "experimental_data"],
-                resource_path=os.path.join(RESOURCE_PATH, "artifacts"),
-            )
-
-    # Write a sub-graph with just vcf experimental data
-    if write_set:
-        write_graph(
-            node_set=node_set,
-            edge_set=edge_set,
-            source_filter=True,
-            strict=True,
-            source_name=["vcf_data", "experimental_data"],
-            resource_path=os.path.join(RESOURCE_PATH, "artifacts"),
-        )
-    processed_df = pl.from_dicts(process_files)
-    if write_reports:
-        os.makedirs(REPORT_PATH, exist_ok=True)
-        processed_df.write_csv(
-            os.path.join(REPORT_PATH, "vcf_file_report.tsv"), separator="\t"
-        )
-
-    return node_set, edge_set, [processed_df]

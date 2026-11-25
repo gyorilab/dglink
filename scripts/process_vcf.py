@@ -4,7 +4,7 @@ Extract KG information from the uncompressed VCF files.
 
 from dglink import load_graph
 import re
-from dglink.core.vcf_data import get_vcf_data
+from dglink.portals.nf_data_portal.vcf import get_vcf_data
 
 vcf_formats = [".vcf", ".gvcf", ".vcf.gz", ".gvcf.gz"]
 vcf_pattern = f"({'|'.join(re.escape(s) for s in vcf_formats)})$"

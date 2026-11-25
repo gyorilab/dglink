@@ -57,15 +57,14 @@ gql  = ["gql>=4.0.0"]
 nci   = ["dglink[gen3,gql]"]   # gc uses both; pdc uses gql
 nhlbi = ["dglink[gen3]"]       # bdc
 
-# VCF / DICOM extraction reads files via the NF data portal's Synapse client
+# Reading local VCF and DICOM files. Extracting them from the NF Data
+# Portal (dglink.portals.nf_data_portal.vcf and .dicom) also needs synapse.
 vcf = [
     "pyvcf3>=1.0.4",
-    "dglink[synapse]",
 ]
 
 dicom = [
     "pydicom>=3.0.1",
-    "dglink[synapse]",
 ]
 
 openai = [

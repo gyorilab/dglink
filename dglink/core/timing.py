@@ -12,7 +12,7 @@ Usage::
     from dglink.core.timing import TIMER
 
     with TIMER.stage("download"):
-        path = syn.get(...)
+        path = download(...)
     TIMER.add("download", bytes=os.path.getsize(path), files=1)
 
     TIMER.write_report("timing.json")
