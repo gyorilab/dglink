@@ -128,7 +128,7 @@ NF_TOOL_DROPPED_COLUMNS = {
 
 
 # --- NF research tools: edges --------------------------------------------------
-# tools view fields grounded to diseases (via NF_GROUND_FIELD_CATEGORIES) and linked to the tool
+# Tools view fields grounded to diseases (via NF_GROUND_FIELD_CATEGORIES) and linked to the tool
 NF_TOOL_DISEASE_FIELDS = ["geneticDisorder", "manifestation", "tumorType"]
 # Tool types that are disease models, linked to their diseases with biolink:model_of;
 # other tools (biobanks, clinical assessment and computational tools) use related_to_at_instance_level
@@ -266,7 +266,7 @@ EDGE_ATTRIBUTES = [
 
 
 # --- portal fields ---------------------------------------------------------------
-# study metadata fields kept as Study attributes
+# Study metadata fields kept as Study attributes
 PROJECT_ATTRS = [
     "studyStatus",
     "parentId",
@@ -303,7 +303,7 @@ NF_PLACEHOLDER_VALUES = {
 
 
 # --- grounding -------------------------------------------------------------------
-# study / publication metadata fields that are grounded
+# Study / publication metadata fields that are grounded
 GROUND_FIELDS = [
     "manifestation",
     "diseaseFocus",

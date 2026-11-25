@@ -328,8 +328,8 @@ def download_tabular_files(client: NciProteomicCommonsClient, study_list: list[s
         client.download_files(file_ids)
         # file_ids += [
         #     f["file_id"]
-        #     For f in study_files
-        #     If f.get("file_format") in NCI_TABULAR_FILE_TYPES
+        #     for f in study_files
+        #     if f.get("file_format") in NCI_TABULAR_FILE_TYPES
         # ]
     # client.download_files(file_ids)
 

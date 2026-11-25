@@ -269,7 +269,7 @@ def query_kg(syn_id: list[str] = None):
         RETURN p, s, e, related
         """
     return neo4j_url(q)
-    # Records, _, _ = driver.execute_query(q,
+    # records, _, _ = driver.execute_query(q,
     #     database_="neo4j",
     # )
     # print(neo4j_url(q,)    )      # loads into editor

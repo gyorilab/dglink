@@ -30,7 +30,7 @@ def get_entities_from_wiki(
         entry = study_wiki.get(field)
         if _is_empty(entry):
             continue
-        # Annotate finds the spans, ground_entity re-grounds each span with the shared
+        # annotate finds the spans, ground_entity re-grounds each span with the shared
         # score / span / category rules. The wiki text is passed as context so ambiguous
         # spans (e.g. acronyms) are disambiguated by the text around them; it is unique
         # per wiki, so these groundings are not cached.

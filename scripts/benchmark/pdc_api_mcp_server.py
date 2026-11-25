@@ -26,7 +26,7 @@ from urllib.parse import urlparse
 import requests
 import polars as pl
 from mcp.server.fastmcp import FastMCP
-# From fast
+# from fast
 
 # Make `dglink` importable no matter what cwd Claude Code launches us from
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))

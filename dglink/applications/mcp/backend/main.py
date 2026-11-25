@@ -317,7 +317,7 @@ async def stream_anthropic_query(query: str):
                     tool_used = True
 
                     # Log Cypher queries to stdout
-                    # If "cypher" in content.name.lower():
+                    # if "cypher" in content.name.lower():
                     print(f"\n{'='*60}")
                     print(f"[CYPHER QUERY] Tool: {content.name}")
                     if "query" in content.input:

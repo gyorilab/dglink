@@ -82,7 +82,7 @@ class AnthropicClient(LLMClient):
             region_name=os.environ.get("AWS_REGION", "us-east-1"),
             config=botocore_config.Config(
                 read_timeout=read_timeout,
-                retries={"max_attempts": 3, "mode": "adaptive"},  # throttling/5xx
+                retries={"max_attempts": 3, "mode": "adaptive"},  # Throttling/5xx
             ),
         )
 

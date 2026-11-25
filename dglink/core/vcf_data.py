@@ -186,7 +186,7 @@ def extract_vcf_metadata(
             }
         )
     # Source and commands are similar so merge to one node type
-    # extract the commands
+    # Extract the commands
     cmnds = meta.get("GATKCommandLine", [])
     for cmnd in cmnds:
         cmnd_id = cmnd.get("ID", "missing_command")

@@ -28,7 +28,7 @@ genomic_files = df.with_columns(
             )
 # Move results to a conistent location
 os.makedirs('fastq_files', exist_ok=True)
-# For x in genomic_files['file_path']:
+# for x in genomic_files['file_path']:
 for row in genomic_files.iter_rows(named=True):
     syn_id = row.get("id")
     x = row.get("file_path")

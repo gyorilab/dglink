@@ -58,7 +58,7 @@ def train_embedding_model(
     tf = TriplesFactory.from_labeled_triples(triples[1:])  # Drop header
     training, testing = tf.split()
     # training, testing, validation = tf.split([0.8, 0.1, 0.1])
-    # train the model
+    # Train the model
     result = pipeline(
         training=training,
         testing=testing,
