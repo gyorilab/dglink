@@ -2,29 +2,35 @@
 """
 Build an INDEPENDENT gold table of per-portal gene presence for the benchmark.
 
-For a fixed gene panel, decide — *without using the DGLink graph* — whether each gene is
-present in each CRDC portal:
+For a fixed gene panel, decide, *without using the DGLink graph*, whether each
+gene is present in each CRDC portal:
 
-  * PDC       -> `geneSpectralCount` GraphQL: present if any study has spectral_count > 0
-  * GDC       -> `ssms` REST: present if the gene has >=1 simple somatic mutation
-  * caNanoLab -> the hard, graph-free path: download the study's tabular files and scan
-                 their contents for the gene symbol (case-SENSITIVE token match, so the
-                 gene `MET`/`Met` matches but the English word "met" does not).
+  * PDC       -> `geneSpectralCount` GraphQL: present if any study has
+                 spectral_count > 0
+  * GDC       -> `ssms` REST: present if the gene has >=1 simple somatic
+                 mutation
+  * caNanoLab -> the hard, graph-free path: download the study's tabular files
+                 and scan their contents for the gene symbol (case-SENSITIVE
+                 token match, so the gene `MET`/`Met` matches but the English
+                 word "met" does not).
 
-Presence criterion for caNanoLab (documented so the gold is auditable): a gene is "present"
-if one of its match tokens appears as an exact, case-sensitive token (split on any
-non-alphanumeric char) in any tabular file. Every hit records the file + matched token, so
-false positives on ambiguous symbols (APC=allophycocyanin, KIT=reagent kit, ...) can be
-reviewed. Ambiguous symbols are flagged in the panel.
+Presence criterion for caNanoLab (documented so the gold is auditable): a gene
+is "present" if one of its match tokens appears as an exact, case-sensitive
+token (split on any non-alphanumeric char) in any tabular file. Every hit
+records the file + matched token, so false positives on ambiguous symbols
+(APC=allophycocyanin, KIT=reagent kit, ...) can be reviewed. Ambiguous symbols
+are flagged in the panel.
 
 Outputs (in scripts/benchmark/):
-  * gold_scan_cache.jsonl  — per-file scan result (resumable; delete to re-scan)
-  * gold_gene_panel.json   — full structured gold + provenance + scan coverage
-  * gold_gene_panel.tsv    — human-readable table to eyeball
+  * gold_scan_cache.jsonl: per-file scan result (resumable, delete to re-scan)
+  * gold_gene_panel.json: full structured gold + provenance + scan coverage
+  * gold_gene_panel.tsv: human-readable table to eyeball
 
 Usage:
-  python scripts/benchmark/build_gold_table.py --limit 150     # quick validation scan
-  python scripts/benchmark/build_gold_table.py                 # full scan (~5.4k files)
+  # quick validation scan
+  python scripts/benchmark/build_gold_table.py --limit 150
+  # full scan (~5.4k files)
+  python scripts/benchmark/build_gold_table.py
   python scripts/benchmark/build_gold_table.py --workers 8
 """
 import os
@@ -130,7 +136,10 @@ def _tokens_from_bytes(content: bytes, name: str) -> set:
 
 
 def scan_one(f: dict) -> dict:
-    """Download + tokenize one file; return {file_id, name, matched:[genes], ...}."""
+    """Download and tokenize one file and return its scan record.
+
+    The record is a dict {file_id, name, matched: [genes], ...}.
+    """
     from gen3.auth import Gen3Auth
     from gen3.file import Gen3File
     from dglink.portals.nci.gc.constants import NCI_GEN3_ENDPOINT

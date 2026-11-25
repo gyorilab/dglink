@@ -1,5 +1,5 @@
 """
-Select entity columns using heuristics
+Select entity columns using heuristics.
 """
 from .column_selector import ColumnSelector, TabularDataset
 
@@ -12,18 +12,25 @@ class HeuristicSelector(ColumnSelector):
     name = "heuristic_selector"
 
     def __init__(self, nan_percentage: float = 0.1, max_entity_types: int = 8) -> None:
-        """
-        nan_percentage: a column is rejected if at most this proportion of its rows were grounded (default: 0.1)
-        max_entity_types: a column is rejected if it has more than this many distinct entity types (default: 8)
+        """Initialize the selector with its rejection thresholds.
+
+        Parameters
+        ----------
+        nan_percentage :
+            A column is rejected if at most this proportion of its rows were
+            grounded (default: 0.1).
+        max_entity_types :
+            A column is rejected if it has more than this many distinct
+            entity types (default: 8).
         """
         super().__init__()
         self.nan_percentage = nan_percentage
         self.max_entity_types = max_entity_types
 
     def execute(self, table: TabularDataset, verbose: bool = False, columns: list | None = None) -> None:
-        """Remove low-quality or overly heterogeneous grounded columns, mutating `table` in place.
+        """Remove low-quality or overly heterogeneous grounded columns.
 
-        A column is rejected if:
+        Mutates `table` in place. A column is rejected if:
         1. at most `nan_percentage` of rows were successfully grounded, or
         2. it contains more than `max_entity_types` distinct entity types.
         """
@@ -36,7 +43,7 @@ class HeuristicSelector(ColumnSelector):
             self._log_selection(starting_cols, table)
 
     def check_column(self, table: TabularDataset, col: str, verbose: bool = False) -> bool:
-        """Check if a single column contains entities"""
+        """Check if a single column contains entities."""
         n_rows = len(table.table)
         if n_rows == 0:
             is_entity = False

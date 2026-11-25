@@ -18,14 +18,14 @@ class Mapping(NamedTuple):
 
 
 def read_obo_mappings(path: str, qualifier_predicates: dict) -> list:
-    """Return the cross-references in an OBO file whose qualifiers have a predicate.
+    """Return an OBO file's cross-references whose qualifiers have a predicate.
 
     An OBO file can qualify each cross-reference with `source` annotations, for
     example `xref: SCTID:64572001 {source="MONDO:equivalentTo"}`.
     `qualifier_predicates` maps such annotations to a predicate, and
-    cross-references with no annotation in it are skipped. CURIEs are normalized
-    with Bioregistry, and ones it cannot normalize are skipped, as are obsolete
-    terms.
+    cross-references with no annotation in it are skipped. CURIEs are
+    normalized with Bioregistry, and ones it cannot normalize are skipped, as
+    are obsolete terms.
     """
     graph = obonet.read_obo(path, include_clauses=True)
     mappings = []

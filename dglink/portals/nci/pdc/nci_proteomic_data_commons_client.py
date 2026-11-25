@@ -1,5 +1,5 @@
 """
-Client for querying and downloading data from the NCI Proteomic Data Commons (PDC).
+Client for querying and downloading data from the NCI Proteomic Data Commons.
 """
 
 from dglink.core.api_clients import GqlClient
@@ -26,8 +26,21 @@ class NciProteomicCommonsClient:
         timeout_sec=60,
         chunk_size=1024 * 256,
     ):
-        """
-        Args:
+        """Initialize the client.
+
+        Parameters
+        ----------
+        retry_total :
+            The total number of retries of a download request.
+        retry_backoff :
+            The backoff factor between retries.
+        retry_status_list
+            The HTTP status codes on which to retry.
+        timeout_sec
+            The timeout of a download request in seconds.
+        chunk_size
+            The size of the chunks a file is downloaded and hashed in, in
+            bytes.
         """
         self.gql_client = GqlClient(PDC_GQL_ENDPOINT, fetch_schema_from_transport=False)
         self.swagger_session = self._initialize_swagger_session(
@@ -39,7 +52,7 @@ class NciProteomicCommonsClient:
         self.timeout_sec = timeout_sec
 
     def get_program_hierarchy(self) -> list[dict]:
-        """Get all programs and their program -> project -> study hierarchy"""
+        """Return all programs and their program -> project -> study tree."""
         base_call = gql("""
         {
             allPrograms{
@@ -74,16 +87,24 @@ class NciProteomicCommonsClient:
         return program_hierarchy
 
     def get_study_biospecimen(self, study_id: str, page_size: int = 1000) -> list[dict]:
-        """Get the case -> sample -> aliquot biospecimen hierarchy for a study.
+        """Return the case -> sample -> aliquot hierarchy of a study.
 
-        Each row ties one aliquot to its parent sample and case, and carries the
-        disease/site/sample-type metadata PDC exposes per biospecimen. This is the
-        structural backbone used to build the graph (analogous to GDC's expanded
-        `samples` on the cases endpoint).
+        Each row ties one aliquot to its parent sample and case, and carries
+        the disease/site/sample-type metadata PDC exposes per biospecimen.
+        This is the structural backbone used to build the graph (analogous to
+        GDC's expanded `samples` on the cases endpoint).
 
-        Args:
-            study_id: study identifier (the UUID `study_id`, not `pdc_study_id`)
-            page_size: amount of biospecimen records to fetch at once
+        Parameters
+        ----------
+        study_id :
+            The study identifier (the UUID `study_id`, not `pdc_study_id`).
+        page_size :
+            The number of biospecimen records to fetch at once.
+
+        Returns
+        -------
+        list[dict]
+            The biospecimen records of the study.
         """
         base_call = gql("""
             query biospecimenPerStudy($study_id: String!) {
@@ -114,12 +135,23 @@ class NciProteomicCommonsClient:
         )
 
     def get_study_files(self, study_id: str, page_size: int = 500) -> list[dict[str]]:
-        """Get a list of all files associated with a given study and cache them
+        """Return a list of all files associated with a study and cache them.
 
-        Note: will store results in `NCI_PDC_CACHE_DIR.joinpath("study_to_files.tsv")`
-        Args:
-            study_id: study identifier
-            page_size: amount of files to check at once
+        Parameters
+        ----------
+        study_id :
+            The study identifier.
+        page_size :
+            The number of files to check at once.
+
+        Returns
+        -------
+        :
+            The files associated with the study.
+
+        Notes
+        -----
+        Stores results in `NCI_PDC_CACHE_DIR.joinpath("study_to_files.tsv")`.
         """
         files_df_path = NCI_PDC_CACHE_DIR.joinpath("study_to_files.tsv")
         study_files_df = self._read_manifest()
@@ -178,18 +210,22 @@ class NciProteomicCommonsClient:
         self,
         file_ids: list[str],
     ):
-        """Download the requested PDC files into the cache, skipping any already present.
+        """Download the requested PDC files into the cache.
 
-        Mirrors the GDC portal's `download_tabular_files`: the manifest is filtered
-        to the requested files, files already in the cache (on disk) are skipped, and
-        the rest are streamed to `<cache>/files/<study_id>/<file_name>`. The on-disk
-        location is deterministic from (study_id, file_name), so caching keys off disk
-        existence; the manifest `path` column is updated to that location whenever a
-        file is downloaded (or back-filled for a file already on disk but unrecorded).
+        Files already present are skipped. Mirrors the GDC portal's
+        `download_tabular_files`: the manifest is filtered to the requested
+        files, files already in the cache (on disk) are skipped, and the rest
+        are streamed to `<cache>/files/<study_id>/<file_name>`. The on-disk
+        location is deterministic from (study_id, file_name), so caching keys
+        off disk existence. The manifest `path` column is updated to that
+        location whenever a file is downloaded (or back-filled for a file
+        already on disk but unrecorded).
 
-        Note: PDC `signedUrl`s are short-lived. If a cached url has expired the
-        download 404/403s; re-fetch the study with `get_study_files` (bypassing the
-        cache) to mint fresh urls before retrying.
+        Notes
+        -----
+        PDC `signedUrl`s are short-lived. If a cached url has expired the
+        download 404/403s. Re-fetch the study with `get_study_files`
+        (bypassing the cache) to mint fresh urls before retrying.
         """
         files_df = self._read_manifest()
         if files_df is None:
@@ -224,8 +260,9 @@ class NciProteomicCommonsClient:
     def _read_manifest(self):
         """Read the study -> file manifest, or None if it does not exist yet.
 
-        Guarantees a String `path` column (null where a file has not been downloaded)
-        so callers can rely on it regardless of how the on-disk manifest was written.
+        Guarantees a String `path` column (null where a file has not been
+        downloaded) so callers can rely on it regardless of how the on-disk
+        manifest was written.
         """
         files_df_path = NCI_PDC_CACHE_DIR.joinpath("study_to_files.tsv")
         if not os.path.exists(files_df_path):
@@ -240,11 +277,16 @@ class NciProteomicCommonsClient:
         return files_df
 
     def _record_downloaded_paths(self, files_df, downloaded_paths: dict[str, str]):
-        """Write local paths for freshly-downloaded files back into the manifest `path`.
+        """Write the local paths of newly downloaded files into the manifest.
 
-        Args:
-            files_df: the full manifest frame (as read by `_read_manifest`).
-            downloaded_paths: mapping of file_id -> local path to record.
+        The paths are written to the manifest `path` column.
+
+        Parameters
+        ----------
+        files_df
+            The full manifest frame (as read by `_read_manifest`).
+        downloaded_paths :
+            Mapping of file_id -> local path to record.
         """
         updates = pl.DataFrame(
             {
@@ -262,7 +304,10 @@ class NciProteomicCommonsClient:
         )
 
     def _verify_md5(self, path, expected_md5) -> bool:
-        """Return True if `path`'s md5 matches `expected_md5` (or if no md5 is known)."""
+        """Return True if the md5 of `path` matches `expected_md5`.
+
+        Also returns True if no md5 is known.
+        """
         if not expected_md5:
             ## nothing to check against; trust the file
             return True
@@ -275,9 +320,7 @@ class NciProteomicCommonsClient:
     def _initialize_swagger_session(
         self, retry_total, retry_backoff, retry_status_list
     ):
-        """
-        Create a requests.Session with basic retry behavior.
-        """
+        """Create a requests.Session with basic retry behavior."""
         session = requests.Session()
         retries = Retry(
             total=retry_total,
@@ -291,14 +334,17 @@ class NciProteomicCommonsClient:
         return session
 
     def _safe_download(self, url, dst_path, expected_md5=None):
-        """
-        Download a single file to dst_path using streaming.
+        """Download a single file to dst_path using streaming.
 
-        Streams to a `.part` sidecar and only renames into place once the transfer
-        completes (and the md5 checks out, when known), so an interrupted download
-        never leaves a truncated file that later looks cached.
+        Streams to a `.part` sidecar and only renames into place once the
+        transfer completes (and the md5 checks out, when known), so an
+        interrupted download never leaves a truncated file that later looks
+        cached.
 
-        Returns True on success, False if the file was not downloaded.
+        Returns
+        -------
+        bool
+            True on success, False if the file was not downloaded.
         """
         filename = os.path.basename(dst_path)
         part_path = dst_path.with_name(dst_path.name + ".part")

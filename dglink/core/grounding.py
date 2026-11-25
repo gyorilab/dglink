@@ -1,15 +1,18 @@
-"""Ground free-text biomedical terms (e.g. a primary diagnosis) to ontology identifiers.
+"""Ground free-text biomedical terms to ontology identifiers.
 
-Shared by every portal's diagnosis parser so grounded disease concepts merge across
-portals. Uses `gilda.annotate` (not `ground`) so messy multi-part strings still resolve —
-`ground` needs the whole string to match, so e.g. "Papillary transitional cell carcinoma,
-non-invasive" fails, whereas `annotate` finds the grounded span within it. Among the
-grounded spans we keep the one covering the *longest* substring (the most specific
-concept, not a generic sub-token like "carcinoma") above a score threshold; otherwise the
-caller falls back to a portal-local id.
+The terms are, for example, a primary diagnosis. This module is shared by
+every portal's diagnosis parser so grounded disease concepts merge across
+portals. Uses `gilda.annotate` (not `ground`) so messy multi-part strings
+still resolve. `ground` needs the whole string to match, so e.g. "Papillary
+transitional cell carcinoma, non-invasive" fails, whereas `annotate` finds
+the grounded span within it. Among the grounded spans we keep the one
+covering the *longest* substring (the most specific concept, not a generic
+sub-token like "carcinoma") above a score threshold. Otherwise the caller
+falls back to a portal-local id.
 
-`annotate_text` is the simpler strategy tabular data uses (the top match of the first
-span gilda finds, no threshold), cached since tables repeat the same values many times.
+`annotate_text` is the simpler strategy tabular data uses (the top match of
+the first span gilda finds, no threshold), cached since tables repeat the
+same values many times.
 """
 
 import re
@@ -42,8 +45,11 @@ def _annotate(text: str, context: str | None = None, grounder=None):
 
 
 def slugify(name: str) -> str:
-    """Lower-case, punctuation-collapsed slug of a name, for keying ungrounded nodes by
-    name so duplicates that share a name (e.g. "Not Reported") collapse to one id."""
+    """Return a lower-case, punctuation-collapsed slug of a name.
+
+    The slug is used for keying ungrounded nodes by name so duplicates that
+    share a name (e.g. "Not Reported") collapse to one id.
+    """
     return (
         re.sub(r"[^a-z0-9]+", "_", (name or "").strip().lower()).strip("_") or "unknown"
     )
@@ -51,16 +57,18 @@ def slugify(name: str) -> str:
 
 def _best_match(text: str, score_threshold: float, min_span_fraction: float, context: str | None = None,
                 grounder: gilda.Grounder | None = None):
-    """Best gilda match for `text`, or None.
+    """Return the best gilda match for `text`, or None.
 
-    First tries to ground the whole string with `gilda.ground` (the most specific match);
-    if that fails, falls back to `gilda.annotate` and keeps the match on the longest span
-    within the string, provided that span covers at least `min_span_fraction` of the text
-    (so "xyzzy unknown disease" does not ground to "disease"). Either way only matches
-    at/above `score_threshold` are accepted.
+    First tries to ground the whole string with `gilda.ground` (the most
+    specific match). If that fails, falls back to `gilda.annotate` and keeps
+    the match on the longest span within the string, provided that span
+    covers at least `min_span_fraction` of the text (so "xyzzy unknown
+    disease" does not ground to "disease"). Either way only matches at/above
+    `score_threshold` are accepted.
 
-    `context` (e.g. the document `text` was found in) is passed to gilda, which uses it to
-    disambiguate strings it has a disambiguation model for, and ignores it otherwise.
+    `context` (e.g. the document `text` was found in) is passed to gilda,
+    which uses it to disambiguate strings it has a disambiguation model for,
+    and ignores it otherwise.
     """
     if not isinstance(text, str) or not text.strip():
         return None
@@ -89,8 +97,9 @@ def ground_term(text: str, score_threshold: float = GROUNDING_SCORE_THRESHOLD,
                 grounder: gilda.Grounder | None = None) -> tuple:
     """Return a (normalized_name, curie, iri) triple for `text`.
 
-    curie/iri are None when `text` is empty or nothing grounds, so callers can detect
-    failure and fall back to a portal-local id. See `_best_match` for the matching rules.
+    curie/iri are None when `text` is empty or nothing grounds, so callers can
+    detect failure and fall back to a portal-local id. See `_best_match` for
+    the matching rules.
     """
     match = _best_match(text, score_threshold, min_span_fraction=0.0, grounder=grounder)
     if match is None:
@@ -115,12 +124,14 @@ class TextGrounding(NamedTuple):
 
 @lru_cache(maxsize=ANNOTATE_CACHE_SIZE)
 def annotate_text(text: str, grounder: gilda.Grounder | None = None) -> TextGrounding | None:
-    """Top match of the first span `gilda.annotate` finds in `text`, or None.
+    """Return the top match of the first span gilda annotates in `text`.
 
-    The tabular grounding strategy: unlike `ground_entity` there is no score threshold and
-    no whole-string match first. A pure function of the text and the grounder, so it is
-    cached across columns, tables and portals; callers apply their own exclusions (e.g. a
-    table's terms_to_exclude) to the result.
+    Returns None if there is no such span. This is the tabular grounding
+    strategy: unlike `ground_entity` there is no score threshold and no
+    whole-string match first. It is a pure function of the text and the
+    grounder, so it is cached across columns, tables and portals. Callers
+    apply their own exclusions (e.g. a table's terms_to_exclude) to the
+    result.
     """
     ans = _annotate(text, grounder=grounder)
     if not ans:
@@ -142,12 +153,13 @@ def ground_entity(
     context: str | None = None,
     grounder: gilda.Grounder | None = None,
 ) -> tuple:
-    """Return a (normalized_name, curie, iri, biolink_category) tuple for `text`.
+    """Return a (normalized_name, curie, iri, biolink_category) for `text`.
 
-    Like `ground_term`, but also types the grounding (INDRA type mapped to a Biolink
-    category), can reject partial matches covering less than `min_span_fraction` of
-    the text, and can take a `context` to disambiguate with (see `_best_match`).
-    curie/iri/category are None when nothing grounds.
+    Like `ground_term`, but also types the grounding (INDRA type mapped to a
+    Biolink category), can reject partial matches covering less than
+    `min_span_fraction` of the text, and can take a `context` to disambiguate
+    with (see `_best_match`). curie/iri/category are None when nothing
+    grounds.
     """
     match = _best_match(text, score_threshold, min_span_fraction, context=context, grounder=grounder)
     if match is None:

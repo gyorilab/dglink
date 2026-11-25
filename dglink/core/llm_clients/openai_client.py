@@ -20,7 +20,7 @@ REASONING_MODELS = {"gpt-5", "gpt-5-mini", "o1", "o3", "o3-mini", "o4-mini"}
 
 class OpenAIClient(LLMClient):
     """
-    Ollama implementation of LLM client adapter.
+    OpenAI implementation of LLM client adapter.
     """
 
     def __init__(
@@ -44,9 +44,7 @@ class OpenAIClient(LLMClient):
         retry_delay: float = 1.0,
         temperature: float | None = 0.0,
     ) -> BaseModel:
-        """
-        Make an LLM API call with structured pydantic response format
-        """
+        """Make an LLM API call with structured pydantic response format."""
         ParsedResponse = import_optional(
             "openai.types.responses.parsed_response", "openai"
         ).ParsedResponse

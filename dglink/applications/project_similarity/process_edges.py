@@ -1,5 +1,8 @@
-"""
-Reads in existing graph from `dglink/resources/graph` then saves one tsv with only the related project edges and another with out them (for training the model)
+"""Split the related project edges from the rest of the graph.
+
+Reads in the existing graph from `dglink/resources/graph`, then saves one TSV
+with only the related project edges and another without them (for training
+the model).
 """
 
 import pandas

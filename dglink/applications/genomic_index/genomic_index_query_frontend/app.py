@@ -68,7 +68,7 @@ def chat():
 
 @app.route('/api/health', methods=['GET'])
 def get_health():
-    """Get health status from backend"""
+    """Get the health status from the backend."""
     try:
         response = requests.get(f'{BACKEND_URL}/health')
         return jsonify(response.json())

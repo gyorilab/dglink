@@ -13,15 +13,19 @@ gql = import_optional("gql", "nci").gql
 
 class NciGeneralCommonsClient:
     def __init__(self, gen3_credential_file: str = None):
-        """
-        Args:
-            gen3_credential_file: Path to file with NCI Gen3 credential file can be obtained from (https://nci-crdc.datacommons.io/login)
+        """Initialize the client.
+
+        Parameters
+        ----------
+        gen3_credential_file :
+            Path to the NCI Gen3 credential file, which can be obtained from
+            https://nci-crdc.datacommons.io/login.
         """
         self.gql_client = GqlClient(NCI_GQL_ENDPOINT)
         self.gen3_client = Gen3Client(NCI_GEN3_ENDPOINT, gen3_credential_file)
 
     def get_all_studies(self, only_open: bool = False) -> list[dict]:
-        """Get a list of all studies from the NCI GC, and their metadata"""
+        """Return a list of all studies from the NCI GC, and their metadata."""
         base_call = gql("""
                         query GetStudies($first: Int, $offset: Int) {
                             studies(
@@ -51,12 +55,24 @@ class NciGeneralCommonsClient:
     def get_study_files(
         self, phs_accession: str, page_size: int = 500
     ) -> list[dict[str]]:
-        """Get a list of all files associated with a given study and cache them
+        """Return a list of all files associated with a study and cache them.
 
-        Note: will store results in `os.path.join(NCI_GC_CACHE_DIR, 'study_to_files.tsv')`
-        Args:
-            phs_accession: study identifier
-            page_size: amount of files to check at once
+        Parameters
+        ----------
+        phs_accession :
+            The study identifier.
+        page_size :
+            The number of files to check at once.
+
+        Returns
+        -------
+        :
+            The files associated with the study.
+
+        Notes
+        -----
+        Stores results in
+        `os.path.join(NCI_GC_CACHE_DIR, 'study_to_files.tsv')`.
         """
         files_df_path = os.path.join(NCI_GC_CACHE_DIR, "study_to_files.tsv")
         if os.path.exists(files_df_path):
@@ -107,7 +123,10 @@ class NciGeneralCommonsClient:
         save_directory="./downloads",
         show_progress: bool = True,
     ):
-        """Use Gen3 client to download a list of files, updates `study_to_files.tsv` with path to downloaded files"""
+        """Download a list of files with the Gen3 client.
+
+        Updates `study_to_files.tsv` with the paths of the downloaded files.
+        """
         files_df_path = os.path.join(NCI_GC_CACHE_DIR, "study_to_files.tsv")
         study_files_df = pl.read_csv(files_df_path, separator="\t").cast(
             {"phs_accession": pl.String}

@@ -1,5 +1,5 @@
 """
-Schemas to match columns against
+Schemas to match columns against.
 """
 
 from pydantic import BaseModel
@@ -35,12 +35,15 @@ class EvaluationResponse(BaseModel):
 
 
 class ColumnEvaluation(EvaluationResponse):
-    """EvaluationResponse with the column it describes (used by the table-wide selector)"""
+    """EvaluationResponse with the column it describes.
+
+    Used by the table-wide selector.
+    """
 
     column_name: str
 
 
 class EvaluationResponseBatch(BaseModel):
-    """Response model for batch (table-wide) column evaluation"""
+    """Response model for batch (table-wide) column evaluation."""
 
     columns: list[ColumnEvaluation]

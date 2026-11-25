@@ -1,5 +1,7 @@
 """
-Identify heart lung and blood diseases parsed from the NHLBI graph and write them to a TSV.
+Identify heart, lung and blood diseases in the NHLBI graph.
+
+The diseases are parsed from the NHLBI graph and written to a TSV file.
 """
 
 import pyobo

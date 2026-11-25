@@ -1,5 +1,5 @@
 """
-This can be used to generate a random sample of groundings from nodes.tsv
+Generate a random sample of groundings from nodes.tsv.
 """
 
 import polars as pl

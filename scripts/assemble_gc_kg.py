@@ -1,5 +1,6 @@
 """
-Assembles a knowledge graph by parsing the NCI General Commons (GC) Portal
+Assemble a knowledge graph by parsing the NCI General Commons (GC) portal.
+
 https://datacommons.cancer.gov/repository/general-commons
 """
 

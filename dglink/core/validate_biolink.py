@@ -1,9 +1,9 @@
 """
 Biolink-model conformance validation for a dglink graph.
 
-Checks that every node ``:LABEL`` is a concrete (instantiable) Biolink category and
-that every edge ``:TYPE`` is a valid Biolink predicate, using the Biolink Model
-Toolkit (``bmt``).
+Checks that every node ``:LABEL`` is a concrete (instantiable) Biolink
+category and that every edge ``:TYPE`` is a valid Biolink predicate, using the
+Biolink Model Toolkit (``bmt``).
 
 Run as a script against a graph directory::
 
@@ -43,9 +43,9 @@ def _toolkit() -> "bmt.Toolkit":
 def _candidate_names(label: str):
     """Yield plausible Biolink element names for a raw :LABEL / :TYPE value.
 
-    Handles the ``biolink:`` prefix and both PascalCase (``MaterialSample``) and
-    snake_case (``derives_from``) spellings by offering spaced variants that
-    ``bmt`` resolves against class/slot names.
+    Handles the ``biolink:`` prefix and both PascalCase (``MaterialSample``)
+    and snake_case (``derives_from``) spellings by offering spaced variants
+    that ``bmt`` resolves against class/slot names.
     """
     name = label.split(":", 1)[-1] if ":" in label else label
     name = name.strip()
@@ -63,7 +63,7 @@ def _candidate_names(label: str):
 
 @lru_cache(maxsize=4096)
 def is_valid_category(label: str) -> bool:
-    """True if ``label`` resolves to a concrete, instantiable Biolink category."""
+    """Check if ``label`` resolves to a concrete Biolink category."""
     t = _toolkit()
     for cand in _candidate_names(label):
         el = t.get_element(cand)
@@ -81,7 +81,10 @@ def is_valid_category(label: str) -> bool:
 
 @lru_cache(maxsize=4096)
 def is_valid_predicate(type_: str) -> bool:
-    """True if ``type_`` resolves to a valid, non-abstract/non-mixin Biolink predicate."""
+    """Check if ``type_`` resolves to a valid Biolink predicate.
+
+    The predicate must not be abstract or a mixin.
+    """
     t = _toolkit()
     for cand in _candidate_names(type_):
         el = t.get_element(cand)
@@ -97,7 +100,7 @@ def is_valid_predicate(type_: str) -> bool:
 
 
 def validate_node_set(node_set) -> dict:
-    """Return the set of node ``:LABEL`` values that are not valid Biolink categories."""
+    """Return the node ``:LABEL`` values that are not Biolink categories."""
     bad = Counter()
     for node in node_set.nodes.values():
         label = node.get(":LABEL", "")
@@ -107,7 +110,7 @@ def validate_node_set(node_set) -> dict:
 
 
 def validate_edge_set(edge_set) -> dict:
-    """Return the set of edge ``:TYPE`` values that are not valid Biolink predicates."""
+    """Return the edge ``:TYPE`` values that are not Biolink predicates."""
     bad = Counter()
     for edge in edge_set.edges.values():
         type_ = edge.get(":TYPE", "")
@@ -117,10 +120,10 @@ def validate_edge_set(edge_set) -> dict:
 
 
 def find_dangling_edges(node_set, edge_set) -> dict:
-    """Count edges whose ``:START_ID`` or ``:END_ID`` is not a node in ``node_set``.
+    """Count edges whose ``:START_ID`` or ``:END_ID`` is not in ``node_set``.
 
-    Returns ``{raw_type: count}`` (falling back to ``:TYPE``) so the source of the
-    dangling edges is easy to trace.
+    Returns ``{raw_type: count}`` (falling back to ``:TYPE``) so the source of
+    the dangling edges is easy to trace.
     """
     bad = Counter()
     for edge in edge_set.edges.values():
@@ -147,10 +150,11 @@ def _name(curie: str) -> str:
 
 
 def check_schema(edges) -> list:
-    """Return problems with a schema's (subject, predicate, object, association) edges.
+    """Return problems with a schema's edges.
 
-    Each category and predicate must be valid, and the subject and object categories
-    must fall within the predicate's Biolink domain and range.
+    The edges are (subject, predicate, object, association) tuples. Each
+    category and predicate must be valid, and the subject and object
+    categories must fall within the predicate's Biolink domain and range.
     """
     t = _toolkit()
     problems = []
@@ -186,11 +190,12 @@ def find_schema_violations(node_set, edge_set, allowed_triples) -> dict:
 
 
 def validate_graph(node_set, edge_set, allowed_triples=None) -> dict:
-    """Validate a NodeSet/EdgeSet pair. Returns a report dict.
+    """Validate a NodeSet/EdgeSet pair and return a report dict.
 
-    ``conformant`` is True only when no node label and no edge type violates the
-    Biolink model, no edge is untyped, no edge points at a missing node and, if
-    ``allowed_triples`` is given, every edge matches an allowed triple.
+    ``conformant`` is True only when no node label and no edge type violates
+    the Biolink model, no edge is untyped, no edge points at a missing node
+    and, if ``allowed_triples`` is given, every edge matches an allowed
+    triple.
     """
     bad_labels = validate_node_set(node_set)
     bad_types = validate_edge_set(edge_set)

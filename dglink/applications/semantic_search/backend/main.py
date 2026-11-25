@@ -21,7 +21,7 @@ RESULT_LIMIT = int(os.environ.get("SEMANTIC_SEARCH_RESULT_LIMIT", "1000"))
 
 
 def load_prefix_sets(nodes_df, edges_df):
-    """load the prefix sets of nodes and edges for auto-complete"""
+    """Load the prefix sets of nodes and edges for auto-complete."""
     ## load node prefix set
     node_prefix_set = pygtrie.PrefixSet()
     ## add curie and name to node prefix set
@@ -36,7 +36,10 @@ def load_prefix_sets(nodes_df, edges_df):
 
 
 def load_mappings(nodes_df, edges_df):
-    """get mapping from entity name to curie (and inverse) as well as a list of projects to their disease focus"""
+    """Get the mapping from entity name to CURIE and its inverse.
+
+    Also gets a list of projects to their disease focus.
+    """
     ## get name mappings
     names_mapping = {}
     for _, row in nodes_df.iterrows():
@@ -127,7 +130,10 @@ def add_indra_url_with_context(record, object_whole, subject_whole):
 
 
 def load_disease_focus(nodes_df, edges_df):
-    """Map a project/study curie -> [mesh curie, display name] for INDRA disease context lookoup"""
+    """Map a project/study CURIE to [MeSH CURIE, display name].
+
+    The mapping is used for the INDRA disease context lookup.
+    """
     labels = dict(zip(nodes_df["curie:ID"], nodes_df[":LABEL"]))
     names = dict(zip(nodes_df["curie:ID"], nodes_df["name"]))
     project_to_disease_focus = {}
@@ -180,17 +186,20 @@ def load_disease_focus(nodes_df, edges_df):
 
 
 def relation_pattern(relation: str = None) -> str:
-    """Cypher fragment binding `r`, optionally constrained to one relationship type.
+    """Return a Cypher fragment binding `r`, optionally to one type.
 
-    A relationship type cannot be parameterized -- `[r:$type]` is not valid Cypher -- so it
-    has to be interpolated. Two consequences, both of which bit us:
+    A relationship type cannot be parameterized (`[r:$type]` is not valid
+    Cypher), so it has to be interpolated. Two consequences, both of which
+    bit us:
 
-      * Biolink types contain a colon, and `[r:biolink:related_to]` is a syntax error, so
-        the type must be backtick-quoted. Every relation search against the CRDC graph
-        failed with CypherSyntaxError until this was added.
-      * Interpolation is an injection sink, and this endpoint is published on a public port
-        by compose.crdc.yaml. The type is therefore accepted only if it actually occurs in
-        the graph, which is also what autocomplete offers.
+      * Biolink types contain a colon, and `[r:biolink:related_to]` is a
+        syntax error, so the type must be backtick-quoted. Every relation
+        search against the CRDC graph failed with CypherSyntaxError until
+        this was added.
+      * Interpolation is an injection sink, and this endpoint is published on
+        a public port by compose.crdc.yaml. The type is therefore accepted
+        only if it actually occurs in the graph, which is also what
+        autocomplete offers.
     """
     if not relation:
         return "r"
@@ -205,14 +214,17 @@ def relation_pattern(relation: str = None) -> str:
 
 
 def get_disease_focus(curie):
-    """The [mesh curie, name, raw text] focus entry for a project/study, or None."""
+    """Return the disease focus entry for a project/study, or None.
+
+    The entry is [mesh curie, name, raw text].
+    """
     if not isinstance(curie, str):
         return None
     return project_to_disease_focus.get(curie.removesuffix(":Wiki"))
 
 
 def _has_disease_focus(curie) -> bool:
-    """Helper function checking if a curie has a disease focus"""
+    """Check if a CURIE has a disease focus."""
     return get_disease_focus(curie) is not None
 
 
@@ -220,11 +232,12 @@ def _has_disease_focus(curie) -> bool:
 def add_disease_focus(record, object_whole, subject_whole):
     """Report a project/study's disease focus as its own fields on that node.
 
-    Kept separate from the INDRA context links, which only appear when the *other* entity in
-    the triple grounds to a bioregistry id. The focus is a property of the study itself, so it
-    should show up either way. The raw text is the diagnosis string the disease was grounded
-    from, reported alongside the grounding so a bad one is visible in the results -- e.g.
-    "Early Onset Gastric Cancer" grounding to "Age of Onset".
+    Kept separate from the INDRA context links, which only appear when the
+    *other* entity in the triple grounds to a bioregistry id. The focus is a
+    property of the study itself, so it should show up either way. The raw
+    text is the diagnosis string the disease was grounded from, reported
+    alongside the grounding so a bad one is visible in the results, for
+    example "Early Onset Gastric Cancer" grounding to "Age of Onset".
     """
     for side, curie, attributes in (
         ("Subject", record.data()["subject"], subject_whole),
@@ -253,7 +266,10 @@ EDGE_TYPES = frozenset()
 
 
 def _load_graph_data():
-    """Load graph TSVs and build in-memory indexes (runs off the event loop)."""
+    """Load the graph TSVs and build in-memory indexes.
+
+    Runs off the event loop.
+    """
     global node_prefix_set, edge_prefix_set, names_mapping
     global inverse_names_mapping, project_to_disease_focus, EDGE_TYPES
 
@@ -274,7 +290,10 @@ def ensure_graph_loaded():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Start graph loading in a worker thread so /health is available immediately."""
+    """Start loading the graph in a worker thread.
+
+    This makes /health available immediately.
+    """
     loop = asyncio.get_running_loop()
     load_future = loop.run_in_executor(None, _load_graph_data)
     yield

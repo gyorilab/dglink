@@ -1,5 +1,6 @@
 """
-Assembles a knowledge graph by parsing the NCI Proteomic Data Commons (PDC) Portal
+Assemble a knowledge graph from the NCI Proteomic Data Commons (PDC) portal.
+
 https://pdc.cancer.gov/pdc/
 """
 

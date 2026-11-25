@@ -68,7 +68,10 @@ BDC_CURIE_PREFIX = "nhlbibdc"
 
 
 def bdc_curie(value: str) -> str:
-    """Prefix a raw BDC id (or slugged name) as a CURIE (Biolink requires CURIE ids)."""
+    """Prefix a raw BDC id (or slugged name) as a CURIE.
+
+    Biolink requires CURIE ids.
+    """
     return f"{BDC_CURIE_PREFIX}:{value}"
 
 

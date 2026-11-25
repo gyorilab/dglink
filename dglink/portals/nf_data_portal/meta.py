@@ -11,7 +11,7 @@ import os
 logger = logging.getLogger(__name__)
 
 def parse_project_attrs(project_id:str, project_metadata:dict, node_set:NodeSet)->NodeSet:
-    """Extract study node attributes from metadata"""
+    """Extract study node attributes from metadata."""
     project_attrs = {}
     for attr in PROJECT_ATTRS:
         project_attrs[f'{attr}:string[]'] = _unpack_dict_list(project_metadata, attr)
@@ -49,7 +49,7 @@ def get_meta(
     edge_set: EdgeSet,
     write_set: bool = False,
 ):
-    """pull all fields from a series of project meta data."""
+    """Pull all fields from the metadata of a series of projects."""
     logger.info("starting meta data pull")
     for project_id in tqdm.tqdm(project_ids):
         try:

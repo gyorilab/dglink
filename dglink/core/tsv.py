@@ -12,10 +12,11 @@ _WHITESPACE = re.compile(r"\s+")
 def clean_tsv_text(val, array_item: bool = False) -> str:
     """Return `val` as a single-line string that cannot break a TSV row.
 
-    Unsafe characters become spaces and runs of whitespace collapse to one space. Double
-    quotes become single quotes, since neo4j-admin import reads `"` as a quote character.
-    For items of a `string[]` column (`array_item`), `;` (the array delimiter) becomes `,`.
-    None and NaN become "".
+    Unsafe characters become spaces and runs of whitespace collapse to one
+    space. Double quotes become single quotes, since neo4j-admin import reads
+    `"` as a quote character. For items of a `string[]` column
+    (`array_item`), `;` (the array delimiter) becomes `,`. None and NaN
+    become "".
     """
     if val is None or (isinstance(val, float) and math.isnan(val)):
         return ""

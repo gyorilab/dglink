@@ -1,5 +1,7 @@
 """
-Assembles a knowledge graph by parsing the NCI genomics Data Commons (GDC) Portal https://portal.gdc.cancer.gov/
+Assemble a knowledge graph from the NCI Genomic Data Commons (GDC) portal.
+
+https://portal.gdc.cancer.gov/
 """
 
 from dglink import NodeSet, EdgeSet, write_graph

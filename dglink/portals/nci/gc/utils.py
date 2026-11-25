@@ -21,7 +21,7 @@ lazzy_get = lambda d, x: f"{d.get(x, f'{x}_missing')}"
 def get_program_hierarchy(
     client: NciGeneralCommonsClient, node_set: NodeSet, edge_set: EdgeSet
 ):
-    """parse the hierachy associated with a program"""
+    """Parse the hierarchy associated with a program."""
     program_details = client.get_program_details()
     for program in program_details:
         program_id = program.get("program")
@@ -109,8 +109,8 @@ def get_publications(
 ):
     """Add publications (biolink:Publication) and publication -> study edges.
 
-    Emitted as publication --biolink:mentions--> study (reverses the GC-native
-    Published direction to match mentions semantics).
+    Emitted as publication --biolink:mentions--> study (reverses the
+    GC-native Published direction to match mentions semantics).
     """
     for publication in client.get_publications():
         doi = lazzy_get(publication, "DOI_or_Pub_ID")
@@ -149,7 +149,10 @@ def get_publications(
 def get_investigators(
     client: NciGeneralCommonsClient, node_set: NodeSet, edge_set: EdgeSet
 ):
-    """Add investigators (biolink:Agent) and investigator -> study edges (contributes_to)."""
+    """Add investigators (biolink:Agent) and investigator -> study edges.
+
+    The edges use the contributes_to predicate.
+    """
     for investigator in client.get_investigators():
         inv_id = investigator.get("investigator_id")
         if not inv_id:
@@ -190,12 +193,13 @@ def get_investigators(
 
 
 def _fallback_disease_curie(name: str) -> str:
-    """Mint a name-based `ncigc:disease_<slug>` id for a diagnosis that did not ground.
+    """Mint a name-based `ncigc:disease_<slug>` id for an ungrounded diagnosis.
 
-    Keying by NAME (not the per-diagnosis id) collapses duplicate ungrounded diagnoses
-    that share a name — e.g. every "Not Reported" becomes a single node instead of one per
-    diagnosis. The `disease_` prefix also puts these ids in their own namespace so they
-    cannot collide with participant ids (which are `gc_curie(participant_id)`).
+    Keying by NAME (not the per-diagnosis id) collapses duplicate ungrounded
+    diagnoses that share a name, e.g. every "Not Reported" becomes a single
+    node instead of one per diagnosis. The `disease_` prefix also puts these
+    ids in their own namespace so they cannot collide with participant ids
+    (which are `gc_curie(participant_id)`).
     """
     return gc_curie(f"disease_{slugify(name)}")
 
@@ -203,15 +207,18 @@ def _fallback_disease_curie(name: str) -> str:
 def get_diagnoses(
     client: NciGeneralCommonsClient, node_set: NodeSet, edge_set: EdgeSet
 ):
-    """Add diagnoses as grounded biolink:Disease *concept* nodes, with the clinical detail
-    split by what it actually describes:
+    """Add diagnoses as grounded biolink:Disease concept nodes.
 
-      * the Disease node holds only concept identity (grounded name / curie / iri) so it
-        merges cleanly across patients and portals;
-      * the diagnosis-*event* qualifiers (stage, morphology, site, age, ...) live on the
-        participant -> disease edge, so per-patient values never collide on the shared node;
-      * patient-*course* facts (vital status, last known status) live on the participant
-        (biolink:Case), mirroring how GDC attaches demographics to the case.
+    The clinical detail is split by what it actually describes:
+
+      * the Disease node holds only concept identity (grounded name / curie /
+        iri) so it merges cleanly across patients and portals,
+      * the diagnosis-*event* qualifiers (stage, morphology, site, age, ...)
+        are stored on the participant -> disease edge, so per-patient values
+        never collide on the shared node,
+      * patient-*course* facts (vital status, last known status) are stored on
+        the participant (biolink:Case), mirroring how GDC attaches
+        demographics to the case.
     """
     for diagnosis in client.get_diagnoses(only_open=True):
         diag_id = diagnosis.get("diagnosis_id")
@@ -330,8 +337,10 @@ def get_diagnoses(
 def get_metadata_graph(
     client: NciGeneralCommonsClient, node_set: NodeSet, edge_set: EdgeSet
 ):
-    """Build the full NCI GC structural/metadata subgraph (programs, publications,
-    investigators, diagnoses) into the node/edge sets. Analogous to GDC's get_case_hierarchy.
+    """Build the full NCI GC structural/metadata subgraph.
+
+    Adds programs, publications, investigators and diagnoses to the node and
+    edge sets. Analogous to GDC's get_case_hierarchy.
     """
     get_program_hierarchy(client, node_set, edge_set)
     get_publications(client, node_set, edge_set)
@@ -369,11 +378,19 @@ def download_tabular_files(client: NciGeneralCommonsClient, step_size: int = 250
 
 
 def get_tabular_iterator(study_list: list | None = None) -> tuple[list, Iterator]:
-    """Return (group_ids, iterator) over downloaded tabular files, grouped by study.
+    """Return group ids and an iterator over downloaded tabular files.
 
-    The group id is the gc: CURIE of the study (phs_accession) so grounded-entity
-    edges attach to the study node. The iterator yields (study_curie, file_paths,
-    file_ids) tuples, matching the shape get_tabular_data expects.
+    The files are grouped by study. The group id is the gc: CURIE of the study
+    (phs_accession) so grounded-entity edges attach to the study node. The
+    iterator yields (study_curie, file_paths, file_ids) tuples, matching the
+    shape get_tabular_data expects.
+
+    Returns
+    -------
+    group_ids : list
+        The group ids.
+    iterator : Iterator
+        The iterator over (study_curie, file_paths, file_ids) tuples.
     """
     manifest = os.path.join(NCI_GC_CACHE_DIR, "study_to_files.tsv")
     files_df = pl.read_csv(manifest, separator="\t").cast({"phs_accession": pl.String})

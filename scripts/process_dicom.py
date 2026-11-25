@@ -1,5 +1,5 @@
 """
-Parsing DICOM files, for now only looking at one file
+Parse DICOM files, for now only looking at one file.
 """
 
 import pydicom
@@ -40,9 +40,10 @@ def process_dicom(
     dicom_identifiers: set,
     project_granularity: bool = False,
 ):
-    """
-    read in dicom file, and extract information
-    if project_granularity is true will just load one DICOM per project, otherwise will try to lead all series.
+    """Read a DICOM file and extract its information.
+
+    If project_granularity is True, load just one DICOM file per project,
+    otherwise try to load all series.
     """
     annotations = syn.get_annotations(file_id)
     project_id = annotations.get("studyId", ["project_id_missing"])[0]

@@ -24,7 +24,5 @@ class LLMClient(ABC):
         retry_delay: float = 1.0,
         temperature: float = 0.0,
     ) -> BaseModel:
-        """
-        Make an LLM API call with structured pydantic response format
-        """
+        """Make an LLM API call with structured pydantic response format."""
         pass

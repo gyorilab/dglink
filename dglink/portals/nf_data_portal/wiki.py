@@ -22,8 +22,10 @@ logger = logging.getLogger(__name__)
 def get_entities_from_wiki(
     project_id: str, study_wiki, node_set: NodeSet, edge_set: EdgeSet,
 ):
-    """pull entities from a project's wiki and link them straight to the project (each
-    project has a single root wiki, so there is no intermediate wiki node)."""
+    """Pull entities from a project's wiki and link them to the project.
+
+    Each project has a single root wiki, so there is no intermediate wiki node.
+    """
     for field in WIKI_FIELDS:
         entry = study_wiki.get(field)
         if _is_empty(entry):

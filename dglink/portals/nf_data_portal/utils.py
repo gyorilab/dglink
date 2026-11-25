@@ -36,16 +36,14 @@ SOURCE_TO_HEAD = {
 
 
 def download_all_nf_studies():
-    """
-    Saves a list of all studies on the NF Data Portal
-    """
+    """Save a list of all studies on the NF Data Portal."""
     os.makedirs(Path(DGLINK_CACHE), exist_ok=True)
     query = syn.tableQuery(f"SELECT * FROM {NF_STUDIES_TABLE}")
     df = query.asDataFrame()
     df.to_csv(f"{DGLINK_CACHE}/all_nf_studies.tsv", sep="\t", index=False)
 
 def _nf_studies_path() -> str:
-    """Path to the cached NF studies table, downloading it first if needed."""
+    """Return the path of the cached NF studies table, downloading it first."""
     nf_studies_path = f"{DGLINK_CACHE}/all_nf_studies.tsv"
     if not os.path.exists(nf_studies_path):
         logger.info("NF Data Portal studies list not found.")
@@ -56,22 +54,26 @@ def _nf_studies_path() -> str:
 
 
 def get_all_nf_studies():
-    """
-    Checks the list of all studies on the NF Data Portal exists and makes it if not. Returns all nf study ids as a list.
+    """Return the ids of all studies on the NF Data Portal.
+
+    The cached list of all studies is downloaded first if it does not exist.
     """
     return pandas.read_csv(_nf_studies_path(), sep="\t")["studyId"].to_list()
 
 
 @lru_cache(maxsize=1)
 def _studies_table() -> dict:
-    """studyId -> row of the NF studies table (names and summaries are not in the project
-    metadata). Loaded on first use, from the same cache as get_all_nf_studies."""
+    """Return the rows of the NF studies table by studyId.
+
+    Names and summaries are not in the project metadata. The table is loaded
+    on first use, from the same cache as get_all_nf_studies.
+    """
     df = pandas.read_csv(_nf_studies_path(), sep="\t")
     return {row["studyId"]: row for row in df.to_dict("records")}
 
 
 def safe_download(syn_id:str)->str|None:
-    """safe method to download from nf data portal"""
+    """Download a file from the NF Data Portal, returning None on failure."""
     try:
         with TIMER.stage("download"):
             entity = syn.get(syn_id, ifcollision="keep.local") ## keep local file if already downloaded ie do not re-download.
@@ -86,11 +88,13 @@ def safe_download(syn_id:str)->str|None:
         return None
 
 def fetch_nf_tabular_files()->pl.DataFrame:
-    """
-    Pulls all tabular files from the NF data portal and saves them as a list
-    
-    :return: Description
-    :rtype: DataFrame
+    """Return all tabular files from the NF Data Portal and save their list.
+
+    Returns
+    -------
+    pl.DataFrame
+        The tabular files of all projects, with the paths they were downloaded
+        to.
     """
     output_path:str = os.path.join(
             NF_DATA_PORTAL_CACHE_DIR, 
@@ -132,9 +136,7 @@ def fetch_nf_tabular_files()->pl.DataFrame:
     return tabular_project_files
 
 def get_tabular_iterator(project_list: list) -> Iterator:
-    """
-    returns a 2d iterator of project_id and associated file_paths
-    """
+    """Return a 2D iterator of project ids and their associated file paths."""
     ## get a list of tabular files and download if need be 
     tabular_files = fetch_nf_tabular_files()
     ## filter for files that could be downloaded and format the col names
@@ -154,27 +156,38 @@ def get_tabular_iterator(project_list: list) -> Iterator:
 def get_project_files(
     project_syn_id: str, file_types: list = None, as_list: bool = False
 ) -> Union[pl.DataFrame, list]:
-    """Get all files for a Synapse project, with optional filtering by file extension.
+    """Return all files of a Synapse project, optionally filtered by extension.
 
-    Uses cached data if available, otherwise crawls the project and updates cache.
+    Uses cached data if available, otherwise crawls the project and updates
+    the cache.
 
-    There is a table that has many of the files already aggregated from the nf data portal, but it seems to be missing a lot of files that can be pulled by just crawling everything.
+    There is a table that has many of the files already aggregated from the
+    NF Data Portal, but it seems to be missing a lot of files that can be
+    pulled by just crawling everything.
 
-    Args:
-        project_syn_id: Synapse project ID (e.g., 'syn12345678')
-        file_types: Optional list of file extensions to filter by (e.g., ['.vcf', '.bam'])
-        as_list: If True, returns list of file_syn_ids instead of DataFrame
+    Parameters
+    ----------
+    project_syn_id :
+        Synapse project ID (e.g., 'syn12345678').
+    file_types :
+        Optional list of file extensions to filter by (e.g., ['.vcf', '.bam']).
+    as_list :
+        If True, returns a list of file_syn_ids instead of a DataFrame.
 
-    Returns:
-        DataFrame with columns [project_syn_id, file_syn_id, file_name], or
-        list of file_syn_ids if as_list=True
+    Returns
+    -------
+    :
+        DataFrame with columns [project_syn_id, file_syn_id, file_name], or a
+        list of file_syn_ids if as_list=True.
 
-    Examples:
-        >>> # Get all files as DataFrame
-        >>> files = get_project_files('syn12345678')
-        >>>
-        >>> # Get only VCF files as list of IDs
-        >>> vcf_ids = get_project_files('syn12345678', file_types=['.vcf'], as_list=True)
+    Examples
+    --------
+    >>> # Get all files as DataFrame
+    >>> files = get_project_files('syn12345678')
+    >>>
+    >>> # Get only VCF files as list of IDs
+    >>> vcf_ids = get_project_files('syn12345678', file_types=['.vcf'],
+    ...                             as_list=True)
     """
     known_files = load_known_files_df()
     ## check if we have already crawled the files for this data frame
@@ -202,9 +215,11 @@ def get_project_files(
 def load_known_files_df() -> pl.DataFrame:
     """Load the cached registry of files from previously crawled projects.
 
-    Returns:
-        DataFrame with columns: project_syn_id, file_syn_id, file_name.
-        Returns empty DataFrame with schema if cache file doesn't exist.
+    Returns
+    -------
+    pl.DataFrame
+        DataFrame with columns: project_syn_id, file_syn_id, file_name. An
+        empty DataFrame with this schema if the cache file doesn't exist.
     """
     os.makedirs(REPORT_PATH, exist_ok=True)
     df_path = os.path.join(REPORT_PATH, "project_files.tsv")
@@ -217,20 +232,25 @@ def load_known_files_df() -> pl.DataFrame:
 
 
 def get_projects_files(project_ids: list) -> pl.DataFrame:
-    """Get all files for multiple Synapse projects.
+    """Return all files for multiple Synapse projects.
 
     Efficiently retrieves files for multiple projects by using cached data when
     available and only crawling uncached projects.
 
-    Args:
-        project_ids: List of Synapse project IDs (e.g., ['syn12345678', 'syn87654321'])
+    Parameters
+    ----------
+    project_ids :
+        List of Synapse project IDs (e.g., ['syn12345678', 'syn87654321']).
 
-    Returns:
+    Returns
+    -------
+    :
         DataFrame containing files from all specified projects with columns:
-        [project_syn_id, file_syn_id, file_name]
+        [project_syn_id, file_syn_id, file_name].
 
-    Note:
-        Cache is automatically updated with any newly crawled projects.
+    Notes
+    -----
+    Cache is automatically updated with any newly crawled projects.
     """
     known_files = load_known_files_df()
     for project_syn_id in tqdm.tqdm(project_ids):
@@ -255,16 +275,22 @@ def crawl_project_files(
 ) -> pl.DataFrame:
     """Crawl a Synapse project to discover all files and update the cache.
 
-    Args:
-        project_syn_id: Synapse project ID (e.g., 'syn12345678')
-        known_files: Existing file registry. If None, loads from cache.
+    Parameters
+    ----------
+    project_syn_id :
+        Synapse project ID (e.g., 'syn12345678').
+    known_files :
+        Existing file registry. If None, loads from cache.
 
-    Returns:
-        Updated DataFrame containing all known files including newly discovered ones.
-        Cache file is automatically updated on disk.
+    Returns
+    -------
+    :
+        Updated DataFrame containing all known files including newly
+        discovered ones. The cache file is automatically updated on disk.
 
-    Note:
-        Handles locked projects gracefully by logging a warning and continuing.
+    Notes
+    -----
+    Handles locked projects gracefully by logging a warning and continuing.
     """
     if known_files is None:
         known_files = load_known_files_df()
@@ -309,14 +335,19 @@ def crawl_project_files(
 
 
 def get_file_annotations(file_ids:list)->dict[str, dict]:
-    """Use the Synapse file object to pull file annotations for a list of synapse ids 
-    Args:
-        file_ids: a list of file syn ids. 
-        
-    Returns:
-        dict[str, dict] a dictionary mapping syn ids to a dictionary of their annotations
+    """Return the annotations of a list of Synapse files.
 
-    
+    Uses the Synapse file object to pull the file annotations.
+
+    Parameters
+    ----------
+    file_ids :
+        A list of file Synapse ids.
+
+    Returns
+    -------
+    dict[str, dict]
+        A dictionary mapping Synapse ids to a dictionary of their annotations.
     """
     logger.info("pulling annotations...")
     async def _safe_get(fid):
@@ -339,7 +370,10 @@ def get_file_annotations(file_ids:list)->dict[str, dict]:
         return results
     return asyncio.run(fetch_open_annotations(file_ids))
 def nf_curie(uuid: str) -> str:
-    """Prefix a raw NF UUID as a `nfdataportal:` CURIE (Biolink requires CURIE node ids)."""
+    """Prefix a raw NF UUID as a `nfdataportal:` CURIE.
+
+    Biolink requires CURIE node ids.
+    """
     return f"{NF_CURIE_PREFIX}:{uuid}"
 
 ## helper functions for parsing meta, publications and tools ##
@@ -348,8 +382,11 @@ def _is_placeholder(value: str) -> bool:
 
 
 def _unpack_dict_list(meta: dict, key: str) -> list:
-    """Non-empty values of a dictionary metadata (could be publication metadata as well) field
-    as stripped strings, dropping leaked boolean annotations."""
+    """Return the non-empty values of a dictionary metadata field.
+
+    The metadata could be publication metadata as well. Values are returned as
+    stripped strings, dropping leaked boolean annotations.
+    """
     values = meta.get(key, "")
     values = values if isinstance(values, list) else [values]
     return [
@@ -359,9 +396,12 @@ def _unpack_dict_list(meta: dict, key: str) -> list:
     ]
 
 def meta_node_curie(key: str, entry: str) -> str:
-    """CURIE for an ungrounded metadata value. `key` is usually the Biolink category, so the
-    same name under two fields of one category (e.g. a funder that is also an institution)
-    is one node; fields in NF_OWN_NAMESPACE_FIELDS pass their field name instead."""
+    """Return the CURIE for an ungrounded metadata value.
+
+    `key` is usually the Biolink category, so the same name under two fields
+    of one category (e.g. a funder that is also an institution) is one node.
+    Fields in NF_OWN_NAMESPACE_FIELDS pass their field name instead.
+    """
     return nf_curie(f"{key.split(':')[-1].lower()}_{slugify(entry)}")
 
 ORCID_SOURCE = "nf_tools_investigator_name_match"
@@ -369,9 +409,12 @@ ORCID_SOURCE = "nf_tools_investigator_name_match"
 
 @lru_cache(maxsize=1)
 def _investigator_orcids() -> dict:
-    """slugified investigator name -> ORCID CURIE, from the NF tools db. Neither publications
-    table has author ids, so a portal author whose full name matches an investigator gets
-    that investigator's ORCID. Loaded on first use."""
+    """Return a mapping from slugified investigator names to ORCID CURIEs.
+
+    The mapping comes from the NF tools db. Neither publications table has
+    author ids, so a portal author whose full name matches an investigator gets
+    that investigator's ORCID. Loaded on first use.
+    """
     df = syn.tableQuery(f"SELECT investigatorName, orcid FROM {NF_TOOLS_TABLE}").asDataFrame()
     orcids = dict()
     for name, orcid in df.itertuples(index=False):
@@ -383,9 +426,12 @@ def _investigator_orcids() -> dict:
 
 
 def author_curie(name: str) -> Tuple[str, str | None]:
-    """CURIE for a person (publication author or tool investigator): their ORCID when the
-    tools db has one for that name, else an `author_` id. Also returns where the ORCID came
-    from (None when there is no ORCID)."""
+    """Return the CURIE for a person and where its ORCID came from.
+
+    A person is a publication author or tool investigator. Their CURIE is
+    their ORCID when the tools db has one for that name, else an `author_` id.
+    The source of the ORCID is None when there is no ORCID.
+    """
     orcid = _investigator_orcids().get(slugify(name))
     if orcid:
         return orcid, ORCID_SOURCE
@@ -412,13 +458,36 @@ def _process_grounded_field(entry:str, meta_curie:str, node_type:str):
         curie = meta_node_curie(category, entry)
     return name, curie, iri, category, "true" if grounded else "false"
 def parse_dict_fields(meta_curie:str, meta:dict, node_types: list[str], source:str, node_set: NodeSet, edge_set : EdgeSet, head: str | None = None) -> Tuple[NodeSet, EdgeSet]:
-    """Parse fields from dictionary metadata (same procedure for publications and tools)
-    Args:
-        meta_curie: curie identifying the dictionary source. often publication or project.
-        meta: dict with fields.
-        node_types: a list of field name containing the nodes to extract
-        source: where the information is being extracted from often publications or metadata
-        head: NF_KG_SCHEMA subject name, if not the default for `source` (e.g. "tool_model")
+    """Parse fields from dictionary metadata.
+
+    The same procedure is used for publications and tools.
+
+    Parameters
+    ----------
+    meta_curie :
+        CURIE identifying the dictionary source, often a publication or
+        project.
+    meta :
+        Dict with fields.
+    node_types :
+        A list of field names containing the nodes to extract.
+    source :
+        Where the information is being extracted from, often publications or
+        metadata.
+    node_set :
+        Existing set of nodes to update.
+    edge_set :
+        Existing set of edges to update.
+    head :
+        NF_KG_SCHEMA subject name, if not the default for `source` (e.g.
+        "tool_model").
+
+    Returns
+    -------
+    node_set : NodeSet
+        The updated node set.
+    edge_set : EdgeSet
+        The updated edge set.
     """
     head = head or SOURCE_TO_HEAD[source]
     ## prase simple non grounded node types ##
@@ -470,7 +539,7 @@ def parse_dict_fields(meta_curie:str, meta:dict, node_types: list[str], source:s
 
 
 def parse_related_studies(meta_curie:str, meta:dict, key:str, source:str, node_set: NodeSet, edge_set : EdgeSet ):
-    """parse related studies (for metadata) or StudyIDs for publications."""
+    """Parse related studies (for metadata) or StudyIDs for publications."""
     to_url = lambda x: NF_STUDIES_BASE_URL.replace("{study_id}", x)
     for entry in _unpack_dict_list(meta, key):
         curie = entry if SYNAPSE_ID.fullmatch(entry) else None
@@ -512,12 +581,12 @@ def parse_related_studies(meta_curie:str, meta:dict, key:str, source:str, node_s
     return node_set, edge_set
 
 def get_project_name(study_id)->str:
-    """helper function looks for a project name and if not found return curie"""
+    """Return the name of a project, or its CURIE if it has none."""
     name = _studies_table().get(study_id, {}).get("name")
     return study_id if _is_empty(name) else str(name)
 
 
 def get_project_summary(study_id) -> str:
-    """the study summary from the NF studies table, or "" if there is none"""
+    """Return the study summary from the NF studies table, or "" if none."""
     summary = _studies_table().get(study_id, {}).get("summary")
     return "" if _is_empty(summary) else str(summary)

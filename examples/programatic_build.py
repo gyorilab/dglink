@@ -1,6 +1,4 @@
-"""
-this script recreates Ben's original build script using the synapse API
-"""
+"""Recreate Ben's original build script using the Synapse API."""
 
 import synapseclient
 from synapseutils import walk
@@ -20,9 +18,7 @@ FILE_TYPES = [
 
 
 def get_project_files(syn, project_syn_id):
-    """
-    returns a set of all files associated with a given synapse project id.
-    """
+    """Return a set of all files associated with a given Synapse project id."""
     project_files = set()
     for _, _, filenames in walk(
         syn=syn,
@@ -39,8 +35,9 @@ def get_project_files(syn, project_syn_id):
 
 
 def get_entity_grounder():
-    """
-    makes a grounder for the names of different types of entites used for finding cols
+    """Make a grounder for the names of different types of entities.
+
+    The grounder is used for finding columns.
     """
     ## Name grounder.
     base_entities = {
@@ -88,9 +85,7 @@ def get_entity_grounder():
 
 
 def ground_entries(entries):
-    """
-    use gilda to ground existing entites
-    """
+    """Use Gilda to ground existing entities."""
     name_to_id = {}
     for entity in set(entries):
         anns = gilda.annotate(entity)
@@ -135,9 +130,7 @@ def apply_ground(row):
 
 
 def read_csv_auto(path, nbytes=100 * 1024 * 1024, **kwargs):
-    """
-    Reads a CSV (or TSV) file with automatic encoding detection.
-    """
+    """Read a CSV (or TSV) file with automatic encoding detection."""
     # Detect encoding
     with open(path, "rb") as f:
         rawdata = f.read(nbytes)
@@ -202,8 +195,12 @@ def read_xlsx_auto(path, sample_rows=20, **kwargs):
 
 
 def file_reader(obj, max_size_bytes=100 * 1024 * 1024):
-    """
-    reads in files from a synapse file object. Returns files as a dictionary for working with sheets
+    """Read in files from a Synapse file object.
+
+    Returns
+    -------
+    dict
+        The files, as a dictionary for working with sheets.
     """
     if obj is None:
         return {}
@@ -236,9 +233,7 @@ def file_reader(obj, max_size_bytes=100 * 1024 * 1024):
 
 
 def process_enteries(project_id, entries):
-    """
-    process found enteties into lists of nodes and relations
-    """
+    """Process found entities into lists of nodes and relations."""
 
     node_project = (project_id, "Project")
 

@@ -89,5 +89,8 @@ PDC_EDGE_TO_BIOLINK = {
 
 
 def pdc_curie(value: str) -> str:
-    """Prefix a raw PDC id (or slugged name) as a `pdc:` CURIE (Biolink requires CURIE ids)."""
+    """Prefix a raw PDC id (or slugged name) as a `pdc:` CURIE.
+
+    Biolink requires CURIE ids.
+    """
     return f"{PDC_CURIE_PREFIX}:{value}"
