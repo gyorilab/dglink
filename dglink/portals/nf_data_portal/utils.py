@@ -167,16 +167,16 @@ def get_project_files(
 
     Parameters
     ----------
-    project_syn_id : str
+    project_syn_id :
         Synapse project ID (e.g., 'syn12345678').
-    file_types : list
+    file_types :
         Optional list of file extensions to filter by (e.g., ['.vcf', '.bam']).
-    as_list : bool
+    as_list :
         If True, returns a list of file_syn_ids instead of a DataFrame.
 
     Returns
     -------
-    Union[pl.DataFrame, list]
+    :
         DataFrame with columns [project_syn_id, file_syn_id, file_name], or a
         list of file_syn_ids if as_list=True.
 
@@ -239,12 +239,12 @@ def get_projects_files(project_ids: list) -> pl.DataFrame:
 
     Parameters
     ----------
-    project_ids : list
+    project_ids :
         List of Synapse project IDs (e.g., ['syn12345678', 'syn87654321']).
 
     Returns
     -------
-    pl.DataFrame
+    :
         DataFrame containing files from all specified projects with columns:
         [project_syn_id, file_syn_id, file_name].
 
@@ -277,14 +277,14 @@ def crawl_project_files(
 
     Parameters
     ----------
-    project_syn_id : str
+    project_syn_id :
         Synapse project ID (e.g., 'syn12345678').
-    known_files : pl.DataFrame
+    known_files :
         Existing file registry. If None, loads from cache.
 
     Returns
     -------
-    pl.DataFrame
+    :
         Updated DataFrame containing all known files including newly
         discovered ones. The cache file is automatically updated on disk.
 
@@ -341,7 +341,7 @@ def get_file_annotations(file_ids:list)->dict[str, dict]:
 
     Parameters
     ----------
-    file_ids : list
+    file_ids :
         A list of file Synapse ids.
 
     Returns
@@ -464,21 +464,21 @@ def parse_dict_fields(meta_curie:str, meta:dict, node_types: list[str], source:s
 
     Parameters
     ----------
-    meta_curie : str
+    meta_curie :
         CURIE identifying the dictionary source, often a publication or
         project.
-    meta : dict
+    meta :
         Dict with fields.
-    node_types : list[str]
+    node_types :
         A list of field names containing the nodes to extract.
-    source : str
+    source :
         Where the information is being extracted from, often publications or
         metadata.
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
-    head : str | None
+    head :
         NF_KG_SCHEMA subject name, if not the default for `source` (e.g.
         "tool_model").
 

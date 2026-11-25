@@ -40,9 +40,9 @@ def extract_variants(
     obj : synapseclient.File
         Downloaded Synapse file object, with the VCF file's local path and its
         id and annotations.
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
 
     Returns
@@ -133,9 +133,9 @@ def extract_vcf_metadata(
     obj : synapseclient.File
         Downloaded Synapse file object, with the VCF file's local path and its
         id and annotations.
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
 
     Returns
@@ -265,15 +265,15 @@ def parse_vcf_file(
 
     Parameters
     ----------
-    file_id : str
+    file_id :
         Synapse file ID (e.g., 'syn12345678').
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
-    project_id : str
+    project_id :
         Synapse project ID containing the file.
-    process_variants : bool
+    process_variants :
         If True, extract variant information. If False, only extract metadata.
 
     Returns
@@ -334,21 +334,21 @@ def get_vcf_data(
 
     Parameters
     ----------
-    project_ids : list
+    project_ids :
         List of Synapse project IDs to process.
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
-    write_set : bool
+    write_set :
         If True, write final knowledge graph to disk.
-    process_compressed_files : bool
+    process_compressed_files :
         If True, process .vcf.gz files. If False, skip them.
-    process_variants : bool
+    process_variants :
         If True, extract variant data. If False, only extract metadata.
-    write_intermediate : bool
+    write_intermediate :
         If True, write graph after each project.
-    write_reports : bool
+    write_reports :
         If True, generate TSV reports of processing status.
 
     Returns

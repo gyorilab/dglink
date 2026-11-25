@@ -109,9 +109,9 @@ class TabularDataset:
 
         Parameters
         ----------
-        col : str
+        col :
             Column name in the table.
-        target_size : int
+        target_size :
             Goal size of the sample. Will return the minimum of the target
             size and the number of unique column entries.
 
@@ -178,7 +178,7 @@ class TabularDataset:
 
         Parameters
         ----------
-        text : str
+        text :
             The cell's text.
         grounder
             Gilda grounder to use instead of Gilda's default.

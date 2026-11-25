@@ -184,7 +184,7 @@ class LLMSelectorTableWide(ColumnSelector):
 
         Parameters
         ----------
-        llm_prompt : tuple[str, str]
+        llm_prompt :
             The context and prompt of the call.
 
         Returns

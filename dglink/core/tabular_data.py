@@ -152,7 +152,7 @@ def frictionless_file_reader(pth: str, max_size_bytes=100 * 1024 * 1024):
 
     Parameters
     ----------
-    pth : str
+    pth :
         Path to the tabular file to read.
     max_size_bytes : int
         Maximum file size to process in bytes (default: 100MB).
@@ -212,18 +212,18 @@ def extract_df_graph(
 
     Parameters
     ----------
-    table : TabularDataset
+    table :
         Table with grounded entity columns (entity, type, name, raw_text,
         etc.) for each of its `entity_columns`.
     group_identifier
         Group ID for edge creation.
     file_id
         File identifier for provenance tracking.
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
-    pascalify_types : bool
+    pascalify_types :
         Not currently used.
 
     Returns
@@ -357,10 +357,10 @@ def load_file(group_identifier: str, fp: str):
 
     Parameters
     ----------
-    group_identifier : str
+    group_identifier :
         Identifier for the group of files (project_id in the NF data portal
         and case_id in GDC).
-    fp : str
+    fp :
         Local path to the file.
 
     Returns

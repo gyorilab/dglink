@@ -17,7 +17,7 @@ class NciGeneralCommonsClient:
 
         Parameters
         ----------
-        gen3_credential_file : str
+        gen3_credential_file :
             Path to the NCI Gen3 credential file, which can be obtained from
             https://nci-crdc.datacommons.io/login.
         """
@@ -59,14 +59,14 @@ class NciGeneralCommonsClient:
 
         Parameters
         ----------
-        phs_accession : str
+        phs_accession :
             The study identifier.
-        page_size : int
+        page_size :
             The number of files to check at once.
 
         Returns
         -------
-        list[dict[str]]
+        :
             The files associated with the study.
 
         Notes

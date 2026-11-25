@@ -32,9 +32,9 @@ def _ground_and_add_node(raw_text: str, node_set: NodeSet) -> Tuple[str, str] | 
 
     Parameters
     ----------
-    raw_text : str
+    raw_text :
         The free text to ground.
-    node_set : NodeSet
+    node_set :
         The node set to add the grounded node to.
 
     Returns
@@ -85,13 +85,13 @@ def get_fastq_metadata(project_list:list[str], node_set:NodeSet, edge_set:EdgeSe
 
     Parameters
     ----------
-    project_list : list[str]
+    project_list :
         Synapse project ids to crawl (e.g. ``['syn12345678']``).
-    node_set : NodeSet
+    node_set :
         NodeSet to accumulate nodes into, mutated in place.
-    edge_set : EdgeSet
+    edge_set :
         EdgeSet to accumulate edges into, mutated in place.
-    write_set : bool
+    write_set :
         If True, write an intermediate result.
 
     Returns

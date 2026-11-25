@@ -46,16 +46,16 @@ def process_dicom(
 
     Parameters
     ----------
-    file_id : str
+    file_id :
         Synapse file ID for the DICOM file (e.g., 'syn12345678').
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
-    dicom_identifiers : set
+    dicom_identifiers :
         Set of already-processed series/project identifiers to avoid
         duplicates.
-    project_granularity : bool
+    project_granularity :
         If True, process one DICOM per project. If False, process all unique
         series (identified by studyId, assay, specimenID, individualID,
         timepoint).
@@ -197,20 +197,20 @@ def get_dicom_data(
 
     Parameters
     ----------
-    project_ids : list
+    project_ids :
         List of Synapse project IDs to process.
-    node_set : NodeSet
+    node_set :
         Existing set of nodes to update.
-    edge_set : EdgeSet
+    edge_set :
         Existing set of edges to update.
-    write_set : bool
+    write_set :
         If True, write final knowledge graph to disk.
-    project_granularity : bool
+    project_granularity :
         If True, process one DICOM per project. If False, process all unique
         series per project.
-    write_intermediate : bool
+    write_intermediate :
         If True, write graph after each project.
-    write_reports : bool
+    write_reports :
         If True, generate TSV reports of processing status.
 
     Returns

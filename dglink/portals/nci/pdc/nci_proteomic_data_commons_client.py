@@ -30,9 +30,9 @@ class NciProteomicCommonsClient:
 
         Parameters
         ----------
-        retry_total : int
+        retry_total :
             The total number of retries of a download request.
-        retry_backoff : float
+        retry_backoff :
             The backoff factor between retries.
         retry_status_list
             The HTTP status codes on which to retry.
@@ -96,9 +96,9 @@ class NciProteomicCommonsClient:
 
         Parameters
         ----------
-        study_id : str
+        study_id :
             The study identifier (the UUID `study_id`, not `pdc_study_id`).
-        page_size : int
+        page_size :
             The number of biospecimen records to fetch at once.
 
         Returns
@@ -139,14 +139,14 @@ class NciProteomicCommonsClient:
 
         Parameters
         ----------
-        study_id : str
+        study_id :
             The study identifier.
-        page_size : int
+        page_size :
             The number of files to check at once.
 
         Returns
         -------
-        list[dict[str]]
+        :
             The files associated with the study.
 
         Notes
@@ -285,7 +285,7 @@ class NciProteomicCommonsClient:
         ----------
         files_df
             The full manifest frame (as read by `_read_manifest`).
-        downloaded_paths : dict[str, str]
+        downloaded_paths :
             Mapping of file_id -> local path to record.
         """
         updates = pl.DataFrame(

@@ -89,12 +89,12 @@ def merge_graphs(inputs: dict, output_path: str = "merged_graph", write: bool = 
 
     Parameters
     ----------
-    inputs : dict
+    inputs :
         Mapping of graph directory to portal label, e.g.
         ``{"nci_gc_graph": "gc", "nci_gdc_graph": "gdc"}``.
-    output_path : str
+    output_path :
         Directory the merged graph is written to.
-    write : bool
+    write :
         If True, write the merged graph to ``output_path``.
 
     Returns

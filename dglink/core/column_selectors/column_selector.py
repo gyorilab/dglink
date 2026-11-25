@@ -28,11 +28,11 @@ class ColumnSelector(ABC):
 
         Parameters
         ----------
-        table : TabularDataset
+        table :
             The table to process.
-        verbose : bool
+        verbose :
             If True, log information about the selection.
-        columns : list | None
+        columns :
             The columns to check. If not given, the original columns are
             used.
         """

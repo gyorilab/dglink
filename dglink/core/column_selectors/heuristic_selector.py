@@ -16,10 +16,10 @@ class HeuristicSelector(ColumnSelector):
 
         Parameters
         ----------
-        nan_percentage : float
+        nan_percentage :
             A column is rejected if at most this proportion of its rows were
             grounded (default: 0.1).
-        max_entity_types : int
+        max_entity_types :
             A column is rejected if it has more than this many distinct
             entity types (default: 8).
         """

@@ -66,9 +66,9 @@ def read_entity_file(file_id: str, max_chars: int = MAX_FILE_CHARS) -> str:
 
     Parameters
     ----------
-    file_id : str
+    file_id :
         The entity's file identifier (CURIE) as it appears in the graph.
-    max_chars : int
+    max_chars :
         Maximum number of characters to return from the file.
     """
     path = _load_file_index().get(file_id)

@@ -25,7 +25,7 @@ class NhlbiBioDataCatalystClient:
 
         Parameters
         ----------
-        credential_file : str | None
+        credential_file :
             Path to a Gen3 API key/credentials.json (see
             https://gen3.biodatacatalyst.nhlbi.nih.gov/identity).
         """

@@ -56,15 +56,15 @@ class AnthropicClient(LLMClient):
 
         Parameters
         ----------
-        model : str
+        model :
             Bedrock model or inference-profile ID.
-        effort : str | None
+        effort :
             Optional ``output_config.effort`` (low|medium|high|xhigh|max).
             None uses the model's default.
-        max_tokens : int
+        max_tokens :
             Per-response output cap. Thinking counts toward it, so keep it
             well above the size of the JSON answer.
-        read_timeout : float
+        read_timeout :
             Seconds to wait for a reply before failing the request.
         """
         boto3 = import_optional("boto3", "bedrock")
