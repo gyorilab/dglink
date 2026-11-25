@@ -50,7 +50,7 @@ def _add_disease(
     name, disease_curie, iri = ground_term(disease_type)
     grounded = disease_curie is not None
     if not disease_curie:
-        ## grounding failed -> portal-local slug id (won't merge across portals)
+        # Grounding failed -> portal-local slug id (won't merge across portals)
         disease_curie = _disease_curie(disease_type)
         name = disease_type
     node_set.update_nodes(
@@ -324,7 +324,7 @@ def download_tabular_files(client: NciProteomicCommonsClient, study_list: list[s
             for f in study_files
             if f.get("file_format") in NCI_TABULAR_FILE_TYPES
         ]
-        ## for now downloading files of each case independently want to batch this later. ##
+        # For now downloading files of each case independently want to batch this later.
         client.download_files(file_ids)
         # file_ids += [
         #     f["file_id"]

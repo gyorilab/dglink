@@ -33,7 +33,7 @@ import requests
 import polars as pl
 from mcp.server.fastmcp import FastMCP
 
-## make `dglink` importable no matter what cwd Claude Code launches us from
+# Make `dglink` importable no matter what cwd Claude Code launches us from
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from dglink.portals.nci.gc.constants import NCI_GQL_ENDPOINT, NCI_GEN3_ENDPOINT  # noqa: E402
 from dglink.portals.nci.pdc.constants import PDC_GQL_ENDPOINT  # noqa: E402

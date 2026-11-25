@@ -18,21 +18,21 @@ import logging
 logger = logging.getLogger(__name__)
 
 QC_METHOD = 'hierarchal_selector' 
-## LLM used by the column selector (passed through get_tabular_data to the selector)
+# LLM used by the column selector (passed through get_tabular_data to the selector)
 LLM_PROVIDER = "anthropic"
 LLM_MODEL = "global.anthropic.claude-haiku-5-5"
 # QC_METHOD = None
 
-## RESUME_FROM_TABULAR: load the graph checkpointed after the tabular stage
-## (dglink/resources/graph/{nodes,edges}.tsv) and skip the projects + tabular stages,
-## so the LLM column selection is not redone.
+# RESUME_FROM_TABULAR: load the graph checkpointed after the tabular stage
+# (dglink/resources/graph/{nodes,edges}.tsv) and skip the projects + tabular stages,
+# so the LLM column selection is not redone.
 RESUME_FROM_TABULAR = True
-## RUN_FASTQ: FASTQ metadata stage is muted for now (the 2026-11-13 full run died here or in wikis).
+# RUN_FASTQ: FASTQ metadata stage is muted for now (the 2026-11-13 full run died here or in wikis).
 RUN_FASTQ = False
 
 if __name__ == "__main__":
     if RESUME_FROM_TABULAR:
-        ## load the tabular checkpoint
+        # Load the tabular checkpoint
         with TIMER.stage("load_checkpoint"):
             node_set, edge_set = load_graph(
                 node_attributes=NODE_ATTRIBUTES,
@@ -43,10 +43,10 @@ if __name__ == "__main__":
             )
         print(f"resumed from checkpoint: {len(node_set)} nodes, {len(edge_set)} edges")
     else:
-        ## make a new graph
+        # Make a new graph
         node_set = NodeSet(attributes=NODE_ATTRIBUTES)
         edge_set = EdgeSet(attributes=EDGE_ATTRIBUTES)
-    ## get a full list of studies
+    # Get a full list of studies
     print("getting studies and all that...")
     with TIMER.stage("api.list_studies"):
         project_ids = get_all_nf_studies()
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     # # "syn52740594",  ## large
     # ]
     if not RESUME_FROM_TABULAR:
-        # add projects to KG as nodes
+        # Add projects to KG as nodes
         with TIMER.stage("projects"):
             node_set, edge_set = get_projects(
                 project_ids=project_ids,
@@ -85,9 +85,9 @@ if __name__ == "__main__":
                 raw_label="Project",
             )
 
-        # process the tabular data
-        ## file listing + download happen eagerly in get_tabular_iterator (timed as
-        ## "crawl_file_listing" and "download"); "tabular" is processing only.
+        # Process the tabular data
+        # File listing + download happen eagerly in get_tabular_iterator (timed as
+        # "crawl_file_listing" and "download"); "tabular" is processing only.
         with TIMER.stage("tabular.fetch_files"):
             tabular_iterator = get_tabular_iterator(project_list=project_ids)
         with TIMER.stage("tabular"):
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     if RUN_FASTQ:
         with TIMER.stage("fastq_metadata"):
             node_set, edge_set = get_fastq_metadata(project_list=project_ids, node_set=node_set, edge_set=edge_set, write_set=True)
-    ## load in wikis
+    # Load in wikis
     with TIMER.stage("wikis"):
         node_set, edge_set = get_wikis(
             node_set=node_set,
@@ -130,11 +130,11 @@ if __name__ == "__main__":
             edge_set=edge_set,
             write_set=True,
         )
-    ## write the graph
+    # Write the graph
     with TIMER.stage("write_graph"):
         write_graph(node_set=node_set, edge_set=edge_set)
     TIMER.print_summary()
-    ## a resumed run has no tabular timings, so don't let it pass as the full-run report
+    # A resumed run has no tabular timings, so don't let it pass as the full-run report
     timing_name = "timing_nf_resume.json" if RESUME_FROM_TABULAR else "timing_nf.json"
     TIMER.write_report(
         os.path.join(REPORT_PATH, timing_name),

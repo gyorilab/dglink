@@ -194,7 +194,7 @@ def parse_fasta(raw: str) -> list[SequenceQuery]:
             )
     else:
         # Raw nucleotide string
-        ## accommodate cases where transcripts are broken by either new line or a blank line
+        # Accommodate cases where transcripts are broken by either new line or a blank line
         lines = raw.split("\n\n")
         if len(lines)<=1:
             lines = raw.split("\n")

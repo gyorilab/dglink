@@ -27,7 +27,7 @@ NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
 NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
 
 
-# config variable
+# Config variable
 PORTAL_NAME = os.getenv("PORTAL_NAME", "NF Data Portal")
 MAX_TURNS = int(os.getenv("MAX_TURNS", "50"))
 ABBREVIATED_RESPONSE = os.getenv("ABBREVIATED_RESPONSE", "0")
@@ -259,7 +259,7 @@ async def stream_anthropic_query(query: str):
         )
 
     print("Starting check")
-    ## General response format ##
+    # General response format
     messages = [
         {"role": "assistant", "content": get_base_prompt()},
         {"role": "user", "content": query},

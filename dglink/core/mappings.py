@@ -31,7 +31,7 @@ def read_obo_mappings(path: str, qualifier_predicates: dict) -> list:
     mappings = []
     for node, data in graph.nodes(data=True):
         term = normalize_curie(node)
-        ## Terms only referenced by others have no clauses
+        # Terms only referenced by others have no clauses
         for clause in data.get("_clauses", {}).get("xref", []):
             obj = normalize_curie(clause["value"])
             predicates = {
@@ -39,7 +39,7 @@ def read_obo_mappings(path: str, qualifier_predicates: dict) -> list:
                 for q in _SOURCE.findall(clause["trailing_modifier"] or "")
                 if q in qualifier_predicates
             }
-            ## Conflicting qualifiers leave the mapping untyped
+            # Conflicting qualifiers leave the mapping untyped
             if term and obj and len(predicates) == 1:
                 mappings.append(Mapping(term, predicates.pop(), obj))
     return mappings

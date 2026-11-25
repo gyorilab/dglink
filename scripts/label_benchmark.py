@@ -45,11 +45,11 @@ def check_existing_annotated_benchmark(records: list[dict[str, str]]) -> set:
 
 
 if __name__ == "__main__":
-    ## extract original benchmark ##
+    # Extract original benchmark
     benchmark_records = get_benchmark_records()
-    # write header to new output path if needed and otherwise get already labeled rows.##
+    # Write header to new output path if needed and otherwise get already labeled rows.##
     checked_rows = check_existing_annotated_benchmark(records=benchmark_records)
-    # update file ##
+    # Update file ##
     total_records = len(benchmark_records)
     current_record = 0
     with open(WRITE_BENCHMARK_PATH, mode="a") as f:
@@ -57,7 +57,7 @@ if __name__ == "__main__":
             f, fieldnames=benchmark_records[0].keys(), delimiter="\t"
         )
         for row in benchmark_records:
-            ## extract fields ##
+            # Extract fields
             dataset_path = row.get("fp", "missing")
             group_id = row.get("group_identifier", "missing")
             target_sheet = row.get("sheet", "missing")
@@ -69,17 +69,17 @@ if __name__ == "__main__":
                     f"Already labeled {dataset_path}, {target_sheet}, {target_col}. Skipping..."
                 )
                 continue
-            ## get the proper dataset ##
+            # Get the proper dataset
             dfs, read_states = load_file(group_identifier=group_id, fp=dataset_path)
             sheet_idx = 0
             while read_states[sheet_idx]["sheet"] != target_sheet:
                 sheet_idx += 1
             df = dfs[sheet_idx]
             col_view = df[target_col]
-            ## open in file viewer ##
+            # Open in file viewer
             cmd = ["open", dataset_path]
             run(cmd)
-            ## Give user information ##
+            # Give user information
             logger.info(
                 f"Looking at record {current_record} out of {total_records}, {total_records-current_record} remain to be labeled."
             )
@@ -87,16 +87,16 @@ if __name__ == "__main__":
             logger.info(f"Sheet name: {target_sheet}")
             logger.info(f"Column name: {target_col}")
             logger.info(f"Group ID: {group_id}")
-            ## trace so can look at the DF in memory ##
+            # Trace so can look at the DF in memory
             set_trace()
-            ## get and parse input from user ##
+            # Get and parse input from user
             user_resp = input('Is this a valid "biological entity" column?...\t')
             while user_resp not in ["0", "1"]:
                 user_resp = input("Enter the label as either 0 or 1 please...\t")
-            parsed_resp = f"{bool(int(user_resp))}"  ## kind of cursed but what ever
+            parsed_resp = f"{bool(int(user_resp))}"  # Kind of cursed but what ever
             row["is_entity_col"] = parsed_resp
             csv_write.writerow(row)
-            f.flush() ## avoids buffer issues ## 
-            ## report back and continue ##
+            f.flush() # Avoids buffer issues
+            # Report back and continue
             logger.info(f"You have labeled this column as {parsed_resp}")
             logger.info("-" * 50)

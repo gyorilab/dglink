@@ -5,7 +5,7 @@ Schemas to match columns against.
 from pydantic import BaseModel
 
 
-## current schema target based ish of of BioLink
+# Current schema target based ish of of BioLink
 class BiologicalEntity(BaseModel):
     GeneOrGeneProduct: float
     MolecularEntity: float
@@ -17,7 +17,7 @@ class BiologicalEntity(BaseModel):
     Other: float
 
 
-## older schema target
+# Older schema target
 class EvaluationResponse(BaseModel):
     human_rna: float
     small_molecule: float

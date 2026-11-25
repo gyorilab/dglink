@@ -313,7 +313,7 @@ class NciGeneralCommonsClient:
     def get_diagnoses(
         self, page_size: int = 1000, only_open: bool = False
     ) -> list[dict]:
-        ## for now
+        # For now
         studies = self.get_all_studies(only_open=only_open)
         query = gql("""
             query GetDiagnoses($phs_accession: String!, $first: Int!, $offset: Int!) {

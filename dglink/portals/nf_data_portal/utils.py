@@ -76,7 +76,7 @@ def safe_download(syn_id:str)->str|None:
     """Download a file from the NF Data Portal, returning None on failure."""
     try:
         with TIMER.stage("download"):
-            entity = syn.get(syn_id, ifcollision="keep.local") ## keep local file if already downloaded ie do not re-download.
+            entity = syn.get(syn_id, ifcollision="keep.local") # Keep local file if already downloaded ie do not re-download.
         try:
             TIMER.add("download", files=1, bytes=os.path.getsize(entity.path))
         except (OSError, TypeError):
@@ -109,12 +109,12 @@ def fetch_nf_tabular_files()->pl.DataFrame:
         tabular_project_files = pl.read_csv(output_path, separator='\t')
     else:
         logger.info("fetching tabular files from the NF data portal...")
-        ## get a full list of studies
+        # Get a full list of studies
         project_ids = get_all_nf_studies()
-        ## crawl all projects
+        # Crawl all projects
         with TIMER.stage("crawl_file_listing"):
             project_files = get_projects_files(project_ids=project_ids, )
-        ## filter for tabular projects
+        # Filter for tabular projects
         file_types_pattern = f"({'|'.join(re.escape(s) for s in TABULAR_FILE_TYPES)})$"
         tabular_project_files = project_files.filter(
             pl.col("file_name").str.contains(file_types_pattern)
@@ -137,19 +137,19 @@ def fetch_nf_tabular_files()->pl.DataFrame:
 
 def get_tabular_iterator(project_list: list) -> Iterator:
     """Return a 2D iterator of project ids and their associated file paths."""
-    ## get a list of tabular files and download if need be 
+    # Get a list of tabular files and download if need be
     tabular_files = fetch_nf_tabular_files()
-    ## filter for files that could be downloaded and format the col names
+    # Filter for files that could be downloaded and format the col names
     tabular_files = tabular_files.filter(pl.col("file_path").is_not_null()).select(
         ['project_syn_id','file_path', 'file_syn_id', ]
     ).rename(
         {'file_syn_id':'file_id', 'file_path':'file_paths'}
     )
-    ## group by project id.
+    # Group by project id.
     project_files = tabular_files.group_by("project_syn_id", maintain_order=True).agg(
     [pl.col("file_paths"), pl.col("file_id")]
     )
-    ## filter for only desired project id.
+    # Filter for only desired project id.
     project_files = project_files.filter(pl.col('project_syn_id').is_in(project_list))
     return project_files.iter_rows()
 
@@ -190,10 +190,10 @@ def get_project_files(
     ...                             as_list=True)
     """
     known_files = load_known_files_df()
-    ## check if we have already crawled the files for this data frame
+    # Check if we have already crawled the files for this data frame
     if len(known_files.filter(pl.col("project_syn_id").eq(project_syn_id))) > 0:
         logger.info(f"loading files for {project_syn_id} from cache")
-    ## if not crawl the files and save the results
+    # If not crawl the files and save the results
     else:
         logger.info(
             f"Files from {project_syn_id} not found in cache, checking synapse..."
@@ -254,11 +254,11 @@ def get_projects_files(project_ids: list) -> pl.DataFrame:
     """
     known_files = load_known_files_df()
     for project_syn_id in tqdm.tqdm(project_ids):
-        ## check if we have already crawled the files for this data frame
+        # Check if we have already crawled the files for this data frame
         if len(known_files.filter(pl.col("project_syn_id").eq(project_syn_id))) > 0:
             logger.info(f"loading files for {project_syn_id} from cache")
             continue
-        ## if not crawl the files and save the results
+        # If not crawl the files and save the results
         else:
             logger.info(
                 f"Files from {project_syn_id} not found in cache, checking synapse..."
@@ -296,7 +296,7 @@ def crawl_project_files(
         known_files = load_known_files_df()
     found_files = []
     try:
-        ## will throw and error if try to lead wiki of locked project
+        # Will throw and error if try to lead wiki of locked project
         _ = syn.getWiki(project_syn_id)
         file_name_iter = walk(
             syn=syn,
@@ -315,7 +315,7 @@ def crawl_project_files(
                 "",
                 [("", "")],
             ]
-        ]  ## give just empty syn_id and file_name
+        ]  # Give just empty syn_id and file_name
     for _, _, filenames in file_name_iter:
         for filename, file_syn_id in filenames:
             found_files.append(
@@ -376,7 +376,7 @@ def nf_curie(uuid: str) -> str:
     """
     return f"{NF_CURIE_PREFIX}:{uuid}"
 
-## helper functions for parsing meta, publications and tools ##
+# Helper functions for parsing meta, publications and tools
 def _is_placeholder(value: str) -> bool:
     return value.strip().lower() in NF_PLACEHOLDER_VALUES
 
@@ -418,7 +418,7 @@ def _investigator_orcids() -> dict:
     df = syn.tableQuery(f"SELECT investigatorName, orcid FROM {NF_TOOLS_TABLE}").asDataFrame()
     orcids = dict()
     for name, orcid in df.itertuples(index=False):
-        ## a single token (e.g. a surname) is too ambiguous to match on
+        # A single token (e.g. a surname) is too ambiguous to match on
         if _is_empty(name) or _is_empty(orcid) or len(str(name).split()) < 2:
             continue
         orcids[slugify(str(name))] = normalize_curie(f"orcid:{str(orcid).strip()}")
@@ -440,7 +440,7 @@ def author_curie(name: str) -> Tuple[str, str | None]:
 
 @lru_cache(maxsize=None)
 def _ground(entry: str):
-    ## tools repeat the same few values hundreds of times (e.g. "Neurofibromatosis type 1")
+    # Tools repeat the same few values hundreds of times (e.g. "Neurofibromatosis type 1")
     return ground_entity(entry, min_span_fraction=NF_GROUNDING_MIN_SPAN_FRACTION)
 
 
@@ -490,13 +490,13 @@ def parse_dict_fields(meta_curie:str, meta:dict, node_types: list[str], source:s
         The updated edge set.
     """
     head = head or SOURCE_TO_HEAD[source]
-    ## prase simple non grounded node types ##
+    # Prase simple non grounded node types
     for node_type in node_types:
         for entry in _unpack_dict_list(meta, node_type):
             if _is_placeholder(entry):
                 continue
             orcid_source = None
-            ## fields with a category allow-list are grounded
+            # Fields with a category allow-list are grounded
             if node_type in NF_GROUND_FIELD_CATEGORIES:
                 name, curie, iri, category, grounded = _process_grounded_field(entry, meta_curie, node_type)
             else:
@@ -511,7 +511,7 @@ def parse_dict_fields(meta_curie:str, meta:dict, node_types: list[str], source:s
                 iri = get_bioregistry_iri(*curie.split(":", 1)) if orcid_source else None
                 grounded = None
                 name = entry
-            ## fill_empty so a value seen again (e.g. a shared funder) never overwrites the existing node
+            # fill_empty so a value seen again (e.g. a shared funder) never overwrites the existing node
             node_set.update_nodes(
                 {
                     "curie:ID": curie,
@@ -546,7 +546,7 @@ def parse_related_studies(meta_curie:str, meta:dict, key:str, source:str, node_s
         if curie is None:
             logger.debug(f"{meta_curie}: skipping {key} value {entry!r}")
             continue
-        ## add the related study as a project only if not present in other nodes ##
+        # Add the related study as a project only if not present in other nodes
         if not curie in node_set.nodes:
             node_set.update_nodes(
                 {

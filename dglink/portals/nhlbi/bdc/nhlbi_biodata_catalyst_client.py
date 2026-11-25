@@ -216,12 +216,12 @@ class NhlbiBioDataCatalystClient:
         if files_df is None:
             return
 
-        ## filter the manifest down to the requested files
+        # Filter the manifest down to the requested files
         to_load = files_df.filter(pl.col("object_id").is_in(file_ids))
-        ## skip those that are already downloaded ##
+        # Skip those that are already downloaded
         to_load = to_load.filter(pl.col("path").is_null()).unique()
 
-        ## Group by project id ##
+        # Group by project id
         project_files = (
             to_load.select(["project_id", "object_id"])
             .rename({ "object_id": "object_ids"})
@@ -260,7 +260,7 @@ class NhlbiBioDataCatalystClient:
                 NHLBI_BDC_CACHE_DIR.joinpath("project_to_files.tsv"), separator="\t"
             )
         if process_zip_files:
-            ## get list of zip files that were downloaded successfully to try and extract ## 
+            # Get list of zip files that were downloaded successfully to try and extract
             unprocessed_zip_files = (
                 files_df.filter(pl.col("data_format").str.to_lowercase().eq("zip"))
                 .filter(pl.col("object_id").is_in(file_ids))
@@ -276,7 +276,7 @@ class NhlbiBioDataCatalystClient:
         updates = []
         for zip_file in unprocessed_zip_files.iter_rows(named=True):
             base_object_id = zip_file.get("object_id")
-            ## skip zips already extracted in a previous call ## 
+            # Skip zips already extracted in a previous call
             if any(eid.startswith(f"{base_object_id}.") for eid in existing_ids):
                 continue
             zip_path = Path(zip_file.get("path"))
@@ -306,7 +306,7 @@ class NhlbiBioDataCatalystClient:
                     offset += 1
         if not updates:
             return
-        ## append to manifest path and write ##
+        # Append to manifest path and write
         files_df_path = NHLBI_BDC_CACHE_DIR.joinpath("project_to_files.tsv")
         manifest.vstack(pl.from_records(updates)).unique().write_csv(
                 files_df_path, separator="\t"

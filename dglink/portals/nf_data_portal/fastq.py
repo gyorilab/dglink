@@ -103,7 +103,7 @@ def get_fastq_metadata(project_list:list[str], node_set:NodeSet, edge_set:EdgeSe
     """
     pf = get_projects_files(project_ids=project_list)
     genomic_files = pf.filter(pl.col('file_name').str.ends_with('.fastq.gz'))
-    ## get file level annotations ## 
+    # Get file level annotations
     annotations_map = get_file_annotations(file_ids = genomic_files['file_syn_id'].to_list())
     for syn_id, annotation in annotations_map.items():
         project_id = annotation.get("studyId", [None])[0]
@@ -125,7 +125,7 @@ def get_fastq_metadata(project_list:list[str], node_set:NodeSet, edge_set:EdgeSe
             grounded = _ground_and_add_node(species, node_set)
             if grounded:
                 entry, _ = grounded
-                ## add edges as possible ## 
+                # Add edges as possible
                 if specimen_id:
                     _add_edge(edge_set, specimen_id, entry, "has_organism")
                 if project_id:
@@ -136,7 +136,7 @@ def get_fastq_metadata(project_list:list[str], node_set:NodeSet, edge_set:EdgeSe
             grounded = _ground_and_add_node(organ, node_set)
             if grounded:
                 entry, label = grounded
-                ## add anatomical region to both file and project ##
+                # Add anatomical region to both file and project
                 _add_edge(edge_set, syn_id, entry, f"has_{label}")
                 if project_id:
                     _add_edge(edge_set, project_id, entry, f"has_{label}")

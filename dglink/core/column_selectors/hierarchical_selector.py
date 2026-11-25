@@ -53,7 +53,7 @@ class HierarchicalSelector(ColumnSelector):
 
     def execute(self, table: TabularDataset, verbose: bool = False, columns: list | None = None) -> None:
         self.heuristic.execute(table, verbose=verbose, columns=columns)
-        ## only spend LLM calls on columns that passed the heuristic
+        # Only spend LLM calls on columns that passed the heuristic
         if len(table.entity_columns) > 0:
             self.llm.execute(table, verbose=verbose, columns=table.entity_columns)
 

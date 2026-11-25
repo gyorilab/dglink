@@ -200,7 +200,7 @@ def _read_tsv_header_and_rows(path):
     f : file
         The open file, to be closed by the caller.
     """
-    csv.field_size_limit(10 ** 7)  # graph cells (descriptions) can be long
+    csv.field_size_limit(10 ** 7)  # Graph cells (descriptions) can be long
     f = open(path, newline='')
     reader = csv.reader(f, delimiter='\t')
     header = next(reader)
@@ -237,7 +237,7 @@ def compute_stats(graph_dir=GRAPH_DIR):
 
     # --- nodes ---
     labels = Counter()
-    node_portal_presence = Counter()   # nodes counted once per portal they touch
+    node_portal_presence = Counter()   # Nodes counted once per portal they touch
     # Per entity type: how many of its nodes touch each portal (notebook §1), and
     # how many are shared across >1 portal (the per-type cross-portal overlap).
     label_portal = defaultdict(Counter)
@@ -253,7 +253,7 @@ def compute_stats(graph_dir=GRAPH_DIR):
     # content DGLink extracted from files vs. metadata the portals expose. This
     # is the notebook §8 breakdown. Keyed by combo string -> [extracted, metadata].
     combo_prov = {}
-    # curie -> (label, [portals]) for Study/Case nodes only, so the edge pass can map
+    # Curie -> (label, [portals]) for Study/Case nodes only, so the edge pass can map
     # each extraction edge back to the portal(s) of the case/study it hangs off.
     study_case_portal = {}
     header, rows, f = _read_tsv_header_and_rows(nodes_path)
@@ -298,14 +298,14 @@ def compute_stats(graph_dir=GRAPH_DIR):
     # --- edges ---
     edge_types = Counter()
     edge_portal = Counter()
-    edge_type_portal = defaultdict(Counter)   # per relationship type, per portal
+    edge_type_portal = defaultdict(Counter)   # Per relationship type, per portal
     edge_total = 0
     # What DGLink actually extracted content from, per portal. related_to is the sole
     # extraction predicate (source ``experimental_data;tabular_data``); it hangs off the
     # case (GDC) or study (GC/PDC) it was mined from and carries the source file ids.
-    extracted_cases = defaultdict(set)    # portal -> {case curie}
-    extracted_studies = defaultdict(set)  # portal -> {study curie}
-    extracted_files = defaultdict(set)    # portal -> {file id}
+    extracted_cases = defaultdict(set)    # Portal -> {case curie}
+    extracted_studies = defaultdict(set)  # Portal -> {study curie}
+    extracted_files = defaultdict(set)    # Portal -> {file id}
     header, rows, f = _read_tsv_header_and_rows(edges_path)
     ti = header.index(':TYPE')
     pi = header.index('portal:string[]') if 'portal:string[]' in header else None

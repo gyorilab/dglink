@@ -50,7 +50,7 @@ class OpenAIClient(LLMClient):
         ).ParsedResponse
         num_retries = 0
         response = None
-        ## temperature not used in reasoning models so by pass in that case.
+        # Temperature not used in reasoning models so by pass in that case.
         temperature = temperature if not self.reasoning_model else None
         while num_retries < max_retries:
             try:

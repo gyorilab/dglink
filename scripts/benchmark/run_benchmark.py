@@ -44,9 +44,9 @@ REPO_ROOT = HERE.parent.parent
 ARMS = {
     "dglink": {
         "config": HERE / "mcp_configs" / "dglink_neo4j.json",
-        # server-level allow so every tool from that MCP server is pre-approved (no prompt)
+        # Server-level allow so every tool from that MCP server is pre-approved (no prompt)
         "allowed": "mcp__neo4j",
-        # the graph merges all three portals; a node's `portal` list records every portal
+        # The graph merges all three portals; a node's `portal` list records every portal
         # it came from, so cross-portal questions are answerable directly.
         "prompt_suffix": (
             " The knowledge graph merges the GDC, GC (General Commons) and PDC portals into "
@@ -55,13 +55,13 @@ ARMS = {
             "['gdc','gc','pdc']). Use that to answer per-portal and cross-portal questions."
         ),
     },
-    # unified raw-API baseline covering all three portals (per-portal + cross-portal)
+    # Unified raw-API baseline covering all three portals (per-portal + cross-portal)
     "crdc_api": {
         "config": HERE / "mcp_configs" / "crdc_api.json",
         "allowed": "mcp__crdc_api",
         "prompt_suffix": "",
     },
-    # single-portal baselines kept for targeted runs
+    # Single-portal baselines kept for targeted runs
     "gc_api": {
         "config": HERE / "mcp_configs" / "gc_api.json",
         "allowed": "mcp__gc_api",
@@ -115,7 +115,7 @@ def run_one(question: str, arm: str, model: str, max_turns: int, timeout: int) -
         # and read the graph directly. Strict mode restricts each arm to ONLY its own config.
         "--strict-mcp-config",
         "--allowedTools", a["allowed"],
-        # deny built-ins on every arm so no agent can reach the graph outside its MCP server
+        # Deny built-ins on every arm so no agent can reach the graph outside its MCP server
         # (splat: each tool name must be a separate argv element — the flag is variadic)
         "--disallowedTools", *DISALLOWED_BUILTINS,
         "--max-turns", str(max_turns),
@@ -145,7 +145,7 @@ def run_one(question: str, arm: str, model: str, max_turns: int, timeout: int) -
         "arm": arm,
         "answer": data.get("result"),
         "is_error": data.get("is_error"),
-        "num_turns": data.get("num_turns"),          # proxy for tool-call effort
+        "num_turns": data.get("num_turns"),          # Proxy for tool-call effort
         "duration_ms": data.get("duration_ms"),
         "wall_sec": round(wall, 1),
         "input_tokens": usage.get("input_tokens"),
@@ -171,7 +171,7 @@ def main() -> None:
     out_path = Path(args.out)
     labels_path = HERE / "labels_to_fill.csv"
 
-    ## check mode ## 
+    # Check mode
     write_mode = 'a' if out_path.exists() else "w"
     with out_path.open(write_mode) as out:
         for q in questions:
@@ -184,7 +184,7 @@ def main() -> None:
                 print(f"  turns={rec.get('num_turns')} "
                       f"wall={rec.get('wall_sec')}s out_tok={rec.get('output_tokens')}")
 
-    # emit an empty labelling sheet for the human correctness pass
+    # Emit an empty labelling sheet for the human correctness pass
     with labels_path.open("w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["id", "arm", "verdict(correct|partial|incorrect|unsupported)", "note"])

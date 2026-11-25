@@ -9,27 +9,27 @@ import pandas
 from indra.databases import bioregistry_client
 from urllib.parse import quote
 
-## Methods for finding portal specific disease focus ##
+# Methods for finding portal specific disease focus
 NF_DISEASE_FOCUS_TYPE = "has_diseaseFocus"
 BIOLINK_FOCUS_TYPES = ("biolink:related_to", "biolink:associated_with")
 BIOLINK_STUDY_LABEL = "biolink:Study"
 BIOLINK_DISEASE_LABEL = "biolink:Disease"
 DISEASE_RAW_TEXT_COLUMN = "disease_type"
 
-## Cap on rows returned per query ## s
+# Cap on rows returned per query
 RESULT_LIMIT = int(os.environ.get("SEMANTIC_SEARCH_RESULT_LIMIT", "1000"))
 
 
 def load_prefix_sets(nodes_df, edges_df):
     """Load the prefix sets of nodes and edges for auto-complete."""
-    ## load node prefix set
+    # Load node prefix set
     node_prefix_set = pygtrie.PrefixSet()
-    ## add curie and name to node prefix set
+    # Add curie and name to node prefix set
     node_prefix_set = node_prefix_set | pygtrie.PrefixSet(
         nodes_df["curie:ID"].astype(str)
     )
     node_prefix_set = node_prefix_set | pygtrie.PrefixSet(nodes_df["name"].dropna())
-    # load edge prefix set
+    # Load edge prefix set
     edge_prefix_set = pygtrie.PrefixSet()
     edge_prefix_set = edge_prefix_set | pygtrie.PrefixSet(edges_df[":TYPE"])
     return node_prefix_set, edge_prefix_set
@@ -40,7 +40,7 @@ def load_mappings(nodes_df, edges_df):
 
     Also gets a list of projects to their disease focus.
     """
-    ## get name mappings
+    # Get name mappings
     names_mapping = {}
     for _, row in nodes_df.iterrows():
         curie = row["curie:ID"]
@@ -124,9 +124,9 @@ def add_indra_url_with_context(record, object_whole, subject_whole):
     return subject_whole, object_whole
 
 
-## Bellow are a number of functions that help with making disease focus ##
-## general between CRDC and NF Data portal the core idea is this lets you ##
-## query Indra in the disease context of the study ##
+# Bellow are a number of functions that help with making disease focus
+# general between CRDC and NF Data portal the core idea is this lets you
+# query Indra in the disease context of the study
 
 
 def load_disease_focus(nodes_df, edges_df):
@@ -138,14 +138,14 @@ def load_disease_focus(nodes_df, edges_df):
     names = dict(zip(nodes_df["curie:ID"], nodes_df["name"]))
     project_to_disease_focus = {}
 
-    ## NF data portal case ##
+    # NF data portal case
     nf_focus = edges_df[edges_df[":TYPE"] == NF_DISEASE_FOCUS_TYPE].drop_duplicates()
     for _, row in nf_focus.iterrows():
         project, disease = row.iloc[0], row.iloc[1]
         entry = project_to_disease_focus.setdefault(project, ["", "", ""])
         entry[0 if str(disease).startswith("mesh") else 1] = disease
 
-    ## CRDC Case ##
+    # CRDC Case
     candidates = edges_df[edges_df[":TYPE"].isin(BIOLINK_FOCUS_TYPES)]
     is_focus = (candidates[":START_ID"].map(labels) == BIOLINK_STUDY_LABEL) & (
         candidates[":END_ID"].map(labels) == BIOLINK_DISEASE_LABEL
@@ -154,7 +154,7 @@ def load_disease_focus(nodes_df, edges_df):
     biolink_focus = biolink_focus[
         biolink_focus[":END_ID"].astype(str).str.startswith("mesh")
     ]
-    ## find raw text of disease focus name if possible ##
+    # Find raw text of disease focus name if possible
     raw_column = (
         DISEASE_RAW_TEXT_COLUMN
         if DISEASE_RAW_TEXT_COLUMN in biolink_focus.columns
@@ -167,7 +167,7 @@ def load_disease_focus(nodes_df, edges_df):
         biolink_focus = biolink_focus.assign(_has_raw_text=has_raw_text).sort_values(
             "_has_raw_text", ascending=False, kind="stable"
         )
-    ## a study can carry several diagnoses; keep the first mesh-grounded one ##
+    # A study can carry several diagnoses; keep the first mesh-grounded one
     biolink_focus = biolink_focus.drop_duplicates(subset=":START_ID")
 
     raw_texts = biolink_focus[raw_column] if raw_column else [None] * len(biolink_focus)
@@ -207,9 +207,9 @@ def relation_pattern(relation: str = None) -> str:
         raise HTTPException(
             status_code=400, detail=f"unknown relation type: {relation!r}"
         )
-    ## `relation` is now known to be one of the graph's own type strings, so it cannot carry
-    ## a stray backtick, but escape anyway so the quoting stays correct if the allow-list is
-    ## ever loosened.
+    # `relation` is now known to be one of the graph's own type strings, so it cannot carry
+    # a stray backtick, but escape anyway so the quoting stays correct if the allow-list is
+    # ever loosened.
     return "r:`{}`".format(relation.replace("`", "``"))
 
 
@@ -228,7 +228,7 @@ def _has_disease_focus(curie) -> bool:
     return get_disease_focus(curie) is not None
 
 
-## king of jank helper function bellow ##
+# King of jank helper function bellow
 def add_disease_focus(record, object_whole, subject_whole):
     """Report a project/study's disease focus as its own fields on that node.
 
@@ -248,8 +248,8 @@ def add_disease_focus(record, object_whole, subject_whole):
             continue
         name = focus[1]
         raw_text = focus[2] if len(focus) > 2 else ""
-        ## a name only exists once the diagnosis grounded to an ontology term; the raw text is
-        ## only present on graphs that carry the diagnosis column. Emit whichever we have.
+        # A name only exists once the diagnosis grounded to an ontology term; the raw text is
+        # only present on graphs that carry the diagnosis column. Emit whichever we have.
         if name:
             attributes[f"{side} disease focus"] = name
         if raw_text:

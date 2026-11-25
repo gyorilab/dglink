@@ -30,15 +30,15 @@ def get_entities_from_wiki(
         entry = study_wiki.get(field)
         if _is_empty(entry):
             continue
-        ## annotate finds the spans, ground_entity re-grounds each span with the shared
-        ## score / span / category rules. The wiki text is passed as context so ambiguous
-        ## spans (e.g. acronyms) are disambiguated by the text around them; it is unique
-        ## per wiki, so these groundings are not cached.
+        # annotate finds the spans, ground_entity re-grounds each span with the shared
+        # score / span / category rules. The wiki text is passed as context so ambiguous
+        # spans (e.g. acronyms) are disambiguated by the text around them; it is unique
+        # per wiki, so these groundings are not cached.
         for annotation in gilda.annotate(entry):
             name, curie, iri, category = ground_entity(
                 annotation.text, min_span_fraction=NF_GROUNDING_MIN_SPAN_FRACTION, context=entry
             )
-            ## skip things that can not be grounded, and generic categories ##
+            # Skip things that can not be grounded, and generic categories
             if curie is None or category in NF_WIKI_EXCLUDED_CATEGORIES:
                 continue
             node_set.update_nodes(

@@ -47,9 +47,9 @@ def process_dicom(
     """
     annotations = syn.get_annotations(file_id)
     project_id = annotations.get("studyId", ["project_id_missing"])[0]
-    ## try to process all DICOM series
+    # Try to process all DICOM series
     if not project_granularity:
-        ## annotations do not have series identifier so using all this info as a proxy ##
+        # Annotations do not have series identifier so using all this info as a proxy
         assay = annotations.get("assay", ["assay_missing"])[0]
         specimen_id = annotations.get("specimenID", ["specimenID_missing"])[0]
         individual_id = annotations.get("individualID", ["individualID_missing"])[0]
@@ -63,7 +63,7 @@ def process_dicom(
             individual_id,
             experimental_timepoint,
         )
-    ## try to process one series per study
+    # Try to process one series per study
     else:
         series_identifier = project_id
     if series_identifier in dicom_identifiers:
@@ -146,11 +146,11 @@ if __name__ == "__main__":
             node_set=node_set,
             edge_set=edge_set,
             dicom_identifiers=dicom_identifiers,
-            project_granularity=True,  ## just processing one file for each study for now
+            project_granularity=True,  # Just processing one file for each study for now
         )
         if i % 100 == 0:
             write_graph(node_set=node_set, edge_set=edge_set)
         i = i + 1
         processed += could_process
-    ## run the extract process
+    # Run the extract process
     write_graph(node_set=node_set, edge_set=edge_set)

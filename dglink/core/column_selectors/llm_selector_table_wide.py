@@ -61,14 +61,14 @@ class LLMSelectorTableWide(ColumnSelector):
             retry_delay=self.retry_delay,
             temperature=self.temperature,
         )
-        ## reuse our client rather than constructing a new one
+        # Reuse our client rather than constructing a new one
         selector.llm_client = self.llm_client
         return selector.check_column(table, col, verbose)
 
     def execute(self, table: TabularDataset, verbose: bool = False, columns: list | None = None) -> None:
         starting_cols = self._resolve_columns(table, columns)
         llm_resp = self.call_llm_batch(self.get_llm_prompt_batch(table=table, columns=starting_cols))
-        ## columns skipped by the prompt (below min_ground_percentage) or not returned are dropped
+        # Columns skipped by the prompt (below min_ground_percentage) or not returned are dropped
         score_map: dict[str, list[str] | None] = {col: None for col in starting_cols}
         for col, probs in llm_resp.items():
             if col not in score_map:
@@ -121,7 +121,7 @@ class LLMSelectorTableWide(ColumnSelector):
 
             priority_sample = table.get_priority_sample(col=col, target_size=self.target_records_for_call)
             logger.info(f"Got priority sample of length {len(priority_sample)} for {col}")
-            ## first row for each sampled raw value
+            # First row for each sampled raw value
             sample_rows = df[df[f"{col}_raw_text"].isin(priority_sample)].drop_duplicates(
                 subset=[f"{col}_raw_text"]
             )

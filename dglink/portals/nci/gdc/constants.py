@@ -9,24 +9,24 @@ NCI_GDC_CACHE_DIR = module("nci_genomic_data_commons").base
 DATA_ENDPNT = "https://api.gdc.cancer.gov/data"
 CASES_ENDPNT = "https://api.gdc.cancer.gov/cases/"
 NODE_ATTRIBUTES = [
-    ## core fields - all nodes should have ths other fields are optional
+    # Core fields - all nodes should have ths other fields are optional
     "curie:ID",
     ":LABEL",
-    "raw_label",  ## Golds GDC-native fields not conforming to BioLinK (e.g. "aliquot")
+    "raw_label",  # Golds GDC-native fields not conforming to BioLinK (e.g. "aliquot")
     "name",
     "iri",
-    "grounded:boolean",  ## true if name/curie came from ontology grounding, false if raw text
+    "grounded:boolean",  # True if name/curie came from ontology grounding, false if raw text
     "source:string[]",
-    ## NB: tabular provenance (raw_texts / columns / file_id) is NOT a node attribute — it
-    ## rides on the group -> entity edge (see EDGE_ATTRIBUTES) to stay per-portal after merge
-    "submitter_id:string[]",  ## human-readable GDC submitter barcode(s); an alias, not a node
-    ## sample (specimen) fields
+    # NB: tabular provenance (raw_texts / columns / file_id) is NOT a node attribute — it
+    # rides on the group -> entity edge (see EDGE_ATTRIBUTES) to stay per-portal after merge
+    "submitter_id:string[]",  # Human-readable GDC submitter barcode(s); an alias, not a node
+    # Sample (specimen) fields
     "tumor_descriptor",
     "specimen_type",
     "sample_type",
     "tissue_type",
     "preservation_method",
-    ## case demographic fields (expanded `demographic` object)
+    # Case demographic fields (expanded `demographic` object)
     "gender",
     "race",
     "ethnicity",
@@ -34,23 +34,23 @@ NODE_ATTRIBUTES = [
     "age_at_index",
     "days_to_death",
     "days_to_birth",
-    ## project -> biolink:Study fields (expanded `project` object)
+    # Project -> biolink:Study fields (expanded `project` object)
     "program",
     "disease_type",
     "primary_site",
-    ## NB: per-diagnosis fields (primary_diagnosis, morphology, stage, ...) are NOT node
-    ## attributes — they ride on the case -> disease edge (see EDGE_ATTRIBUTES). The Disease
-    ## node itself is a grounded concept (name / curie / iri only).
+    # NB: per-diagnosis fields (primary_diagnosis, morphology, stage, ...) are NOT node
+    # attributes — they ride on the case -> disease edge (see EDGE_ATTRIBUTES). The Disease
+    # node itself is a grounded concept (name / curie / iri only).
 ]
 EDGE_ATTRIBUTES = [
-    ## core fields - all edges should have ths other fields are optional
+    # Core fields - all edges should have ths other fields are optional
     ":START_ID",
     ":END_ID",
     ":TYPE",
-    "raw_type",  ## GDC-native relation (e.g. "has_aliquot") preserved alongside the Biolink predicate
+    "raw_type",  # GDC-native relation (e.g. "has_aliquot") preserved alongside the Biolink predicate
     "source:string[]",
-    ## diagnosis-event qualifiers carried on the case -> disease edge (per-patient;
-    ## kept off the shared grounded Disease concept node)
+    # Diagnosis-event qualifiers carried on the case -> disease edge (per-patient;
+    # kept off the shared grounded Disease concept node)
     "diagnosis_id",
     "primary_diagnosis",
     "morphology",
@@ -63,12 +63,12 @@ EDGE_ATTRIBUTES = [
     "age_at_diagnosis",
     "progression_or_recurrence",
     "last_known_disease_status",
-    ## tabular provenance — which file / column / raw text an extracted entity was found
-    ## in (moved here from the node so it stays per-portal after merge)
+    # Tabular provenance — which file / column / raw text an extracted entity was found
+    # in (moved here from the node so it stays per-portal after merge)
     "raw_texts:string[]",
     "columns:string[]",
     "file_id:string[]",
-    ## predicted similar project fields
+    # Predicted similar project fields
     "jacquard_score",
     "score_cutoff",
     "intersection_score",
@@ -79,7 +79,7 @@ EDGE_ATTRIBUTES = [
     "edge_weights:string[]",
 ]
 
-## fields to take from files for csv
+# Fields to take from files for csv
 FILE_FIELDS = [
     "access",
     "data_category",
@@ -91,12 +91,12 @@ FILE_FIELDS = [
 ]
 
 
-## Prefix GDC UUIDs with gdc to conform to biolink curies
+# Prefix GDC UUIDs with gdc to conform to biolink curies
 GDC_CURIE_PREFIX = "ncigdc"
 
-## GDC-native entity type -> concrete Biolink category (verified against Biolink
-## 4.2.2). The specimen subdivisions have no dedicated Biolink class, so they all
-## map to biolink:MaterialSample; the native distinction is kept in `raw_label`.
+# GDC-native entity type -> concrete Biolink category (verified against Biolink
+# 4.2.2). The specimen subdivisions have no dedicated Biolink class, so they all
+# map to biolink:MaterialSample; the native distinction is kept in `raw_label`.
 GDC_LABEL_TO_BIOLINK = {
     "case": "biolink:Case",
     "sample": "biolink:MaterialSample",

@@ -115,5 +115,5 @@ class StageTimer:
             )
 
 
-## process-wide timer
+# Process-wide timer
 TIMER = StageTimer()

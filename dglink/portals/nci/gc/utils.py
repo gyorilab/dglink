@@ -117,7 +117,7 @@ def get_publications(
         if not doi:
             continue
         # doi_curie = gc_curie(doi)
-        ## do not need to prefix this with protal name since is not portal specific ##
+        # Do not need to prefix this with protal name since is not portal specific
         doi_curie = doi
         node_set.update_nodes(
             {
@@ -157,7 +157,7 @@ def get_investigators(
         inv_id = investigator.get("investigator_id")
         if not inv_id:
             continue
-        ## build a display name — fall back to primary_investigator_name if first/last absent
+        # Build a display name — fall back to primary_investigator_name if first/last absent
         first = investigator.get("first_name", "")
         last = investigator.get("last_name", "")
         display_name = f"{first} {last}".strip() or lazzy_get(
@@ -228,13 +228,13 @@ def get_diagnoses(
         diag_name, diag_curie, diag_iri = ground_term(raw_name)
         grounded = diag_curie is not None
         if not diag_curie:
-            ## grounding failed -> key by NAME so same-name diagnoses ("Not Reported", ...)
-            ## collapse into one node, in a `disease_` namespace distinct from participants
+            # Grounding failed -> key by NAME so same-name diagnoses ("Not Reported", ...)
+            # collapse into one node, in a `disease_` namespace distinct from participants
             diag_name = raw_name or "Not Reported"
             diag_curie = _fallback_disease_curie(diag_name)
 
-        ## disease CONCEPT node: identity only. `grounded` flags whether `name` is a real
-        ## ontology label (true) or unresolved raw text (false).
+        # Disease CONCEPT node: identity only. `grounded` flags whether `name` is a real
+        # ontology label (true) or unresolved raw text (false).
         node_set.update_nodes(
             {
                 "curie:ID": diag_curie,
@@ -247,8 +247,8 @@ def get_diagnoses(
             }
         )
 
-        ## diagnosis-EVENT qualifiers: belong to this patient's diagnosis, so they ride on
-        ## the association edge (per-patient edge id -> no collision on the shared concept)
+        # Diagnosis-EVENT qualifiers: belong to this patient's diagnosis, so they ride on
+        # the association edge (per-patient edge id -> no collision on the shared concept)
         diagnosis_qualifiers = {
             "diagnosis_id": diag_id,
             "disease_type": lazzy_get(diagnosis, "disease_type"),
@@ -274,14 +274,14 @@ def get_diagnoses(
             "crdc_id": lazzy_get(diagnosis, "crdc_id"),
         }
 
-        ## Prefer attaching the diagnosis to its participant (a biolink:Case) so GC has
-        ## case-level granularity like GDC/PDC; also link the study to the participant.
-        ## Fall back to a study -> diagnosis edge when no participant id is present.
+        # Prefer attaching the diagnosis to its participant (a biolink:Case) so GC has
+        # case-level granularity like GDC/PDC; also link the study to the participant.
+        # Fall back to a study -> diagnosis edge when no participant id is present.
         participant_id = diagnosis.get("participant_id")
         phs = diagnosis.get("phs_accession")
         if participant_id:
             participant_curie = gc_curie(participant_id)
-            ## participant (biolink:Case) carries patient-COURSE facts
+            # Participant (biolink:Case) carries patient-COURSE facts
             node_set.update_nodes(
                 {
                     "curie:ID": participant_curie,

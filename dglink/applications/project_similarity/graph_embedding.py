@@ -14,24 +14,24 @@ import re
 
 RESOURCE_DIR = "dglink/applications/project_similarity/resources"
 all_project_ids = [
-    "syn2343195",  ## large project
-    "syn5562324",  ## small project
-    "syn27761862",  ## small project
-    "syn4939874",  ## large project
-    "syn4939876",  ## locked
-    "syn4939906",  ## small
-    "syn4939916",  ## locked
-    "syn7217928",  ## large
-    "syn8016635",  ## small
-    "syn11638893",  ## locked
-    "syn11817821",  ## large
-    "syn21641813",  ## locked
-    "syn21642027",  ## locked
-    "syn21650493",  ## large
-    "syn21984813",  ## large
-    "syn23639889",  ## locked
-    "syn51133914",  ## locked
-    "syn52740594",  ## large
+    "syn2343195",  # Large project
+    "syn5562324",  # Small project
+    "syn27761862",  # Small project
+    "syn4939874",  # Large project
+    "syn4939876",  # Locked
+    "syn4939906",  # Small
+    "syn4939916",  # Locked
+    "syn7217928",  # Large
+    "syn8016635",  # Small
+    "syn11638893",  # Locked
+    "syn11817821",  # Large
+    "syn21641813",  # Locked
+    "syn21642027",  # Locked
+    "syn21650493",  # Large
+    "syn21984813",  # Large
+    "syn23639889",  # Locked
+    "syn51133914",  # Locked
+    "syn52740594",  # Large
 ]
 
 
@@ -51,14 +51,14 @@ def train_embedding_model(
     entity_to_id : dict
         The mapping from entity to id used in training.
     """
-    ## split the dataset
+    # Split the dataset
     # tf = TriplesFactory.from_path(edge_path)
     edge_path = f"{resource_dir}/non_related_projects_edges.tsv"
     triples = load_triples(path=edge_path, column_remapping=(0, 2, 1))
-    tf = TriplesFactory.from_labeled_triples(triples[1:])  ## drop header
+    tf = TriplesFactory.from_labeled_triples(triples[1:])  # Drop header
     training, testing = tf.split()
     # training, testing, validation = tf.split([0.8, 0.1, 0.1])
-    ## train the model
+    # Train the model
     result = pipeline(
         training=training,
         testing=testing,
@@ -152,8 +152,8 @@ if __name__ == "__main__":
             }
         )
         x = x + 1
-    ## exploration stuff
-    ## plotting
+    # Exploration stuff
+    # Plotting
     distance_df = pd.DataFrame(res)
     write_df = distance_df[
         ["study_1", "study_2", "l_2", "cosine", "has_related"]

@@ -28,7 +28,7 @@ def _normalize_publication_id(id, namespace = 'pmid')->Tuple[str|None, str|None]
         raise ValueError(f"{namespace} is invalid try {list(NS_PATTERNS)}")
     if _is_empty(id):
         return None, None
-    ## the table may hold PMIDs as numbers
+    # The table may hold PMIDs as numbers
     res = namespace_pattern.match(str(id).replace(' ', ''))
     if not res:
         return None, None
@@ -49,7 +49,7 @@ def _tools_publication_to_portal(pub: dict) -> dict:
     """Rename a tools db publication row to the portal table's field names."""
     year = pub.get("year")
     date = pub.get("publicationDate")
-    ## the tools db year column is almost always empty, the date is usually filled
+    # The tools db year column is almost always empty, the date is usually filled
     if _is_empty(year) and not _is_empty(date):
         year = str(date)[:4]
     return {
@@ -68,25 +68,25 @@ def parse_publication_nodes(pub:dict, node_set: NodeSet, source = ("publications
     """
     _, doi_iri = _normalize_publication_id(pub.get("doi", ''), 'doi')
     _, pmid_iri = _normalize_publication_id(pub.get("pmid", ''), 'pmid')
-    ## get a valid id if possible ##
+    # Get a valid id if possible
     curie = publication_curie(pub)
     if not curie:
         logger.warning(f'Publication has neither a valid PMID or DOI. Raw form is \n{pub}')
         return node_set, None
-    ## add publication node with metadata, filling fields an earlier table left empty ##
+    # Add publication node with metadata, filling fields an earlier table left empty
     node_set.update_nodes(
         {
             "curie:ID": curie,
             ":LABEL": NF_LABEL_TO_BIOLINK["publication"],
             "raw_label": "publication",
             "name": pub.get('title'),
-            ## going to just put the iri's (i.e. url) for these
+            # Going to just put the iri's (i.e. url) for these
             "doi": doi_iri,
             "pmid" : pmid_iri,
             "year" : pub.get('year'),
-            ## journal name; Biolink `published in` wants a CURIE (e.g. ISSN), which neither table has
+            # Journal name; Biolink `published in` wants a CURIE (e.g. ISSN), which neither table has
             "journal": next(iter(_unpack_dict_list(pub, "journal")), ""),
-            ## take the raw values and add directly as node attributes ##
+            # Take the raw values and add directly as node attributes
             "diseaseFocus:string[]" : set(_unpack_dict_list(pub, "diseaseFocus")),
             "manifestation:string[]" : set(_unpack_dict_list(pub, "manifestation")),
             "source:string[]": set(source),
@@ -137,7 +137,7 @@ def get_publications(node_set: NodeSet, edge_set: EdgeSet, project_ids: list | N
           manifestation/disease focus (biolink:Disease,
           biolink:BiologicalProcess ...) see grounding logic
     """
-    ## portal publications first, so their fields win on papers in both tables ##
+    # Portal publications first, so their fields win on papers in both tables
     portal_curies = set()
     query = syn.tableQuery(f"SELECT * FROM {PORTAL_PUBLICATIONS_TABLE}")
     for pub in pl.from_pandas(query.asDataFrame()).iter_rows(named=True):
@@ -153,7 +153,7 @@ def get_publications(node_set: NodeSet, edge_set: EdgeSet, project_ids: list | N
                                         node_set=node_set,
                                         edge_set=edge_set,
         )
-        ## only link the studies we were asked for ##
+        # Only link the studies we were asked for
         studies = _unpack_dict_list(pub, "studyId")
         if project_ids is not None:
             studies = [s for s in studies if s in project_ids]
@@ -165,7 +165,7 @@ def get_publications(node_set: NodeSet, edge_set: EdgeSet, project_ids: list | N
                     node_set=node_set,
                     edge_set=edge_set,
         )
-    ## then the tools db publications, filling in what the portal left empty ##
+    # Then the tools db publications, filling in what the portal left empty
     shared = 0
     query = syn.tableQuery(f"SELECT * FROM {TOOLS_PUBLICATIONS_TABLE}")
     for pub in pl.from_pandas(query.asDataFrame()).iter_rows(named=True):

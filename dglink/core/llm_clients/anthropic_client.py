@@ -21,7 +21,7 @@ from ..optional_deps import import_optional
 logger = logging.getLogger(__name__)
 
 DEFAULT_BEDROCK_MODEL = "global.anthropic.claude-haiku-5-5"
-## Bedrock errors that retrying won't fix: bad request/model ID, no model access
+# Bedrock errors that retrying won't fix: bad request/model ID, no model access
 NON_RETRYABLE_ERRORS = {
     "ValidationException",
     "AccessDeniedException",
@@ -33,7 +33,7 @@ NON_RETRYABLE_ERRORS = {
 def json_schema_for(schema: Type[BaseModel]) -> dict:
     """Return the pydantic model as a JSON schema for structured outputs."""
     sc = schema.model_json_schema()
-    ## structured outputs require it on every object, including nested ones in $defs
+    # Structured outputs require it on every object, including nested ones in $defs
     for obj in [sc, *sc.get("$defs", {}).values()]:
         if obj.get("type") == "object":
             obj["additionalProperties"] = False
@@ -73,7 +73,7 @@ class AnthropicClient(LLMClient):
         self.provider = "anthropic"
         self.effort = effort
         self.max_tokens = max_tokens
-        ## running totals across calls, e.g. for cost estimates
+        # Running totals across calls, e.g. for cost estimates
         self.n_calls = 0
         self.input_tokens = 0
         self.output_tokens = 0
@@ -82,7 +82,7 @@ class AnthropicClient(LLMClient):
             region_name=os.environ.get("AWS_REGION", "us-east-1"),
             config=botocore_config.Config(
                 read_timeout=read_timeout,
-                retries={"max_attempts": 3, "mode": "adaptive"},  # throttling/5xx
+                retries={"max_attempts": 3, "mode": "adaptive"},  # Throttling/5xx
             ),
         )
 
