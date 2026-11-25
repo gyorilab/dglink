@@ -1,4 +1,4 @@
-## build the genomic index in a Docker container ##
+# Build the genomic index in a Docker container
 docker build \
 	-t build-index \
 	-f dglink/applications/genomic_index/Dockerfile.build-index \

@@ -208,8 +208,8 @@ __marimo__/
 # Vscode 
 .vscode/
 
-## environment file
+# Environment file
 **/.env
-## code outputs 
+# Code outputs
 **/mantis_index
 **/*.tsv

@@ -39,10 +39,10 @@ if __name__ == "__main__":
         edge_set=edge_set,
         include_biospecimen=INCLUDE_BIOSPECIMEN,
     )
-    # ## download open-access tabular files (skips already-cached files)
+    # Download open-access tabular files (skips already-cached files)
     download_tabular_files(client=client, study_list=EX_STUDIES)
 
-    # ## ground the tabular data and attach the extracted entities to their study nodes
+    # Ground the tabular data and attach the extracted entities to their study nodes
     study_ids, tabular_iterator = get_tabular_iterator(study_list=EX_STUDIES)
     get_tabular_data(
         group_identifiers=study_ids,

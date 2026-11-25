@@ -1,4 +1,4 @@
-## query a pre-existing Mantis index with Docker
+# Query a pre-existing Mantis index with Docker
 # docker build \
 # 	-t query-index \
 # 	-f dglink/applications/genomic_index/Dockerfile.query-index \

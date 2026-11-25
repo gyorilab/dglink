@@ -1,16 +1,16 @@
 #!/bin/bash
-## run vars ##
+# Run vars
 export kmer_size=20
 export slots=31
-export threads=4 ## make sure this matches the sbatch config
-export mb_size=100000 ## 100 mb size
+export threads=4 # Make sure this matches the sbatch config
+export mb_size=100000 # 100 mb size
 
-## run method ##
+# Run method
 mkdir -p squeakr_files 
-## get squeakr files ##
+# Get squeakr files
 echo "Creating squeakr files..."
 for fastq_file in fastq_files/*.fastq*; do
-	## determine the cut off ##
+	# Determine the cut off
         size=$(du -k "$fastq_file" | awk -F '\t' '{print $1 }')
         if ((3* mb_size >= size)); then
                 export cutoff=1;

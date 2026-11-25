@@ -68,7 +68,7 @@ cypher-shell -u neo4j -p "${NEO4J_PASSWORD:-password}" "CALL db.awaitIndexes(600
 
 neo4j stop
 
-## read only neo4j 
+# Read only neo4j
 echo "dbms.databases.default_to_read_only=true" >> /etc/neo4j/neo4j.conf
 
 # Bind bolt and HTTP to all interfaces inside the container. Use the internal

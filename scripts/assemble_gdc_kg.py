@@ -43,7 +43,7 @@ if __name__ == "__main__":
         batch_length=batch_size,
         include_biospecimen=INCLUDE_BIOSPECIMEN,
     )
-    # ## sample some number of cases from those that are open with tabular data at random if do not chose a list ##
+    # Sample some number of cases from those that are open with tabular data at random if do not chose a list
     if not case_ids:
         files_df = pl.read_csv(MANIFEST_PATH, separator="\t")
         case_ids = (

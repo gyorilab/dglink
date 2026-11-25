@@ -9,12 +9,12 @@ description = "Semantic interoperability for biomedical data portals through aut
 readme = "README.md"
 requires-python = "~=3.10"
 dependencies = [
-    ## semantic tools ##
+    # Semantic tools
     "bioregistry>=0.12.42",
     "gilda>=1.4.1",
     "indra>=1.24.0",
     "obonet>=1.3.0",
-    ## tabular data parsing ##
+    # Tabular data parsing
     "frictionless>=5.18.1",
     "numpy>=1.24",
     "pandas>=2.3.2",
@@ -22,7 +22,7 @@ dependencies = [
     "pyarrow>=22.0.0",
     "openpyxl>=3.1.5",
     "xlrd>=2.0.2",
-    ## utilities ##
+    # Utilities
     "tqdm>=4.0",
     "requests>=2.0",
     "pydantic>=2.0",
@@ -35,7 +35,7 @@ dev = [
     "black",
     "pylint",
     "ipython>=8.37.0",
-    ## used by examples/programatic_build.py ##
+    # Used by examples/programatic_build.py
     "chardet>=5.2.0",
 ]
 
@@ -57,7 +57,7 @@ gql  = ["gql>=4.0.0"]
 nci   = ["dglink[gen3,gql]"]   # gc uses both; pdc uses gql
 nhlbi = ["dglink[gen3]"]       # bdc
 
-## vcf / dicom extraction reads files via the NF data portal's Synapse client
+# VCF / DICOM extraction reads files via the NF data portal's Synapse client
 vcf = [
     "pyvcf3>=1.0.4",
     "dglink[synapse]",

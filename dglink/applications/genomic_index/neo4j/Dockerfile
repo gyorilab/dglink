@@ -26,7 +26,7 @@ RUN curl -fsSL https://debian.neo4j.com/neotechnology.gpg.key | \
 RUN mv /var/lib/neo4j/labs/apoc-2025.10.1-core.jar /var/lib/neo4j/plugins/
 
 
-## apoc extended installation - see https://neo4j.com/labs/apoc/2025/installation/
+# apoc extended installation - see https://neo4j.com/labs/apoc/2025/installation/
 # Retrieve jar file for apoc extended
 RUN wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/2025.10.0/apoc-2025.10.0-extended.jar -O /var/lib/neo4j/plugins/apoc-2025.10.0-extended.jar
 

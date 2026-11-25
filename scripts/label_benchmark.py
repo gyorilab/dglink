@@ -47,9 +47,9 @@ def check_existing_annotated_benchmark(records: list[dict[str, str]]) -> set:
 if __name__ == "__main__":
     # Extract original benchmark
     benchmark_records = get_benchmark_records()
-    # Write header to new output path if needed and otherwise get already labeled rows.##
+    # Write header to new output path if needed and otherwise get already labeled rows.
     checked_rows = check_existing_annotated_benchmark(records=benchmark_records)
-    # Update file ##
+    # Update file
     total_records = len(benchmark_records)
     current_record = 0
     with open(WRITE_BENCHMARK_PATH, mode="a") as f:

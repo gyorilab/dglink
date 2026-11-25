@@ -53,24 +53,24 @@ if __name__ == "__main__":
     # project_ids = [
     #     'syn11374354', 
     #     # 'syn25881328',
-    # # "syn2343195",  ## large project
-    # # "syn5562324",  ## small project
-    # # "syn27761862",  ## small project
-    # # "syn4939874",  ## large project
-    # # "syn4939876",  ## locked
-    # # "syn4939906",  ## small
-    # # "syn4939916",  ## locked
-    # # "syn7217928",  ## large
-    # # "syn8016635",  ## small
-    # # "syn11638893",  ## locked
-    # # "syn11817821",  ## large
-    # # "syn21641813",  ## locked
-    # # "syn21642027",  ## locked
-    # # "syn21650493",  ## large
-    # # "syn21984813",  ## large
-    # # "syn23639889",  ## locked
-    # # "syn51133914",  ## locked
-    # # "syn52740594",  ## large
+    # # "syn2343195",  # Large project
+    # # "syn5562324",  # Small project
+    # # "syn27761862",  # Small project
+    # # "syn4939874",  # Large project
+    # # "syn4939876",  # Locked
+    # # "syn4939906",  # Small
+    # # "syn4939916",  # Locked
+    # # "syn7217928",  # Large
+    # # "syn8016635",  # Small
+    # # "syn11638893",  # Locked
+    # # "syn11817821",  # Large
+    # # "syn21641813",  # Locked
+    # # "syn21642027",  # Locked
+    # # "syn21650493",  # Large
+    # # "syn21984813",  # Large
+    # # "syn23639889",  # Locked
+    # # "syn51133914",  # Locked
+    # # "syn52740594",  # Large
     # ]
     if not RESUME_FROM_TABULAR:
         # Add projects to KG as nodes
@@ -100,7 +100,7 @@ if __name__ == "__main__":
                 provider=LLM_PROVIDER,
                 model=LLM_MODEL,
             )
-    # ## add metadata from the FastQ sequencing files
+    # Add metadata from the FastQ sequencing files
     if RUN_FASTQ:
         with TIMER.stage("fastq_metadata"):
             node_set, edge_set = get_fastq_metadata(project_list=project_ids, node_set=node_set, edge_set=edge_set, write_set=True)
@@ -112,17 +112,17 @@ if __name__ == "__main__":
             project_ids=project_ids,
             write_set=True,
         )
-    # ## load in publications
+    # Load in publications
     with TIMER.stage("publications"):
         node_set, edge_set = get_publications(
             node_set=node_set, edge_set=edge_set, project_ids=project_ids, write_set=True
         )
-    # ## load in tools
+    # Load in tools
     with TIMER.stage("tools"):
         node_set, edge_set = get_tools(
             node_set=node_set, edge_set=edge_set, project_ids=project_ids, write_set=True
         )
-    # ## load in metadata
+    # Load in metadata
     with TIMER.stage("metadata"):
         node_set, edge_set = get_meta(
             project_ids=project_ids,
