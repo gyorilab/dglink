@@ -17,9 +17,8 @@ logger = logging.getLogger(__name__)
 data_source = set(["vcf_data", "experimental_data"])
 
 
-def extract_variants(
-    path: str, file_id: str, node_set: NodeSet, edge_set: EdgeSet
-) -> tuple[NodeSet, EdgeSet, bool]:
+def extract_variants(path: str, file_id: str, node_set: NodeSet,
+                     edge_set: EdgeSet) -> tuple[NodeSet, EdgeSet, bool]:
     """Add the genetic variants of a VCF file to the knowledge graph.
 
     Parses VCF files to extract variant identifiers (dbSNP rs IDs) and
@@ -86,7 +85,8 @@ def extract_variants(
                     for sample in record.samples:
                         genotype = sample["GT"]  # e.g., '0/1', '1/1', '0/0'
                         # Only connect if variant is present (not 0/0)
-                        if genotype and genotype not in ["0/0", "./.", "0|0", ".|."]:
+                        if genotype and genotype not in ["0/0", "./.",
+                                                         "0|0", ".|."]:
                             edge_set.update_edges(
                                 {
                                     ":START_ID": sample.sample,
@@ -98,17 +98,16 @@ def extract_variants(
                                 }
                             )
     except Exception as e:
-        logger.error(
-            f"Error extracting variants from {file_id}, this file may be misformed: {e}"
-        )
+        logger.error(f"Error extracting variants from {file_id}, this "
+                     f"file may be misformed: {e}")
         able_to_process = False
 
     return node_set, edge_set, able_to_process
 
 
-def extract_vcf_metadata(
-    path: str, file_id: str, study_id: str, node_set: NodeSet, edge_set: EdgeSet
-) -> tuple[NodeSet, EdgeSet]:
+def extract_vcf_metadata(path: str, file_id: str, study_id: str,
+                         node_set: NodeSet,
+                         edge_set: EdgeSet) -> tuple[NodeSet, EdgeSet]:
     """Extract metadata and sample information from VCF file headers.
 
     Parses VCF metadata to create knowledge graph nodes and relationships for:
@@ -167,7 +166,7 @@ def extract_vcf_metadata(
             "source:string[]": data_source,
         }
     )
-    ## extract the sources
+    # Extract the sources
     for source in vcf_cmnds:
         node_set.update_nodes(
             {
@@ -178,8 +177,8 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-    ## source and commands are similar so merge to one node type
-    ## extract the commands
+    # Source and commands are similar so merge to one node type
+    # Extract the commands
     cmnds = meta.get("GATKCommandLine", [])
     for cmnd in cmnds:
         cmnd_id = cmnd.get("ID", "missing_command")
@@ -193,9 +192,9 @@ def extract_vcf_metadata(
             }
         )
         vcf_cmnds.append(cmnd_id)
-    ## go through all possible samples
+    # Go through all possible samples
     for sample in vcf_reader.samples:
-        ## add sample as node
+        # Add sample as node
         node_set.update_nodes(
             {
                 "curie:ID": sample,
@@ -205,7 +204,7 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-        ## add edge between sample and project
+        # Add edge between sample and project
         edge_set.update_edges(
             {
                 ":START_ID": study_id,
@@ -214,7 +213,7 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-        ## add edges from each sample to the file format and reference
+        # Add edges from each sample to the file format and reference
         edge_set.update_edges(
             {
                 ":START_ID": sample,
@@ -231,7 +230,7 @@ def extract_vcf_metadata(
                 "source:string[]": data_source,
             }
         )
-        ## add each of the command ids to the sample
+        # Add each of the command ids to the sample
         for vcf_cmnd in vcf_cmnds:
             edge_set.update_edges(
                 {

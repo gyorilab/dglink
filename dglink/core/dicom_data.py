@@ -17,13 +17,9 @@ from indra.ontology.bio import bio_ontology
 from gilda import annotate
 
 
-def process_dicom(
-    path: str,
-    file_id: str,
-    group_identifier: str,
-    node_set: NodeSet,
-    edge_set: EdgeSet,
-) -> tuple[NodeSet, EdgeSet]:
+def process_dicom(path: str, file_id: str, group_identifier: str,
+                  node_set: NodeSet,
+                  edge_set: EdgeSet) -> tuple[NodeSet, EdgeSet]:
     """Add the series of a local DICOM file and its grounded fields to a graph.
 
     Parameters

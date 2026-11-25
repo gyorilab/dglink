@@ -66,12 +66,14 @@ def process_synapse_dicom(
     able_to_process = True
     annotations = syn.get_annotations(file_id)
     project_id = annotations.get("studyId", ["project_id_missing"])[0]
-    ## try to process all DICOM series
+    # Try to process all DICOM series
     if not project_granularity:
-        ## annotations do not have series identifier so using all this info as a proxy ##
+        # Annotations do not have series identifier so using all this
+        # info as a proxy
         assay = annotations.get("assay", ["assay_missing"])[0]
         specimen_id = annotations.get("specimenID", ["specimenID_missing"])[0]
-        individual_id = annotations.get("individualID", ["individualID_missing"])[0]
+        individual_id = annotations.get("individualID",
+                                        ["individualID_missing"])[0]
         experimental_timepoint = annotations.get(
             "experimentalTimepoint", ["experimentalTimepoint_missing"]
         )[0]
@@ -82,7 +84,7 @@ def process_synapse_dicom(
             individual_id,
             experimental_timepoint,
         )
-    ## try to process one series per study
+    # Try to process one series per study
     else:
         series_identifier = project_id
     if series_identifier in dicom_identifiers:
@@ -182,7 +184,8 @@ def get_dicom_data(
     ...     project_granularity=True
     ... )
     """
-    logger.info(f"Adding tabular experimental data for {len(project_ids)} projects")
+    logger.info(f"Adding tabular experimental data for "
+                f"{len(project_ids)} projects")
     process_files = []
     dicom_identifiers = set()
     i = 0
@@ -219,7 +222,7 @@ def get_dicom_data(
                 resource_path=os.path.join(RESOURCE_PATH, "artifacts"),
             )
 
-    ## write a sub-graph with just dicom experimental data
+    # Write a sub-graph with just dicom experimental data
     if write_set:
         write_graph(
             node_set=node_set,

@@ -65,10 +65,10 @@ def parse_vcf_file(
     if file_path is None:
         able_to_process = False
     else:
-        ## the Synapse id and study annotation of the downloaded file
+        # The Synapse id and study annotation of the downloaded file
         synapse_id = obj.get("id", "")
         study_id = obj.get("studyId", ["study_id_missing"])[0]
-        ## extract the variants
+        # Extract the variants
         if process_variants:
             node_set, edge_set, able_to_process = extract_variants(
                 path=file_path,
@@ -76,7 +76,7 @@ def parse_vcf_file(
                 node_set=node_set,
                 edge_set=edge_set,
             )
-        ## extract the meta data
+        # Extract the meta data
         node_set, edge_set = extract_vcf_metadata(
             path=file_path,
             file_id=synapse_id,
@@ -145,7 +145,8 @@ def get_vcf_data(
     Intermediate graphs and reports are written to RESOURCE_PATH/artifacts and
     REPORT_PATH.
     """
-    logger.info(f"Adding tabular experimental data for {len(project_ids)} projects")
+    logger.info(f"Adding tabular experimental data for "
+                f"{len(project_ids)} projects")
     process_files = []
     i = 0
     vcf_formats = (
@@ -184,7 +185,7 @@ def get_vcf_data(
                 resource_path=os.path.join(RESOURCE_PATH, "artifacts"),
             )
 
-    ## write a sub-graph with just vcf experimental data
+    # Write a sub-graph with just vcf experimental data
     if write_set:
         write_graph(
             node_set=node_set,

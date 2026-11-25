@@ -57,6 +57,8 @@ gql  = ["gql>=4.0.0"]
 nci   = ["dglink[gen3,gql]"]   # gc uses both; pdc uses gql
 nhlbi = ["dglink[gen3]"]       # bdc
 
+# Reading local VCF and DICOM files. Extracting them from the NF Data
+# Portal (dglink.portals.nf_data_portal.vcf and .dicom) also needs synapse.
 vcf = [
     "pyvcf3>=1.0.4",
 ]
